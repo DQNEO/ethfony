@@ -788,6 +788,8 @@ class Ethna_Controller
                 return $r;
             }
         }
+        $this->logger->log(LOG_DEBUG, "\n =============== END OF RUQUEST ================\n");
+
     }
 
     /**
