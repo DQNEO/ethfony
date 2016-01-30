@@ -727,8 +727,11 @@ class Ethna_Controller
     public static function main($class_name, $action_name = "", $fallback_action_name = "")
     {
         $c = new $class_name;
-        $c->trigger($action_name, $fallback_action_name);
+        $r = $c->trigger($action_name, $fallback_action_name);
         $c->end();
+        if (Ethna::isError($r)) {
+            throw new \Exception($r->getMessage());
+        }
     }
 
     /**
@@ -743,8 +746,11 @@ class Ethna_Controller
     public static function main_CLI($class_name, $action_name, $enable_filter = true)
     {
         $c = new $class_name(GATEWAY_CLI);
-        $c->trigger($action_name, "", $enable_filter);
+        $r = $c->trigger($action_name, "", $enable_filter);
         $c->end();
+        if (Ethna::isError($r)) {
+            throw new \Exception($r->getMessage());
+        }
     }
 
     /**
@@ -774,10 +780,16 @@ class Ethna_Controller
         // trigger
         switch ($this->getGateway()) {
         case GATEWAY_WWW:
-            $this->_trigger_WWW($default_action_name, $fallback_action_name);
+            $r = $this->_trigger_WWW($default_action_name, $fallback_action_name);
+            if (Ethna::isError($r)) {
+                return $r;
+            }
             break;
         case GATEWAY_CLI:
-            $this->_trigger_CLI($default_action_name);
+            $r = $this->_trigger_CLI($default_action_name);
+            if (Ethna::isError($r)) {
+                return $r;
+            }
             break;
         }
 
