@@ -144,13 +144,42 @@ class Ethna_Controller
 
     /**#@-*/
 
+    /**
+     *  アプリケーションのエントリポイント
+     *
+     *  @access public
+     *  @param  string  $class_name     アプリケーションコントローラのクラス名
+     *  @param  mixed   $action_name    指定のアクション名(省略可)
+     *  @param  mixed   $fallback_action_name   アクションが決定できなかった場合に実行されるアクション名(省略可)
+     *  @static
+     */
+    public static function main($class_name, $action_name = "", $fallback_action_name = "")
+    {
+        $c = new $class_name(GATEWAY_WWW);
+        $c->trigger($action_name, $fallback_action_name);
+    }
+
+    /**
+     *  CLIアプリケーションのエントリポイント
+     *
+     *  @access public
+     *  @param  string  $class_name     アプリケーションコントローラのクラス名
+     *  @param  string  $action_name    実行するアクション名
+     *  @static
+     */
+    public static function main_CLI($class_name, $action_name)
+    {
+        $c = new $class_name(GATEWAY_CLI);
+        $c->trigger($action_name);
+    }
+
 
     /**
      *  Ethna_Controllerクラスのコンストラクタ
      *
      *  @access     public
      */
-    public function __construct($gateway = GATEWAY_WWW)
+    public function __construct($gateway)
     {
         mb_internal_encoding($this->encoding);
         mb_regex_encoding($this->encoding);
@@ -695,35 +724,6 @@ class Ethna_Controller
     public function getGateway()
     {
         return $this->gateway;
-    }
-
-    /**
-     *  アプリケーションのエントリポイント
-     *
-     *  @access public
-     *  @param  string  $class_name     アプリケーションコントローラのクラス名
-     *  @param  mixed   $action_name    指定のアクション名(省略可)
-     *  @param  mixed   $fallback_action_name   アクションが決定できなかった場合に実行されるアクション名(省略可)
-     *  @static
-     */
-    public static function main($class_name, $action_name = "", $fallback_action_name = "")
-    {
-        $c = new $class_name;
-        $c->trigger($action_name, $fallback_action_name);
-    }
-
-    /**
-     *  CLIアプリケーションのエントリポイント
-     *
-     *  @access public
-     *  @param  string  $class_name     アプリケーションコントローラのクラス名
-     *  @param  string  $action_name    実行するアクション名
-     *  @static
-     */
-    public static function main_CLI($class_name, $action_name)
-    {
-        $c = new $class_name(GATEWAY_CLI);
-        $c->trigger($action_name);
     }
 
 
