@@ -183,79 +183,6 @@ class Ethna_Controller
     {
         $this->gateway = $gateway;
 
-        mb_internal_encoding($this->encoding);
-        mb_regex_encoding($this->encoding);
-        $GLOBALS['_Ethna_controller'] = $this;
-        if ($this->base === "") {
-            // EthnaコマンドなどでBASEが定義されていない場合がある
-            if (defined('BASE')) {
-                $this->base = BASE;
-            }
-        }
-
-
-        // クラス設定の未定義値を補完
-        foreach ($this->class_default as $key => $val) {
-            if (isset($this->class[$key]) == false) {
-                $this->class[$key] = $val;
-            }
-        }
-
-        // ディレクトリ設定の未定義値を補完
-        foreach ($this->directory_default as $key => $val) {
-            if (isset($this->directory[$key]) == false) {
-                $this->directory[$key] = $val;
-            }
-        }
-
-        // クラスファクトリオブジェクトの生成
-        $class_factory = $this->class['class'];
-        $this->class_factory = new $class_factory($this, $this->class);
-
-        // エラーハンドラの設定
-        Ethna::setErrorCallback(array($this, 'handleError'));
-
-        // ディレクトリ名の設定(相対パス->絶対パス)
-        foreach ($this->directory as $key => $value) {
-            if ($key == 'plugins') {
-                // Smartyプラグインディレクトリは配列で指定する
-                $tmp = array();
-                foreach (to_array($value) as $elt) {
-                    if (Ethna_Util::isAbsolute($elt) == false) {
-                        $tmp[] = $this->base . (empty($this->base) ? '' : '/') . $elt;
-                    }
-                }
-                $this->directory[$key] = $tmp;
-            } else {
-                if (Ethna_Util::isAbsolute($value) == false) {
-                    $this->directory[$key] = $this->base . (empty($this->base) ? '' : '/') . $value;
-                }
-            }
-        }
-
-        // 遷移先設定をマージ
-        // 但し、キーは完全に維持する
-        $this->forward = $this->forward + $this->forward_default;
-
-        // 初期設定
-        $this->locale = 'ja_JP';
-
-        $this->config = $this->getConfig();
-        $this->dsn = $this->_prepareDSN();
-        $this->url = $this->config->get('url');
-        if (empty($this->url) && PHP_SAPI != 'cli') {
-            $this->url = Ethna_Util::getUrlFromRequestUri();
-            $this->config->set('url', $this->url);
-        }
-
-        // プラグインオブジェクトの用意
-        $this->plugin = $this->getPlugin();
-
-        // ログ出力開始
-        $this->logger = $this->getLogger();
-        $this->plugin->setLogger($this->logger);
-        $this->logger->begin();
-
     }
 
     /**
@@ -736,6 +663,80 @@ class Ethna_Controller
      */
     private function trigger($default_action_name = "", $fallback_action_name = "")
     {
+
+        mb_internal_encoding($this->encoding);
+        mb_regex_encoding($this->encoding);
+        $GLOBALS['_Ethna_controller'] = $this;
+        if ($this->base === "") {
+            // EthnaコマンドなどでBASEが定義されていない場合がある
+            if (defined('BASE')) {
+                $this->base = BASE;
+            }
+        }
+
+
+        // クラス設定の未定義値を補完
+        foreach ($this->class_default as $key => $val) {
+            if (isset($this->class[$key]) == false) {
+                $this->class[$key] = $val;
+            }
+        }
+
+        // ディレクトリ設定の未定義値を補完
+        foreach ($this->directory_default as $key => $val) {
+            if (isset($this->directory[$key]) == false) {
+                $this->directory[$key] = $val;
+            }
+        }
+
+        // クラスファクトリオブジェクトの生成
+        $class_factory = $this->class['class'];
+        $this->class_factory = new $class_factory($this, $this->class);
+
+        // エラーハンドラの設定
+        Ethna::setErrorCallback(array($this, 'handleError'));
+
+        // ディレクトリ名の設定(相対パス->絶対パス)
+        foreach ($this->directory as $key => $value) {
+            if ($key == 'plugins') {
+                // Smartyプラグインディレクトリは配列で指定する
+                $tmp = array();
+                foreach (to_array($value) as $elt) {
+                    if (Ethna_Util::isAbsolute($elt) == false) {
+                        $tmp[] = $this->base . (empty($this->base) ? '' : '/') . $elt;
+                    }
+                }
+                $this->directory[$key] = $tmp;
+            } else {
+                if (Ethna_Util::isAbsolute($value) == false) {
+                    $this->directory[$key] = $this->base . (empty($this->base) ? '' : '/') . $value;
+                }
+            }
+        }
+
+        // 遷移先設定をマージ
+        // 但し、キーは完全に維持する
+        $this->forward = $this->forward + $this->forward_default;
+
+        // 初期設定
+        $this->locale = 'ja_JP';
+
+        $this->config = $this->getConfig();
+        $this->dsn = $this->_prepareDSN();
+        $this->url = $this->config->get('url');
+        if (empty($this->url) && PHP_SAPI != 'cli') {
+            $this->url = Ethna_Util::getUrlFromRequestUri();
+            $this->config->set('url', $this->url);
+        }
+
+        // プラグインオブジェクトの用意
+        $this->plugin = $this->getPlugin();
+
+        // ログ出力開始
+        $this->logger = $this->getLogger();
+        $this->plugin->setLogger($this->logger);
+        $this->logger->begin();
+
         // アクション名の取得
         $action_name = $this->_getActionName($default_action_name, $fallback_action_name);
 
