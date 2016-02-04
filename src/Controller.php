@@ -751,18 +751,6 @@ class Ethna_Controller
     }
 
     /**
-     *  フレームワークの処理を実行する(CLI)
-     *
-     *  @access private
-     *  @param  mixed   $default_action_name    指定のアクション名
-     *  @return mixed   0:正常終了 Ethna_Error:エラー
-     */
-    private function _trigger_CLI($default_action_name = "")
-    {
-        return $this->_trigger_WWW($default_action_name);
-    }
-
-    /**
      *  アクションを実行する
      *
      *  @param  obj     Ethna_ActionClass アクションクラス
