@@ -102,6 +102,7 @@ class Ethna_Error
         Ethna::handleError($this);
     }
 
+
     /**
      * エラーオブジェクトに関連付けられたエラーコードを返します。
      *
@@ -175,6 +176,11 @@ class Ethna_Error
     public function addUserInfo($info)
     {
         $this->userinfo[] = $info;
+    }
+
+    public function __toString()
+    {
+        return $this->getMessage();
     }
 }
 // }}}
