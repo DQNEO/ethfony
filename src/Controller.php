@@ -698,16 +698,6 @@ class Ethna_Controller
     }
 
     /**
-     *  ゲートウェイモードを設定する
-     *
-     *  @access public
-     */
-    public function setGateway($gateway)
-    {
-        $this->gateway = $gateway;
-    }
-
-    /**
      *  アプリケーションのエントリポイント
      *
      *  @access public
