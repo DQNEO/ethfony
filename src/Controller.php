@@ -709,11 +709,7 @@ class Ethna_Controller
     public static function main($class_name, $action_name = "", $fallback_action_name = "")
     {
         $c = new $class_name;
-        $r = $c->trigger($action_name, $fallback_action_name);
-        $c->end();
-        if (Ethna::isError($r)) {
-            throw new \Exception($r->getMessage());
-        }
+        $c->trigger($action_name, $fallback_action_name);
     }
 
     /**
@@ -727,40 +723,9 @@ class Ethna_Controller
     public static function main_CLI($class_name, $action_name)
     {
         $c = new $class_name(GATEWAY_CLI);
-        $r = $c->trigger($action_name, "");
-        $c->end();
-        if (Ethna::isError($r)) {
-            throw new \Exception($r->getMessage());
-        }
+        $c->trigger($action_name);
     }
 
-    /**
-     *  フレームワークの処理を開始する
-     *
-     *  @access public
-     *  @param  mixed   $default_action_name    指定のアクション名
-     *  @param  mixed   $fallback_action_name   アクション名が決定できなかった場合に実行されるアクション名
-     *  @return mixed   0:正常終了 Ethna_Error:エラー
-     */
-    public function trigger($default_action_name = "", $fallback_action_name = "")
-    {
-        // trigger
-        switch ($this->getGateway()) {
-        case GATEWAY_WWW:
-            $r = $this->_trigger_WWW($default_action_name, $fallback_action_name);
-            if (Ethna::isError($r)) {
-                return $r;
-            }
-            break;
-        case GATEWAY_CLI:
-            $r = $this->_trigger_CLI($default_action_name);
-            if (Ethna::isError($r)) {
-                return $r;
-            }
-            break;
-        }
-
-    }
 
     /**
      *  フレームワークの処理を実行する(WWW)
@@ -772,9 +737,8 @@ class Ethna_Controller
      *  @access private
      *  @param  mixed   $default_action_name    指定のアクション名
      *  @param  mixed   $fallback_action_name   アクション名が決定できなかった場合に実行されるアクション名
-     *  @return mixed   0:正常終了 Ethna_Error:エラー
      */
-    private function _trigger_WWW($default_action_name = "", $fallback_action_name = "")
+    private function trigger($default_action_name = "", $fallback_action_name = "")
     {
         // アクション名の取得
         $action_name = $this->_getActionName($default_action_name, $fallback_action_name);
@@ -787,7 +751,10 @@ class Ethna_Controller
                 $action_obj = $this->_getAction($fallback_action_name);
             }
             if (is_null($action_obj)) {
-                return Ethna::raiseError("undefined action [%s]", E_APP_UNDEFINED_ACTION, $action_name);
+                $this->end();
+                $r = Ethna::raiseError("undefined action [%s]", E_APP_UNDEFINED_ACTION, $action_name);
+                throw new \Exception($r->getMessage());
+
             } else {
                 $action_name = $fallback_action_name;
             }
@@ -835,7 +802,8 @@ class Ethna_Controller
         unset($this->action_form->app_ne_vars);
         unset($this->action_form->form_vars);
 
-        return 0;
+        $this->end();
+
     }
 
     /**
