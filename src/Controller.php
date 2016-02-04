@@ -40,25 +40,6 @@ class Ethna_Controller
     /** @protected    array       アプリケーションディレクトリ */
     protected $directory = array();
 
-    /** @protected    array       アプリケーションディレクトリ(デフォルト) */
-    protected $directory_default = array(
-        'action'        => 'app/action',
-        'action_cli'    => 'app/action_cli',
-        'app'           => 'app',
-        'plugin'        => 'app/plugin',
-        'bin'           => 'bin',
-        'etc'           => 'etc',
-        'locale'        => 'locale',
-        'log'           => 'log',
-        'plugins'       => array(),
-        'resources'     => 'resources',
-        'template'      => 'template',
-        'template_c'    => 'tmp',
-        'tmp'           => 'tmp',
-        'view'          => 'app/view',
-        'www'           => 'www',
-        'test'          => 'app/test',
-    );
 
     /** @protected    array       DBアクセス定義 */
     protected $db = array(
@@ -74,22 +55,6 @@ class Ethna_Controller
     /** @protected    array       クラス設定 */
     public $class = array();
 
-    /** @protected    array       クラス設定(デフォルト) */
-    public $class_default = array(
-        'class'         => 'Ethna_ClassFactory',
-        'backend'       => 'Ethna_Backend',
-        'config'        => 'Ethna_Config',
-        'db'            => 'Ethna_DB',
-        'error'         => 'Ethna_ActionError',
-        'form'          => 'Ethna_ActionForm',
-        'i18n'          => 'Ethna_I18N',
-        'logger'        => 'Ethna_Logger',
-        'plugin'        => 'Ethna_Plugin',
-        'renderer'      => 'Ethna_Renderer_Smarty',
-        'session'       => 'Ethna_Session',
-        'view'          => 'Ethna_ViewClass',
-        'url_handler'   => 'Ethna_UrlHandler',
-    );
 
     /**
      * @protected    string ロケール名(e.x ja_JP, en_US 等),
@@ -674,20 +639,6 @@ class Ethna_Controller
             }
         }
 
-
-        // クラス設定の未定義値を補完
-        foreach ($this->class_default as $key => $val) {
-            if (isset($this->class[$key]) == false) {
-                $this->class[$key] = $val;
-            }
-        }
-
-        // ディレクトリ設定の未定義値を補完
-        foreach ($this->directory_default as $key => $val) {
-            if (isset($this->directory[$key]) == false) {
-                $this->directory[$key] = $val;
-            }
-        }
 
         // クラスファクトリオブジェクトの生成
         $class_factory = $this->class['class'];
