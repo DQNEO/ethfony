@@ -48,7 +48,6 @@ class Ethna_Controller
         'plugin'        => 'app/plugin',
         'bin'           => 'bin',
         'etc'           => 'etc',
-        'filter'        => 'app/filter',
         'locale'        => 'locale',
         'log'           => 'log',
         'plugins'       => array(),
@@ -92,10 +91,6 @@ class Ethna_Controller
         'url_handler'   => 'Ethna_UrlHandler',
     );
 
-    /** @protected    array       フィルタ設定 */
-    protected $filter = array(
-    );
-
     /**
      * @protected    string ロケール名(e.x ja_JP, en_US 等),
      *                  (ロケール名は ll_cc の形式。ll = 言語コード cc = 国コード)
@@ -125,9 +120,6 @@ class Ethna_Controller
 
     /** @protected    object  レンダラー */
     protected $renderer = null;
-
-    /** @protected    array   フィルターチェイン(Ethna_Filterオブジェクトの配列) */
-    protected $filter_chain = array();
 
     /** @protected    object  Ethna_ClassFactory  クラスファクトリオブジェクト */
     public $class_factory = null;
@@ -740,13 +732,12 @@ class Ethna_Controller
      *  @access public
      *  @param  string  $class_name     アプリケーションコントローラのクラス名
      *  @param  string  $action_name    実行するアクション名
-     *  @param  bool    $enable_filter  フィルタチェインを有効にするかどうか
      *  @static
      */
-    public static function main_CLI($class_name, $action_name, $enable_filter = true)
+    public static function main_CLI($class_name, $action_name)
     {
         $c = new $class_name(GATEWAY_CLI);
-        $r = $c->trigger($action_name, "", $enable_filter);
+        $r = $c->trigger($action_name, "");
         $c->end();
         if (Ethna::isError($r)) {
             throw new \Exception($r->getMessage());
@@ -759,24 +750,10 @@ class Ethna_Controller
      *  @access public
      *  @param  mixed   $default_action_name    指定のアクション名
      *  @param  mixed   $fallback_action_name   アクション名が決定できなかった場合に実行されるアクション名
-     *  @param  bool    $enable_filter  フィルタチェインを有効にするかどうか
      *  @return mixed   0:正常終了 Ethna_Error:エラー
      */
-    public function trigger($default_action_name = "", $fallback_action_name = "", $enable_filter = true)
+    public function trigger($default_action_name = "", $fallback_action_name = "")
     {
-        // フィルターの生成
-        if ($enable_filter) {
-            $this->_createFilterChain();
-        }
-
-        // 実行前フィルタ
-        for ($i = 0; $i < count($this->filter_chain); $i++) {
-            $r = $this->filter_chain[$i]->preFilter();
-            if (Ethna::isError($r)) {
-                return $r;
-            }
-        }
-
         // trigger
         switch ($this->getGateway()) {
         case GATEWAY_WWW:
@@ -793,13 +770,6 @@ class Ethna_Controller
             break;
         }
 
-        // 実行後フィルタ
-        for ($i = count($this->filter_chain) - 1; $i >= 0; $i--) {
-            $r = $this->filter_chain[$i]->postFilter();
-            if (Ethna::isError($r)) {
-                return $r;
-            }
-        }
         $this->logger->log(LOG_DEBUG, "\n =============== END OF RUQUEST ================\n");
 
     }
@@ -835,14 +805,6 @@ class Ethna_Controller
             }
         }
 
-        // アクション実行前フィルタ
-        for ($i = 0; $i < count($this->filter_chain); $i++) {
-            $r = $this->filter_chain[$i]->preActionFilter($action_name);
-            if ($r != null) {
-                $this->logger->log(LOG_DEBUG, 'action [%s] -> [%s] by %s', $action_name, $r, get_class($this->filter_chain[$i]));
-                $action_name = $r;
-            }
-        }
         $this->action_name = $action_name;
 
         // オブジェクト生成
@@ -870,15 +832,6 @@ class Ethna_Controller
         $ac = new $action_class_name($backend);
         $backend->setActionClass($ac);
         $forward_name = $this->perform($ac);
-
-        // アクション実行後フィルタ
-        for ($i = count($this->filter_chain) - 1; $i >= 0; $i--) {
-            $r = $this->filter_chain[$i]->postActionFilter($action_name, $forward_name);
-            if ($r != null) {
-                $this->logger->log(LOG_DEBUG, 'forward [%s] -> [%s] by %s', $forward_name, $r, get_class($this->filter_chain[$i]));
-                $forward_name = $r;
-            }
-        }
 
         // コントローラで遷移先を決定する(オプション)
         $forward_name = $this->_sortForward($action_name, $forward_name);
@@ -1151,24 +1104,6 @@ class Ethna_Controller
     protected function _sortForward($action_name, $retval)
     {
         return $retval;
-    }
-
-    /**
-     *  フィルタチェインを生成する
-     *
-     *  @access protected
-     */
-    protected function _createFilterChain()
-    {
-        $this->filter_chain = array();
-        foreach ($this->filter as $filter) {
-            $filter_plugin = $this->plugin->getPlugin('Filter', $filter);
-            if (Ethna::isError($filter_plugin)) {
-                continue;
-            }
-
-            $this->filter_chain[] = $filter_plugin;
-        }
     }
 
     /**
