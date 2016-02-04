@@ -250,11 +250,6 @@ class Ethna_Controller
         // プラグインオブジェクトの用意
         $this->plugin = $this->getPlugin();
 
-        //// assert (experimental)
-        //if ($this->config->get('debug') === false) {
-        //    ini_set('assert.active', 0);
-        //}
-
         // ログ出力開始
         $this->logger = $this->getLogger();
         $this->plugin->setLogger($this->logger);
