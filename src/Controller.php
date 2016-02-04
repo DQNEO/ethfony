@@ -181,6 +181,8 @@ class Ethna_Controller
      */
     public function __construct($gateway)
     {
+        $this->gateway = $gateway;
+
         mb_internal_encoding($this->encoding);
         mb_regex_encoding($this->encoding);
         $GLOBALS['_Ethna_controller'] = $this;
@@ -191,7 +193,6 @@ class Ethna_Controller
             }
         }
 
-        $this->gateway = $gateway;
 
         // クラス設定の未定義値を補完
         foreach ($this->class_default as $key => $val) {
