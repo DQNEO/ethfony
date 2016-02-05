@@ -1111,29 +1111,10 @@ class Ethna_Controller
             return null;
         }
 
-        if (isset($this->forward[$forward_name])) {
-            $forward_obj = $this->forward[$forward_name];
-        } else {
-            $forward_obj = array();
-        }
-
-        if (isset($forward_obj['view_name'])) {
-            $class_name = $forward_obj['view_name'];
-            if (class_exists($class_name)) {
-                return $class_name;
-            }
-        } else {
-            $class_name = null;
-        }
+        $class_name = null;
 
         // viewのインクルード
-        $this->_includeViewScript($forward_obj, $forward_name);
-
-        if (is_null($class_name) == false && class_exists($class_name)) {
-            return $class_name;
-        } else if (is_null($class_name) == false) {
-            $this->logger->log(LOG_WARNING, 'stated view class is not defined [%s] -> try default', $class_name);
-        }
+        $this->_includeViewScript([], $forward_name);
 
         $class_name = $this->getDefaultViewClass($forward_name);
         if (class_exists($class_name)) {
@@ -1377,28 +1358,11 @@ class Ethna_Controller
      *  ただし、インクルードしたファイルにクラスが正しく定義されているかどうかは保証しない
      *
      *  @access private
-     *  @param  array   $forward_obj    遷移定義
      *  @param  string  $forward_name   遷移名
      */
-    protected function _includeViewScript($forward_obj, $forward_name)
+    protected function _includeViewScript($void, $forward_name)
     {
         $view_dir = $this->getViewdir();
-
-        // view_path属性チェック
-        if (isset($forward_obj['view_path'])) {
-            // フルパス指定サポート
-            $tmp_path = $forward_obj['view_path'];
-            if (Ethna_Util::isAbsolute($tmp_path) == false) {
-                $tmp_path = $view_dir . $tmp_path;
-            }
-
-            if (file_exists($tmp_path) == false) {
-                $this->logger->log(LOG_WARNING, 'view_path file not found [%s] -> try default', $tmp_path);
-            } else {
-                include_once $tmp_path;
-                return;
-            }
-        }
 
         // デフォルトチェック
         $view_path = $this->getDefaultViewPath($forward_name);
