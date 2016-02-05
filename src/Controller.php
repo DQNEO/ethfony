@@ -366,23 +366,6 @@ class Ethna_Controller
     }
 
     /**
-     *  Setter for ViewClass
-     *  if the ::$view class is not null, then cannot set the view
-     *
-     *  @access public
-     *  @param  $view object  Ethna_ViewClass
-     *  @return boolean
-     */
-    public function setView($view)
-    {
-        if ($this->view !== null) {
-            return false;
-        }
-        $this->view = $view;
-        return true;
-    }
-
-    /**
      *  backendオブジェクトのアクセサ
      *
      *  @access public
