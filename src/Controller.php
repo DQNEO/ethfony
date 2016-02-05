@@ -34,17 +34,8 @@ class Ethna_Controller
     /** @protected    string      アプリケーションベースURL */
     protected $url = '';
 
-    /** @protected    string      アプリケーションDSN(Data Source Name) */
-    protected $dsn;
-
     /** @protected    array       アプリケーションディレクトリ */
     protected $directory = array();
-
-
-    /** @protected    array       DBアクセス定義 */
-    protected $db = array(
-        ''              => DB_TYPE_RW,
-    );
 
     /** @protected    array       拡張子設定 */
     protected $ext = array(
@@ -190,59 +181,6 @@ class Ethna_Controller
     public function getAppId()
     {
         return ucfirst(strtolower($this->appid));
-    }
-
-    /**
-     *  DSNを返す
-     *
-     *  @access public
-     *  @param  string  $db_key DBキー
-     *  @return string  DSN
-     */
-    public function getDSN($db_key = "")
-    {
-        if (isset($this->dsn[$db_key]) == false) {
-            return null;
-        }
-        return $this->dsn[$db_key];
-    }
-
-    /**
-     *  DSNの持続接続設定を返す
-     *
-     *  @access public
-     *  @param  string  $db_key DBキー
-     *  @return bool    true:persistent false:non-persistent(あるいは設定無し)
-     */
-    public function getDSN_persistent($db_key = "")
-    {
-        $key = sprintf("dsn%s_persistent", $db_key == "" ? "" : "_$db_key");
-
-        $dsn_persistent = $this->config->get($key);
-        if (is_null($dsn_persistent)) {
-            return false;
-        }
-        return $dsn_persistent;
-    }
-
-    /**
-     *  DB設定を返す
-     *
-     *  @access public
-     *  @param  string  $db_key DBキー("", "r", "rw", "default", "blog_r"...)
-     *  @return string  $db_keyに対応するDB種別定義(設定が無い場合はnull)
-     */
-    public function getDBType($db_key = null)
-    {
-        if (is_null($db_key)) {
-            // 一覧を返す
-            return $this->db;
-        }
-
-        if (isset($this->db[$db_key]) == false) {
-            return null;
-        }
-        return $this->db[$db_key];
     }
 
     /**
@@ -676,7 +614,6 @@ class Ethna_Controller
         $this->locale = 'ja_JP';
 
         $this->config = $this->getConfig();
-        $this->dsn = $this->_prepareDSN();
         $this->url = $this->config->get('url');
         if (empty($this->url) && PHP_SAPI != 'cli') {
             $this->url = Ethna_Util::getUrlFromRequestUri();
@@ -1501,57 +1438,6 @@ class Ethna_Controller
             }
         }
         closedir($dh);
-    }
-
-    /**
-     *  設定ファイルのDSN定義から使用するデータを再構築する(スレーブアクセス分岐等)
-     *
-     *  DSNの定義方法(デフォルト:設定ファイル)を変えたい場合はここをオーバーライドする
-     *
-     *  @access protected
-     *  @return array   DSN定義(array('DBキー1' => 'dsn1', 'DBキー2' => 'dsn2', ...))
-     */
-    protected function _prepareDSN()
-    {
-        $r = array();
-
-        foreach ($this->db as $key => $value) {
-            $config_key = "dsn";
-            if ($key != "") {
-                $config_key .= "_$key";
-            }
-            $dsn = $this->config->get($config_key);
-            if (is_array($dsn)) {
-                // 種別1つにつき複数DSNが定義されている場合はアクセス分岐
-                $dsn = $this->_selectDSN($key, $dsn);
-            }
-            $r[$key] = $dsn;
-        }
-        return $r;
-    }
-
-    /**
-     *  DSNのアクセス分岐を行う
-     *
-     *  スレーブサーバへの振分け処理(デフォルト:ランダム)を変更したい場合はこのメソッドをオーバーライドする
-     *
-     *  @access protected
-     *  @param  string  $type       DB種別
-     *  @param  array   $dsn_list   DSN一覧
-     *  @return string  選択されたDSN
-     */
-    protected function _selectDSN($type, $dsn_list)
-    {
-        if (is_array($dsn_list) == false) {
-            return $dsn_list;
-        }
-
-        // デフォルト:ランダム
-        list($usec, $sec) = explode(' ', microtime());
-        mt_srand($sec + ((float) $usec * 100000));
-        $n = mt_rand(0, count($dsn_list)-1);
-
-        return $dsn_list[$n];
     }
 
     /**

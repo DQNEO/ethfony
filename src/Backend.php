@@ -62,9 +62,6 @@ class Ethna_Backend
     /** @protected    object  Ethna_Plugin        プラグインオブジェクト */
     public $plugin;
 
-    /** @protected    array   Ethna_DBオブジェクトを格納した配列 */
-    public $db_list;
-
     /** @protected    object  Ethna_Logger        ログオブジェクト */
     public $logger;
 
@@ -97,7 +94,6 @@ class Ethna_Backend
 
         $this->session = $this->controller->getSession();
         $this->plugin = $this->controller->getPlugin();
-        $this->db_list = array();
         $this->logger = $this->controller->getLogger();
     }
 
@@ -317,127 +313,4 @@ class Ethna_Backend
         $this->logger->log($level, $message);
     }
 
-    /**
-     *  DBオブジェクトを返す
-     *
-     *  @access public
-     *  @param  string  $db_key DBキー
-     *  @return mixed   Ethna_DB:DBオブジェクト null:DSN設定なし Ethna_Error:エラー
-     *  @todo   この中でnewしないでclass factoryを利用する
-     */
-    public function getDB($db_key = "")
-    {
-        $null = null;
-        $db_varname = $this->_getDBVarname($db_key);
-
-        if (Ethna::isError($db_varname)) {
-            return $db_varname;
-        }
-
-        if (isset($this->db_list[$db_varname]) && $this->db_list[$db_varname] != null) {
-            return $this->db_list[$db_varname];
-        }
-
-        $dsn = $this->controller->getDSN($db_key);
-
-        if ($dsn == "") {
-            // DB接続不要
-            return $null;
-        }
-
-        $dsn_persistent = $this->controller->getDSN_persistent($db_key);
-
-        $class_factory = $this->controller->getClassFactory();
-        $db_class_name = $class_factory->getObjectName('db');
-
-        // BC: Ethna_DB -> Ethna_DB_PEAR
-        if ($db_class_name == 'Ethna_DB') {
-            $db_class_name = 'Ethna_DB_PEAR';
-        }
-        if (class_exists($db_class_name) === false) {
-            $class_factory->_include($db_class_name);
-        }
-
-        $this->db_list[$db_varname] = new $db_class_name($this->controller, $dsn, $dsn_persistent);
-        $r = $this->db_list[$db_varname]->connect();
-        if (Ethna::isError($r)) {
-            $this->db_list[$db_varname] = null;
-            return $r;
-        }
-
-        register_shutdown_function(array($this, 'shutdownDB'));
-
-        return $this->db_list[$db_varname];
-    }
-
-    /**
-     *  DBオブジェクト(全て)を取得する
-     *
-     *  @access public
-     *  @return mixed   array:Ethna_DBオブジェクトの一覧 Ethan_Error:(いずれか一つ以上の接続で)エラー
-     */
-    public function getDBList()
-    {
-        $r = array();
-        $db_define_list = $this->controller->getDBType();
-        foreach ($db_define_list as $db_key => $db_type) {
-            $db = $this->getDB($db_key);
-            if (Ethna::isError($db)) {
-                return $r;
-            }
-            $elt = array();
-            $elt['db'] = $db;
-            $elt['key'] = $db_key;
-            $elt['type'] = $db_type;
-            $elt['varname'] = "db";
-            if ($db_key != "") {
-                $elt['varname'] = sprintf("db_%s", strtolower($db_key));
-            }
-            $r[] = $elt;
-        }
-        return $r;
-    }
-
-    /**
-     *  DBコネクションを切断する
-     *
-     *  @access public
-     */
-    public function shutdownDB()
-    {
-        foreach (array_keys($this->db_list) as $key) {
-            if ($this->db_list[$key] != null && $this->db_list[$key]->isValid()) {
-                $this->db_list[$key]->disconnect();
-                unset($this->db_list[$key]);
-            }
-        }
-    }
-
-    /**
-     *  指定されたDBキーに対応する(当該DBオブジェクトを格納するための)メンバ変数名を取得する
-     *
-     *  正直もう要らないのですが、後方互換性維持のために一応残してある状態です
-     *  (Ethna_AppManagerクラスなどで、$this->dbとかしている箇所が少なからずあ
-     *  るので)
-     *
-     *  @access private
-     *  @param  string  $db_key DBキー
-     *  @return mixed   string:メンバ変数名 Ethna_Error:不正なDB種別
-     */
-    protected function _getDBVarname($db_key = "")
-    {
-        $r = $this->controller->getDBType($db_key);
-        if (is_null($r)) {
-            return Ethna::raiseError("Undefined DB Type [%s]", E_DB_INVALIDTYPE, $db_key);
-        }
-
-        if ($db_key == "") {
-            $db_varname = "";
-        } else {
-            $db_varname = sprintf("%s", strtolower($db_key));
-        }
-
-        return $db_varname;
-    }
 }
-// }}}
