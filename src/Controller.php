@@ -739,10 +739,10 @@ class Ethna_Controller
         $backend->setActionClass($ac);
         $forward_name = $this->perform($ac);
 
-        if ($forward_name != null) {
-            $this->renderView($forward_name, $backend);
+        if ($forward_name === null) {
             $this->end();
         } else {
+            $this->renderView($forward_name, $backend);
             $this->end();
         }
 
