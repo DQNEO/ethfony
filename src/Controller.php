@@ -740,14 +740,21 @@ class Ethna_Controller
         $forward_name = $this->perform($ac);
 
         if ($forward_name != null) {
-            $view_class_name = $this->getViewClassName($forward_name);
-            $this->view = new $view_class_name($backend, $forward_name, $this->_getForwardPath($forward_name));
-            $this->view->preforward();
-            $this->view->forward();
+            $this->renderView($forward_name, $backend);
+            $this->end();
+        } else {
+            $this->end();
         }
 
-        $this->end();
 
+    }
+
+    protected function renderView(string $forward_name, $backend)
+    {
+        $view_class_name = $this->getViewClassName($forward_name);
+        $this->view = new $view_class_name($backend, $forward_name, $this->_getForwardPath($forward_name));
+        $this->view->preforward();
+        $this->view->forward();
     }
 
     /**
