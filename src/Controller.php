@@ -59,18 +59,6 @@ class Ethna_Controller
     /** @protected    string  現在実行中のアクション名 */
     public $action_name;
 
-    /** @protected    array   forward定義 */
-    protected $forward = array();
-
-    /** @protected    array   デフォルトのforward定義 */
-    protected $forward_default = array(
-        '403' => array( 'view_name' => 'Ethna_View_403',),
-        '404' => array( 'view_name' => 'Ethna_View_404',),
-        '500' => array( 'view_name' => 'Ethna_View_500',),
-        'json' => array( 'view_name' => 'Ethna_View_Json',),
-        'redirect' => array( 'view_name' => 'Ethna_View_Redirect',),
-    );
-
     /** @protected    array   アプリケーションマネージャ定義 */
     protected $manager = array();
 
@@ -605,11 +593,6 @@ class Ethna_Controller
                 }
             }
         }
-
-        // 遷移先設定をマージ
-        // 但し、キーは完全に維持する
-        $this->forward = $this->forward + $this->forward_default;
-
         // 初期設定
         $this->locale = 'ja_JP';
 
@@ -689,7 +672,7 @@ class Ethna_Controller
     protected function renderView(string $forward_name, $backend)
     {
         $view_class_name = $this->getViewClassName($forward_name);
-        $this->view = new $view_class_name($backend, $forward_name, $this->_getForwardPath($forward_name));
+        $this->view = new $view_class_name($backend, $forward_name, $this->getTemplatePath($forward_name));
         $this->view->preforward();
         $this->view->forward();
     }
@@ -1173,9 +1156,9 @@ class Ethna_Controller
      *  @param  string  $forward_name   forward名
      *  @return string  forwardパス名
      */
-    public function getDefaultForwardPath($forward_name)
+    public function getTemplatePath($forward_name)
     {
-        return str_replace('_', '/', $forward_name) . '.' . $this->ext['tpl'];
+        return str_replace('_', '/', $forward_name) . '.tpl';
     }
 
     /**
@@ -1196,29 +1179,6 @@ class Ethna_Controller
         return str_replace('/', '_', $forward_path);
     }
 
-    /**
-     *  遷移名からテンプレートファイルのパス名を取得する
-     *
-     *  @access private
-     *  @param  string  $forward_name   forward名
-     *  @return string  テンプレートファイルのパス名
-     */
-    public function _getForwardPath($forward_name)
-    {
-        $forward_obj = null;
-
-        if (isset($this->forward[$forward_name]) == false) {
-            // try default
-            $this->forward[$forward_name] = array();
-        }
-        $forward_obj = $this->forward[$forward_name];
-        if (isset($forward_obj['forward_path']) == false) {
-            // 省略値補正
-            $forward_obj['forward_path'] = $this->getDefaultForwardPath($forward_name);
-        }
-
-        return $forward_obj['forward_path'];
-    }
 
     /**
      *  レンダラを取得する
