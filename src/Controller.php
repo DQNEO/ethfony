@@ -1071,14 +1071,8 @@ class Ethna_Controller
      *  @param  string  $forward_name   遷移先の名称
      *  @return string  view classのクラス名
      */
-    public function getViewClassName($forward_name)
+    public function getViewClassName(string $forward_name)
     {
-        if ($forward_name == null) {
-            return null;
-        }
-
-        $class_name = null;
-
         // viewのインクルード
         $this->_includeViewScript([], $forward_name);
 
