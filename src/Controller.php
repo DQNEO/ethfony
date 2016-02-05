@@ -1073,8 +1073,7 @@ class Ethna_Controller
      */
     public function getViewClassName(string $forward_name)
     {
-        // viewのインクルード
-        $this->_includeViewScript([], $forward_name);
+        $this->_includeViewScript($forward_name);
 
         $class_name = $this->getDefaultViewClass($forward_name);
         if (class_exists($class_name)) {
@@ -1297,7 +1296,7 @@ class Ethna_Controller
      *  @access private
      *  @param  string  $forward_name   遷移名
      */
-    protected function _includeViewScript($void, $forward_name)
+    protected function _includeViewScript($forward_name)
     {
         $view_dir = $this->getViewdir();
 
