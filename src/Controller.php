@@ -739,9 +739,6 @@ class Ethna_Controller
         $backend->setActionClass($ac);
         $forward_name = $this->perform($ac);
 
-        // コントローラで遷移先を決定する(オプション)
-        $forward_name = $this->_sortForward($action_name, $forward_name);
-
         if ($forward_name != null) {
             $view_class_name = $this->getViewClassName($forward_name);
             $this->view = new $view_class_name($backend, $forward_name, $this->_getForwardPath($forward_name));
@@ -978,19 +975,6 @@ class Ethna_Controller
         }
 
         return $action_obj;
-    }
-
-    /**
-     *  アクション名とアクションクラスからの戻り値に基づいて遷移先を決定する
-     *
-     *  @access protected
-     *  @param  string  $action_name    アクション名
-     *  @param  string  $retval         アクションクラスからの戻り値
-     *  @return string  遷移先
-     */
-    protected function _sortForward($action_name, $retval)
-    {
-        return $retval;
     }
 
     /**
