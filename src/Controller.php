@@ -775,9 +775,7 @@ class Ethna_Controller
             return $forward_name;
         }
 
-        $forward_name = $ac->perform();
-
-        return $forward_name;
+        return $ac->perform();
     }
 
     /**
