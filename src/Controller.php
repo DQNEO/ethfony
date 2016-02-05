@@ -761,8 +761,6 @@ class Ethna_Controller
      */
     protected function perform($ac)
     {
-        // アクションの実行
-        $forward_name = null;
         $forward_name = $ac->authenticate();
         if ($forward_name === false) {
             return null;
