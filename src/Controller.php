@@ -1308,16 +1308,4 @@ class Ethna_Controller
         return $this->gateway == GATEWAY_CLI ? true : false;
     }
 
-    /**
-     *  CLI実行中フラグを設定する
-     *
-     *  @access public
-     *  @param  bool    CLI実行中フラグ
-     *  @obsolete
-     */
-    public function setCLI($cli)
-    {
-        $this->gateway = $cli ? GATEWAY_CLI : $this->_getDefaultGateway();
-    }
 }
-// }}}
