@@ -656,7 +656,7 @@ class Ethna_Controller
     protected function createView(string $forward_name, $backend): Ethna_ViewClass
     {
         $view_dir = $this->getViewdir();
-        $view_path = preg_replace_callback('/_(.)/', function(array $matches){return '/' . strtoupper($matches[1]); }, ucfirst($forward_name)) . '.' . $this->getExt('php');
+        $view_path = preg_replace_callback('/_(.)/', function(array $matches){return '/' . strtoupper($matches[1]); }, ucfirst($forward_name)) . '.php';
         $this->logger->log(LOG_DEBUG, "default view path [%s]", $view_path);
 
         if (file_exists($view_dir . $view_path)) {
