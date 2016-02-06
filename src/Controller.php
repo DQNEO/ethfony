@@ -7,6 +7,49 @@
  *  @package    Ethna
  *  @version    $Id$
  */
+class Ethna_ViewResolver
+{
+    public function getView(string $forward_name, $backend, $logger, $view_dir, $appId, $baseViewClassName): Ethna_ViewClass
+    {
+        $view_path = preg_replace_callback('/_(.)/', function(array $matches){return '/' . strtoupper($matches[1]); }, ucfirst($forward_name)) . '.php';
+        $logger->log(LOG_DEBUG, "default view path [%s]", $view_path);
+
+        if (file_exists($view_dir . $view_path)) {
+            include_once $view_dir . $view_path;
+        } else {
+            $logger->log(LOG_DEBUG, 'default view file not found [%s]', $view_path);
+        }
+
+        $postfix = preg_replace_callback('/_(.)/', function(array $matches){return strtoupper($matches[1]);}, ucfirst($forward_name));
+        $class_name = sprintf("%s_%sView_%s", $appId, "", $postfix);
+        $logger->log(LOG_DEBUG, "view class [%s]", $class_name);
+        if (! class_exists($class_name)) {
+            $class_name = $baseViewClassName;
+            $logger->log(LOG_DEBUG, 'view class is not defined for [%s] -> use default [%s]', $forward_name, $class_name);
+
+        }
+
+        return new $class_name($backend, $forward_name, $this->getTemplatePath($forward_name));
+    }
+
+    /**
+     *  遷移名に対応するテンプレートパス名が省略された場合のデフォルトパス名を返す
+     *
+     *  デフォルトでは"foo_bar"というforward名が"foo/bar" + テンプレート拡張子となる
+     *  ので好み応じてオーバライドする
+     *
+     *  @access public
+     *  @param  string  $forward_name   forward名
+     *  @return string  forwardパス名
+     */
+    protected function getTemplatePath($forward_name)
+    {
+        return str_replace('_', '/', $forward_name) . '.tpl';
+    }
+
+
+
+}
 
 /**
  *  コントローラクラス
@@ -647,34 +690,13 @@ class Ethna_Controller
             return;
         }
 
-        $this->view = $this->createView($forward_name, $backend, $this->logger, $this->getViewdir(), $this->getAppId(), $this->class_factory->getObjectName('view'));
+        $viewResolver = new Ethna_ViewResolver();
+        $this->view = $viewResolver->getView($forward_name, $backend, $this->logger, $this->getViewdir(), $this->getAppId(), $this->class_factory->getObjectName('view'));
         $this->view->send();
         $this->end();
 
     }
 
-    protected function createView(string $forward_name, $backend, $logger, $view_dir, $appId, $baseViewClassName): Ethna_ViewClass
-    {
-        $view_path = preg_replace_callback('/_(.)/', function(array $matches){return '/' . strtoupper($matches[1]); }, ucfirst($forward_name)) . '.php';
-        $logger->log(LOG_DEBUG, "default view path [%s]", $view_path);
-
-        if (file_exists($view_dir . $view_path)) {
-            include_once $view_dir . $view_path;
-        } else {
-            $logger->log(LOG_DEBUG, 'default view file not found [%s]', $view_path);
-        }
-
-        $postfix = preg_replace_callback('/_(.)/', function(array $matches){return strtoupper($matches[1]);}, ucfirst($forward_name));
-        $class_name = sprintf("%s_%sView_%s", $appId, "", $postfix);
-        $logger->log(LOG_DEBUG, "view class [%s]", $class_name);
-        if (! class_exists($class_name)) {
-            $class_name = $baseViewClassName;
-            $logger->log(LOG_DEBUG, 'view class is not defined for [%s] -> use default [%s]', $forward_name, $class_name);
-
-        }
-
-        return new $class_name($backend, $forward_name, $this->getTemplatePath($forward_name));
-    }
 
     /**
      *  アクションを実行する
@@ -1092,21 +1114,6 @@ class Ethna_Controller
      */
     public function getViewClassName(string $forward_name)
     {
-    }
-
-    /**
-     *  遷移名に対応するテンプレートパス名が省略された場合のデフォルトパス名を返す
-     *
-     *  デフォルトでは"foo_bar"というforward名が"foo/bar" + テンプレート拡張子となる
-     *  ので好み応じてオーバライドする
-     *
-     *  @access public
-     *  @param  string  $forward_name   forward名
-     *  @return string  forwardパス名
-     */
-    public function getTemplatePath($forward_name)
-    {
-        return str_replace('_', '/', $forward_name) . '.tpl';
     }
 
     /**
