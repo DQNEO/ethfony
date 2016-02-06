@@ -28,8 +28,6 @@ class Ethna_ActionClassCLI extends Ethna_ActionClass
     public function perform()
     {
         parent::perform();
-        $_SERVER['REMOTE_ADDR'] = "0.0.0.0";
-        $_SERVER['HTTP_USER_AGENT'] = "";
     }
 }
 // }}}
