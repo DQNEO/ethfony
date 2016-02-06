@@ -645,6 +645,9 @@ class Ethna_Controller
         } else {
             $viewResolver = new Ethna_ViewResolver($backend, $this->logger, $this->getViewdir(), $this->getAppId(), $this->class_factory->getObjectName('view'));
             $res = $ac->run($viewResolver);
+            if (is_string($res)) {
+                throw new \Exception('action MUST not return string');
+            }
             if ($res === null) {
                 $this->end();
                 return;
