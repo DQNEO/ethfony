@@ -636,6 +636,12 @@ class Ethna_Controller
         $backend->setActionClass($ac);
         $forward_name = $this->perform($ac);
 
+        //CLIの場合はperformの戻り値を捨てて終了する
+        if ($this->getGateway() === GATEWAY_CLI) {
+            $this->end();
+            return;
+        }
+
         if ($forward_name === null) {
             $this->end();
         } else {
