@@ -1,5 +1,4 @@
 <?php
-// vim: foldmethod=marker
 /**
  *  Controller.php
  *
@@ -9,7 +8,6 @@
  *  @version    $Id$
  */
 
-// {{{ Ethna_Controller
 /**
  *  コントローラクラス
  *
@@ -21,10 +19,6 @@
  */
 class Ethna_Controller
 {
-    /**#@+
-     *  @access protected
-     */
-
     /** @var    string      アプリケーションID */
     protected $appid = 'ETHNA';
 
