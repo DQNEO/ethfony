@@ -644,12 +644,12 @@ class Ethna_Controller
 
         if ($forward_name === null) {
             $this->end();
-        } else {
-            $this->view = $this->createView($forward_name, $backend);
-            $this->view->send();
-            $this->end();
+            return;
         }
 
+        $this->view = $this->createView($forward_name, $backend);
+        $this->view->send();
+        $this->end();
 
     }
 
