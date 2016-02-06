@@ -648,6 +648,13 @@ class Ethna_Controller
             return;
         }
 
+        if ($forward_name instanceof RedirectResponse) {
+            $forward_name->send();
+            $this->end();
+            exit;
+        }
+
+
         $viewResolver = new Ethna_ViewResolver($backend, $this->logger, $this->getViewdir(), $this->getAppId());
         $this->view = $viewResolver->getView($forward_name, $this->class_factory->getObjectName('view'));
         $this->view->send();
