@@ -112,23 +112,24 @@ class Ethna_ActionClass
         return null;
     }
 
+    /** @var  Ethna_ViewResolver  */
+    protected $viewResolver;
+
     public function run(Ethna_ViewResolver $viewResolver)
     {
+        $this->viewResolver = $viewResolver;
+
         $forward_name = $this->authenticate();
         if ($forward_name === false) {
             return null;
-        } else if (is_string($forward_name)) {
-            return $viewResolver->getView($forward_name);
         } else if ($forward_name !== null) {
-            //Redirect Resposne
+            //Redirect Resposne or Ethna_ViewClass
             return $forward_name;
         }
 
         $forward_name = $this->prepare();
         if ($forward_name === false) {
             return null;
-        } else if (is_string($forward_name)) {
-            return $viewResolver->getView($forward_name);
         } else if ($forward_name !== null) {
             return $forward_name;
         }
@@ -136,8 +137,6 @@ class Ethna_ActionClass
         $forward_name = $this->perform();
         if ($forward_name === false) {
             return null;
-        } else if (is_string($forward_name)) {
-            return $viewResolver->getView($forward_name);
         } else if ($forward_name !== null) {
             return $forward_name;
         }
