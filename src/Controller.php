@@ -1099,7 +1099,7 @@ class Ethna_Controller
 
         $postfix = preg_replace_callback('/_(.)/', function(array $matches){return strtoupper($matches[1]);}, ucfirst($forward_name));
         $r = sprintf("%s_%sView_%s", $this->getAppId(), "", $postfix);
-        $this->logger->log(LOG_DEBUG, "default view class [%s]", $r);
+        $this->logger->log(LOG_DEBUG, "view class [%s]", $r);
 
         return $r;
     }
