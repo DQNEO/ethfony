@@ -1088,18 +1088,17 @@ class Ethna_Controller
     /**
      *  遷移名に対応するビュークラス名が省略された場合のデフォルトクラス名を返す
      *
-     *  デフォルトでは[プロジェクトID]_View_[遷移名]となるので好み応じてオーバライドする
+     *  [appid]_View_[遷移名]となる
      *
      *  @access public
      *  @param  string  $forward_name   forward名
      *  @return string  view classクラス名
      */
-    public function getDefaultViewClass($forward_name, $gateway = null)
+    public function getDefaultViewClass($forward_name)
     {
-        $gateway_prefix = $this->_getGatewayPrefix($gateway);
 
         $postfix = preg_replace_callback('/_(.)/', function(array $matches){return strtoupper($matches[1]);}, ucfirst($forward_name));
-        $r = sprintf("%s_%sView_%s", $this->getAppId(), $gateway_prefix ? $gateway_prefix . "_" : "", $postfix);
+        $r = sprintf("%s_%sView_%s", $this->getAppId(), "", $postfix);
         $this->logger->log(LOG_DEBUG, "default view class [%s]", $r);
 
         return $r;
