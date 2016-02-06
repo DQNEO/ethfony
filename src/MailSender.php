@@ -288,8 +288,7 @@ class Ethna_MailSender
     function getTemplateEngine()
     {
         $c = $this->backend->getController();
-        $renderer = $c->getRenderer();
-        return $renderer;
+        return $c->getRenderer();
     }
 }
 // }}}
