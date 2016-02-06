@@ -276,8 +276,7 @@ class Ethna_MailSender
      */
     function getRenderer()
     {
-        $_ret_object = $this->getTemplateEngine();
-        return $_ret_object;
+        return $this->getTemplateEngine();
     }
 
     /**
