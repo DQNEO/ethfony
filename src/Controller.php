@@ -635,30 +635,30 @@ class Ethna_Controller
         $action_class_name = $this->getActionClassName($action_name);
         $ac = new $action_class_name($backend);
         $backend->setActionClass($ac);
-        $forward_name = $ac->run();
 
-        //CLIの場合はperformの戻り値を捨てて終了する
         if ($this->getGateway() === GATEWAY_CLI) {
+            $ac->prepare();
+            $ac->perform();
             $this->end();
-            return;
-        }
+        } else {
+            $forward_name = $ac->run();
+            if ($forward_name === null) {
+                $this->end();
+                return;
+            }
 
-        if ($forward_name === null) {
+            if ($forward_name instanceof RedirectResponse) {
+                $forward_name->send();
+                $this->end();
+                exit;
+            }
+
+
+            $viewResolver = new Ethna_ViewResolver($backend, $this->logger, $this->getViewdir(), $this->getAppId());
+            $this->view = $viewResolver->getView($forward_name, $this->class_factory->getObjectName('view'));
+            $this->view->send();
             $this->end();
-            return;
         }
-
-        if ($forward_name instanceof RedirectResponse) {
-            $forward_name->send();
-            $this->end();
-            exit;
-        }
-
-
-        $viewResolver = new Ethna_ViewResolver($backend, $this->logger, $this->getViewdir(), $this->getAppId());
-        $this->view = $viewResolver->getView($forward_name, $this->class_factory->getObjectName('view'));
-        $this->view->send();
-        $this->end();
 
     }
 
