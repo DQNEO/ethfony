@@ -1290,7 +1290,6 @@ class Ethna_Controller
             return;
         } else {
             $this->logger->log(LOG_DEBUG, 'default view file not found [%s]', $view_path);
-            $view_path = null;
         }
     }
 }
