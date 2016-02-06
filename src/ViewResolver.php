@@ -8,16 +8,18 @@ class Ethna_ViewResolver
     private $logger;
     private $viewDir;
     private $appId;
+    private $baseViewClassName;
 
-    public function __construct($backend, $logger, $viewDir, $appId)
+    public function __construct($backend, $logger, $viewDir, $appId, $baseViewClassName)
     {
         $this->backend = $backend;
         $this->logger = $logger;
         $this->viewDir = $viewDir;
         $this->appId = $appId;
+        $this->baseViewClassName = $baseViewClassName;
     }
 
-    public function getView(string $forward_name, $baseViewClassName): Ethna_ViewClass
+    public function getView(string $forward_name): Ethna_ViewClass
     {
         $view_path = preg_replace_callback('/_(.)/', function(array $matches){return '/' . strtoupper($matches[1]); }, ucfirst($forward_name)) . '.php';
         $this->logger->log(LOG_DEBUG, "default view path [%s]", $view_path);
@@ -32,7 +34,7 @@ class Ethna_ViewResolver
         $class_name = sprintf("%s_%sView_%s", $this->appId, "", $postfix);
         $this->logger->log(LOG_DEBUG, "view class [%s]", $class_name);
         if (! class_exists($class_name)) {
-            $class_name = $baseViewClassName;
+            $class_name = $this->baseViewClassName;
             $this->logger->log(LOG_DEBUG, 'view class is not defined for [%s] -> use default [%s]', $forward_name, $class_name);
 
         }
