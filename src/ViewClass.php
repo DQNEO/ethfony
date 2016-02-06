@@ -71,21 +71,6 @@ class Ethna_ViewClass
     /** @protected    boolean  配列フォームを呼んだカウンタをリセットするか否か */
     protected $reset_counter = false;
 
-    /**#@-*/
-
-    /**#@+
-     *  @access protected
-     */
-
-    /** @var  string レイアウト(HTMLの外枠を記述するファイル)のテンプレートファイルを指定(拡張子は除く)   */
-    protected $_layout_file = 'layout';
-
-    /**#@-*/
-
-    /**#@+
-     *  @access public
-     */
-
     /** @var  boolean  デフォルトのヘッダ出力を使用するか否か  */
     /**                ヘッダ出力を改造する場合はfalseにする   */
     public $has_default_header = true;
