@@ -1284,8 +1284,6 @@ class Ethna_Controller
     protected function _includeViewScript($forward_name)
     {
         $view_dir = $this->getViewdir();
-
-        // デフォルトチェック
         $view_path = $this->getDefaultViewPath($forward_name);
         if (file_exists($view_dir . $view_path)) {
             include_once $view_dir . $view_path;
