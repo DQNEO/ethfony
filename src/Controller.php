@@ -1077,7 +1077,9 @@ class Ethna_Controller
     public function getViewClassName(string $forward_name)
     {
         $view_dir = $this->getViewdir();
-        $view_path = $this->getDefaultViewPath($forward_name);
+        $view_path = preg_replace_callback('/_(.)/', function(array $matches){return '/' . strtoupper($matches[1]); }, ucfirst($forward_name)) . '.' . $this->getExt('php');
+        $this->logger->log(LOG_DEBUG, "default view path [%s]", $view_path);
+
         if (file_exists($view_dir . $view_path)) {
             include_once $view_dir . $view_path;
         } else {
@@ -1094,23 +1096,6 @@ class Ethna_Controller
             $this->logger->log(LOG_DEBUG, 'view class is not defined for [%s] -> use default [%s]', $forward_name, $class_name);
             return $class_name;
         }
-    }
-
-    /**
-     *  遷移名に対応するビューパス名が省略された場合のデフォルトパス名を返す
-     *
-     *  デフォルトでは"foo_bar" -> "/Foo/Bar.php"となるので好み応じてオーバーライドする
-     *
-     *  @access public
-     *  @param  string  $forward_name   forward名
-     *  @return string  view classが定義されるスクリプトのパス名
-     */
-    public function getDefaultViewPath($forward_name)
-    {
-        $r = preg_replace_callback('/_(.)/', function(array $matches){return '/' . strtoupper($matches[1]); }, ucfirst($forward_name)) . '.' . $this->getExt('php');
-        $this->logger->log(LOG_DEBUG, "default view path [%s]", $r);
-
-        return $r;
     }
 
     /**
