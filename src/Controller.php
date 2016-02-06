@@ -1297,35 +1297,6 @@ class Ethna_Controller
     }
 
     /**
-     *  ディレクトリ以下の全てのスクリプトをインクルードする
-     *
-     *  @access private
-     */
-    protected function _includeDirectory($dir)
-    {
-        $ext = "." . $this->ext['php'];
-        $ext_len = strlen($ext);
-
-        if (is_dir($dir) == false) {
-            return;
-        }
-
-        $dh = opendir($dir);
-        if ($dh) {
-            while (($file = readdir($dh)) !== false) {
-                if ($file != '.' && $file != '..' && is_dir("$dir/$file")) {
-                    $this->_includeDirectory("$dir/$file");
-                }
-                if (substr($file, -$ext_len, $ext_len) != $ext) {
-                    continue;
-                }
-                include_once $dir . '/' . $file;
-            }
-        }
-        closedir($dh);
-    }
-
-    /**
      *  CLI実行中フラグを取得する
      *
      *  @access public
