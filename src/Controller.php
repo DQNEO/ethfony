@@ -9,27 +9,40 @@
  */
 class Ethna_ViewResolver
 {
-    public function getView(string $forward_name, $backend, $logger, $view_dir, $appId, $baseViewClassName): Ethna_ViewClass
+    private $backend;
+    private $logger;
+    private $viewDir;
+    private $appId;
+
+    public function __construct($backend, $logger, $viewDir, $appId)
+    {
+        $this->backend = $backend;
+        $this->logger = $logger;
+        $this->viewDir = $viewDir;
+        $this->appId = $appId;
+    }
+
+    public function getView(string $forward_name, $baseViewClassName): Ethna_ViewClass
     {
         $view_path = preg_replace_callback('/_(.)/', function(array $matches){return '/' . strtoupper($matches[1]); }, ucfirst($forward_name)) . '.php';
-        $logger->log(LOG_DEBUG, "default view path [%s]", $view_path);
+        $this->logger->log(LOG_DEBUG, "default view path [%s]", $view_path);
 
-        if (file_exists($view_dir . $view_path)) {
-            include_once $view_dir . $view_path;
+        if (file_exists($this->viewDir . $view_path)) {
+            include_once $this->viewDir . $view_path;
         } else {
-            $logger->log(LOG_DEBUG, 'default view file not found [%s]', $view_path);
+            $this->logger->log(LOG_DEBUG, 'default view file not found [%s]', $view_path);
         }
 
         $postfix = preg_replace_callback('/_(.)/', function(array $matches){return strtoupper($matches[1]);}, ucfirst($forward_name));
-        $class_name = sprintf("%s_%sView_%s", $appId, "", $postfix);
-        $logger->log(LOG_DEBUG, "view class [%s]", $class_name);
+        $class_name = sprintf("%s_%sView_%s", $this->appId, "", $postfix);
+        $this->logger->log(LOG_DEBUG, "view class [%s]", $class_name);
         if (! class_exists($class_name)) {
             $class_name = $baseViewClassName;
-            $logger->log(LOG_DEBUG, 'view class is not defined for [%s] -> use default [%s]', $forward_name, $class_name);
+            $this->logger->log(LOG_DEBUG, 'view class is not defined for [%s] -> use default [%s]', $forward_name, $class_name);
 
         }
 
-        return new $class_name($backend, $forward_name, $this->getTemplatePath($forward_name));
+        return new $class_name($this->backend, $forward_name, $this->getTemplatePath($forward_name));
     }
 
     /**
@@ -690,8 +703,8 @@ class Ethna_Controller
             return;
         }
 
-        $viewResolver = new Ethna_ViewResolver();
-        $this->view = $viewResolver->getView($forward_name, $backend, $this->logger, $this->getViewdir(), $this->getAppId(), $this->class_factory->getObjectName('view'));
+        $viewResolver = new Ethna_ViewResolver($backend, $this->logger, $this->getViewdir(), $this->getAppId());
+        $this->view = $viewResolver->getView($forward_name, $this->class_factory->getObjectName('view'));
         $this->view->send();
         $this->end();
 
