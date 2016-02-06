@@ -635,7 +635,7 @@ class Ethna_Controller
         $action_class_name = $this->getActionClassName($action_name);
         $ac = new $action_class_name($backend);
         $backend->setActionClass($ac);
-        $forward_name = $this->perform($ac);
+        $forward_name = $ac->run();
 
         //CLIの場合はperformの戻り値を捨てて終了する
         if ($this->getGateway() === GATEWAY_CLI) {
@@ -662,31 +662,6 @@ class Ethna_Controller
 
     }
 
-
-    /**
-     *  アクションを実行する
-     *
-     *  @param  obj     Ethna_ActionClass アクションクラス
-     *  @return mixed   (string):Forward名(nullなら終了) Ethna_Error:エラー
-     */
-    protected function perform($ac)
-    {
-        $forward_name = $ac->authenticate();
-        if ($forward_name === false) {
-            return null;
-        } else if ($forward_name !== null) {
-            return $forward_name;
-        }
-
-        $forward_name = $ac->prepare();
-        if ($forward_name === false) {
-            return null;
-        } else if ($forward_name !== null) {
-            return $forward_name;
-        }
-
-        return $ac->perform();
-    }
 
     /**
      *  エラーハンドラ

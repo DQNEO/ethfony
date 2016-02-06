@@ -112,5 +112,23 @@ class Ethna_ActionClass
         return null;
     }
 
+    public function run()
+    {
+        $forward_name = $this->authenticate();
+        if ($forward_name === false) {
+        return null;
+        } else if ($forward_name !== null) {
+            return $forward_name;
+        }
+
+        $forward_name = $this->prepare();
+        if ($forward_name === false) {
+            return null;
+        } else if ($forward_name !== null) {
+            return $forward_name;
+        }
+
+        return $this->perform();
+    }
 }
 // }}}
