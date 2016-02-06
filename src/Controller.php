@@ -650,8 +650,7 @@ class Ethna_Controller
     {
         $view_class_name = $this->getViewClassName($forward_name);
         $this->view = new $view_class_name($backend, $forward_name, $this->getTemplatePath($forward_name));
-        $this->view->preforward();
-        $this->view->forward();
+        $this->view->send();
     }
 
     /**

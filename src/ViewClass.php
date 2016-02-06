@@ -132,6 +132,11 @@ class Ethna_ViewClass
     }
     // }}}
 
+    public function send()
+    {
+        $this->preforward();
+        $this->forward();
+    }
     // {{{ preforward
     /**
      *  画面表示前処理
