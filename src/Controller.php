@@ -1152,20 +1152,6 @@ class Ethna_Controller
     }
 
     /**
-     *  テンプレートエンジン取得する (DEPRECATED)
-     *  getRenderer() を使ってください
-     *
-     *  @access public
-     *  @return object  Ethna_Renderer  レンダラオブジェクト
-     *  @obsolete
-     */
-    public function getTemplateEngine()
-    {
-        trigger_error('Method ' . __METHOD__ . ' is depreacted. Use getRenderer() instead.', E_USER_DEPRECATED);
-        return $this->getRenderer();
-    }
-    
-    /**
      *  デフォルト状態でのゲートウェイを取得する
      *
      *  @access protected
