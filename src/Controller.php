@@ -1065,7 +1065,10 @@ class Ethna_Controller
     }
 
     /**
-     *  指定された遷移名に対応するビュークラス名を返す(オブジェクトの生成は行わない)
+     *  遷移名に対応するビュークラス名を返す(オブジェクトの生成は行わない)
+     *
+     *  [appid]_View_[forward_name]となる
+     *
      *
      *  @access public
      *  @param  string  $forward_name   遷移先の名称
@@ -1075,7 +1078,9 @@ class Ethna_Controller
     {
         $this->_includeViewScript($forward_name);
 
-        $class_name = $this->getDefaultViewClass($forward_name);
+        $postfix = preg_replace_callback('/_(.)/', function(array $matches){return strtoupper($matches[1]);}, ucfirst($forward_name));
+        $class_name = sprintf("%s_%sView_%s", $this->getAppId(), "", $postfix);
+        $this->logger->log(LOG_DEBUG, "view class [%s]", $class_name);
         if (class_exists($class_name)) {
             return $class_name;
         } else {
@@ -1083,25 +1088,6 @@ class Ethna_Controller
             $this->logger->log(LOG_DEBUG, 'view class is not defined for [%s] -> use default [%s]', $forward_name, $class_name);
             return $class_name;
         }
-    }
-
-    /**
-     *  遷移名に対応するビュークラス名が省略された場合のデフォルトクラス名を返す
-     *
-     *  [appid]_View_[遷移名]となる
-     *
-     *  @access public
-     *  @param  string  $forward_name   forward名
-     *  @return string  view classクラス名
-     */
-    public function getDefaultViewClass($forward_name)
-    {
-
-        $postfix = preg_replace_callback('/_(.)/', function(array $matches){return strtoupper($matches[1]);}, ucfirst($forward_name));
-        $r = sprintf("%s_%sView_%s", $this->getAppId(), "", $postfix);
-        $this->logger->log(LOG_DEBUG, "view class [%s]", $r);
-
-        return $r;
     }
 
     /**
