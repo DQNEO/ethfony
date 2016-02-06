@@ -1076,7 +1076,13 @@ class Ethna_Controller
      */
     public function getViewClassName(string $forward_name)
     {
-        $this->_includeViewScript($forward_name);
+        $view_dir = $this->getViewdir();
+        $view_path = $this->getDefaultViewPath($forward_name);
+        if (file_exists($view_dir . $view_path)) {
+            include_once $view_dir . $view_path;
+        } else {
+            $this->logger->log(LOG_DEBUG, 'default view file not found [%s]', $view_path);
+        }
 
         $postfix = preg_replace_callback('/_(.)/', function(array $matches){return strtoupper($matches[1]);}, ucfirst($forward_name));
         $class_name = sprintf("%s_%sView_%s", $this->getAppId(), "", $postfix);
@@ -1270,26 +1276,6 @@ class Ethna_Controller
             include_once $action_dir . $form_path;
         } else {
             $this->logger->log(LOG_DEBUG, 'default form file not found [%s] -> maybe falling back to default form class', $form_path);
-        }
-    }
-
-    /**
-     *  ビュースクリプトをインクルードする
-     *
-     *  ただし、インクルードしたファイルにクラスが正しく定義されているかどうかは保証しない
-     *
-     *  @access private
-     *  @param  string  $forward_name   遷移名
-     */
-    protected function _includeViewScript($forward_name)
-    {
-        $view_dir = $this->getViewdir();
-        $view_path = $this->getDefaultViewPath($forward_name);
-        if (file_exists($view_dir . $view_path)) {
-            include_once $view_dir . $view_path;
-            return;
-        } else {
-            $this->logger->log(LOG_DEBUG, 'default view file not found [%s]', $view_path);
         }
     }
 }
