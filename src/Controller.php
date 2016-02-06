@@ -1148,7 +1148,6 @@ class Ethna_Controller
         if ($this->renderer === null) {
             trigger_error("cannot get renderer", E_USER_ERROR);
         }
-        $this->_setDefaultTemplateEngine($this->renderer);
         return $this->renderer;
     }
 
@@ -1165,18 +1164,7 @@ class Ethna_Controller
         trigger_error('Method ' . __METHOD__ . ' is depreacted. Use getRenderer() instead.', E_USER_DEPRECATED);
         return $this->getRenderer();
     }
-
-    /**
-     *  テンプレートエンジンのデフォルト状態を設定する
-     *
-     *  @access protected
-     *  @param  object  Ethna_Renderer  レンダラオブジェクト
-     *  @obsolete
-     */
-    protected function _setDefaultTemplateEngine($renderer)
-    {
-    }
-
+    
     /**
      *  デフォルト状態でのゲートウェイを取得する
      *
