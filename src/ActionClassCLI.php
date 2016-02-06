@@ -20,14 +20,5 @@
  */
 class Ethna_ActionClassCLI extends Ethna_ActionClass
 {
-    /**
-     *  action処理
-     *
-     *  @access public
-     */
-    public function perform()
-    {
-        parent::perform();
-    }
 }
 // }}}
