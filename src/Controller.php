@@ -649,15 +649,14 @@ class Ethna_Controller
                 return;
             }
 
-            if ($res instanceof RedirectResponse) {
+            if ($res instanceof RedirectResponse || $res instanceof Ethna_ViewClass) {
+                $this->view = $res;
                 $res->send();
                 $this->end();
-                exit;
+                return;
             }
 
-            $this->view = $res;
-            $res->send();
-            $this->end();
+            
         }
 
     }
