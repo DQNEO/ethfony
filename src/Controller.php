@@ -8,6 +8,7 @@
  *  @version    $Id$
  */
 
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  *  コントローラクラス
