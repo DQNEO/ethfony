@@ -660,7 +660,7 @@ class Ethna_Controller
      *  アクションを実行する
      *
      *  @param  obj     Ethna_ActionClass アクションクラス
-     *  @return mixed   (string):Forward名(nullならforwardしない) Ethna_Error:エラー
+     *  @return mixed   (string):Forward名(nullなら終了) Ethna_Error:エラー
      */
     protected function perform($ac)
     {
