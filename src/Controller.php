@@ -632,6 +632,7 @@ class Ethna_Controller
         $this->action_form->setFormVars();
 
         // Action#perform 実行
+
         $action_class_name = $this->getActionClassName($action_name);
         $ac = new $action_class_name($backend);
         $backend->setActionClass($ac);
@@ -641,22 +642,21 @@ class Ethna_Controller
             $ac->perform();
             $this->end();
         } else {
-            $forward_name = $ac->run();
-            if ($forward_name === null) {
+            $viewResolver = new Ethna_ViewResolver($backend, $this->logger, $this->getViewdir(), $this->getAppId(), $this->class_factory->getObjectName('view'));
+            $res = $ac->run($viewResolver);
+            if ($res === null) {
                 $this->end();
                 return;
             }
 
-            if ($forward_name instanceof RedirectResponse) {
-                $forward_name->send();
+            if ($res instanceof RedirectResponse) {
+                $res->send();
                 $this->end();
                 exit;
             }
 
-
-            $viewResolver = new Ethna_ViewResolver($backend, $this->logger, $this->getViewdir(), $this->getAppId(), $this->class_factory->getObjectName('view'));
-            $this->view = $viewResolver->getView($forward_name);
-            $this->view->send();
+            $this->view = $res;
+            $res->send();
             $this->end();
         }
 
