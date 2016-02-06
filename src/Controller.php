@@ -655,8 +655,26 @@ class Ethna_Controller
 
     protected function createView(string $forward_name, $backend): Ethna_ViewClass
     {
-        $view_class_name = $this->getViewClassName($forward_name);
-        return new $view_class_name($backend, $forward_name, $this->getTemplatePath($forward_name));
+        $view_dir = $this->getViewdir();
+        $view_path = preg_replace_callback('/_(.)/', function(array $matches){return '/' . strtoupper($matches[1]); }, ucfirst($forward_name)) . '.' . $this->getExt('php');
+        $this->logger->log(LOG_DEBUG, "default view path [%s]", $view_path);
+
+        if (file_exists($view_dir . $view_path)) {
+            include_once $view_dir . $view_path;
+        } else {
+            $this->logger->log(LOG_DEBUG, 'default view file not found [%s]', $view_path);
+        }
+
+        $postfix = preg_replace_callback('/_(.)/', function(array $matches){return strtoupper($matches[1]);}, ucfirst($forward_name));
+        $class_name = sprintf("%s_%sView_%s", $this->getAppId(), "", $postfix);
+        $this->logger->log(LOG_DEBUG, "view class [%s]", $class_name);
+        if (! class_exists($class_name)) {
+            $class_name = $this->class_factory->getObjectName('view');
+            $this->logger->log(LOG_DEBUG, 'view class is not defined for [%s] -> use default [%s]', $forward_name, $class_name);
+
+        }
+
+        return new $class_name($backend, $forward_name, $this->getTemplatePath($forward_name));
     }
 
     /**
@@ -1075,26 +1093,6 @@ class Ethna_Controller
      */
     public function getViewClassName(string $forward_name)
     {
-        $view_dir = $this->getViewdir();
-        $view_path = preg_replace_callback('/_(.)/', function(array $matches){return '/' . strtoupper($matches[1]); }, ucfirst($forward_name)) . '.' . $this->getExt('php');
-        $this->logger->log(LOG_DEBUG, "default view path [%s]", $view_path);
-
-        if (file_exists($view_dir . $view_path)) {
-            include_once $view_dir . $view_path;
-        } else {
-            $this->logger->log(LOG_DEBUG, 'default view file not found [%s]', $view_path);
-        }
-
-        $postfix = preg_replace_callback('/_(.)/', function(array $matches){return strtoupper($matches[1]);}, ucfirst($forward_name));
-        $class_name = sprintf("%s_%sView_%s", $this->getAppId(), "", $postfix);
-        $this->logger->log(LOG_DEBUG, "view class [%s]", $class_name);
-        if (class_exists($class_name)) {
-            return $class_name;
-        } else {
-            $class_name = $this->class_factory->getObjectName('view');
-            $this->logger->log(LOG_DEBUG, 'view class is not defined for [%s] -> use default [%s]', $forward_name, $class_name);
-            return $class_name;
-        }
     }
 
     /**
