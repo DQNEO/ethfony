@@ -1295,17 +1295,4 @@ class Ethna_Controller
             $view_path = null;
         }
     }
-
-    /**
-     *  CLI実行中フラグを取得する
-     *
-     *  @access public
-     *  @return bool    CLI実行中フラグ
-     *  @obsolete
-     */
-    public function getCLI()
-    {
-        return $this->gateway == GATEWAY_CLI ? true : false;
-    }
-
 }
