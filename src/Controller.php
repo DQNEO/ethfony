@@ -283,7 +283,7 @@ class Ethna_Controller
      */
     public function getViewdir()
     {
-        return (empty($this->directory['view']) ? ($this->base . (empty($this->base) ? '' : '/')) : ($this->directory['view'] . "/"));
+        return $this->directory['view'] . "/";
     }
 
     /**
