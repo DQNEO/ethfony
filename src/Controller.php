@@ -1116,20 +1116,6 @@ class Ethna_Controller
     }
 
     /**
-     *  遷移名に対応するビュークラス名を返す(オブジェクトの生成は行わない)
-     *
-     *  [appid]_View_[forward_name]となる
-     *
-     *
-     *  @access public
-     *  @param  string  $forward_name   遷移先の名称
-     *  @return string  view classのクラス名
-     */
-    public function getViewClassName(string $forward_name)
-    {
-    }
-
-    /**
      *  テンプレートパス名から遷移名を取得する
      *
      *  getDefaultForwardPath()をオーバーライドした場合、こちらも合わせてオーバーライド
