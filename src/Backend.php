@@ -19,8 +19,7 @@
  */
 class Ethna_Backend
 {
-    /** @protected    object  Ethna_ActionForm    アクションフォームオブジェクト */
-    private $action_form;
+    public $controller;
 
     /**
      *  Ethna_Backendクラスのコンストラクタ
@@ -30,10 +29,7 @@ class Ethna_Backend
      */
     public function __construct($controller)
     {
-        // オブジェクトの設定
         $this->controller = $controller;
-        $this->ctl = $this->controller;
-
     }
 
     /**
