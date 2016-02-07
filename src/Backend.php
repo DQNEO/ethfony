@@ -37,9 +37,6 @@ class Ethna_Backend
     /** @protected    object  Ethna_ActionClass   アクションクラスオブジェクト($action_classの省略形) */
     public $ac;
 
-    /** @protected    object  Ethna_Session       セッションオブジェクト */
-    public $session;
-
     /** @protected    object  Ethna_Plugin        プラグインオブジェクト */
     public $plugin;
 
@@ -64,7 +61,6 @@ class Ethna_Backend
         $this->action_error = $controller->getActionError();
         $this->ae = $this->action_error;
 
-        $this->session = $this->controller->getSession();
         $this->plugin = $this->controller->getPlugin();
         $this->logger = $this->controller->getLogger();
     }
@@ -187,7 +183,7 @@ class Ethna_Backend
      */
     public function getSession()
     {
-        return $this->session;
+        return $this->controller->getSession();
     }
 
     /**
