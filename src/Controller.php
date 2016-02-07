@@ -82,8 +82,6 @@ class Ethna_Controller
     /** @protected    string  リクエストのゲートウェイ(www/cli/rest/soap...) */
     protected $gateway = GATEWAY_WWW;
 
-    /**#@-*/
-
     /**
      *  アプリケーションのエントリポイント
      *
@@ -585,9 +583,10 @@ class Ethna_Controller
         $this->plugin->setLogger($this->logger);
         $this->logger->begin();
 
-        $this->actionResolver = new Ethna_ActionResolver($this->getAppId(), $this->logger, $this->class_factory, $this->_getGatewayPrefix(), $this->getActiondir());
+
+        $actionResolver = new Ethna_ActionResolver($this->getAppId(), $this->logger, $this->class_factory, $this->_getGatewayPrefix(), $this->getActiondir());
         // アクション名の取得
-        $action_name = $this->actionResolver->resolveActionName($default_action_name, $fallback_action_name);
+        $action_name = $actionResolver->resolveActionName($default_action_name, $fallback_action_name);
         $this->action_name = $action_name;
 
         // オブジェクト生成
@@ -601,15 +600,12 @@ class Ethna_Controller
 
         // アクションフォーム初期化
         // フォーム定義、フォーム値設定
-        $form_name = $this->actionResolver->getActionFormName($action_name);
-        $this->action_form = new $form_name($this);
+        $this->action_form = $actionResolver->newActionForm($action_name, $this);
         $backend->setActionForm($this->action_form);
         $this->action_form->setFormDef_PreHelper();
         $this->action_form->setFormVars();
 
-
-        $action_class_name = $this->actionResolver->getActionClassName($action_name);
-        $ac = new $action_class_name($backend);
+        $ac = $actionResolver->newAction($action_name, $backend);
         $backend->setActionClass($ac);
 
         if ($this->getGateway() === GATEWAY_CLI) {
@@ -628,7 +624,7 @@ class Ethna_Controller
 
     public function getActionFormName($action_name)
     {
-        return $this->actionResolver->getActionFormName($action_name);
+        return $actionResolver->getActionFormName($action_name);
     }
     /**
      *  エラーハンドラ

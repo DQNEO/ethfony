@@ -383,4 +383,17 @@ class Ethna_ActionResolver
         return $action_name;
     }
 
+    public function newAction($action_name, $backend)
+    {
+        $action_class_name = $this->getActionClassName($action_name);
+        return new $action_class_name($backend);
+    }
+
+    public function newActionForm($action_name, $ctl)
+    {
+        $form_class_name = $this->getActionFormName($action_name);
+        return  new $form_class_name($ctl);
+
+    }
+
 }
