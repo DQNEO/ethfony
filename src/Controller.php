@@ -587,26 +587,7 @@ class Ethna_Controller
 
         $this->actionResolver = new Ethna_ActionResolver($this->getAppId(), $this->logger, $this->class_factory, $this->_getGatewayPrefix(), $this->getActiondir());
         // アクション名の取得
-        $action_name = $this->actionResolver->_getActionName($default_action_name, $fallback_action_name);
-
-        // アクション定義の取得
-        $action_obj = $this->actionResolver->_getAction($action_name);
-        if (is_null($action_obj)) {
-            if ($fallback_action_name != "") {
-                $this->logger->log(LOG_DEBUG, 'undefined action [%s] -> try fallback action [%s]', $action_name, $fallback_action_name);
-                $action_obj = $this->_getAction($fallback_action_name);
-            }
-            if (is_null($action_obj)) {
-                $this->end();
-                $r = Ethna::raiseError("undefined action [%s]", E_APP_UNDEFINED_ACTION, $action_name);
-                throw new \Exception($r->getMessage());
-
-            } else {
-                $action_name = $fallback_action_name;
-            }
-        }
-        unset($action_obj);
-
+        $action_name = $this->actionResolver->resolveActionName($default_action_name, $fallback_action_name);
         $this->action_name = $action_name;
 
         // オブジェクト生成
@@ -686,119 +667,8 @@ class Ethna_Controller
         return null;
     }
 
-    /**
-     *  実行するアクション名を返す
-     *
-     *  @access protected
-     *  @param  mixed   $default_action_name    指定のアクション名
-     *  @return string  実行するアクション名
-     */
-    protected function _getActionName($default_action_name, $fallback_action_name)
-    {
-        // フォームから要求されたアクション名を取得する
-        $form_action_name = $this->_getActionName_Form();
-        $form_action_name = preg_replace('/[^a-z0-9\-_]+/i', '', $form_action_name);
-        $this->logger->log(LOG_DEBUG, 'form_action_name[%s]', $form_action_name);
 
-        // フォームからの指定が無い場合はエントリポイントに指定されたデフォルト値を利用する
-        if ($form_action_name == "" && count($default_action_name) > 0) {
-            $tmp = is_array($default_action_name) ? $default_action_name[0] : $default_action_name;
-            if ($tmp{strlen($tmp)-1} == '*') {
-                $tmp = substr($tmp, 0, -1);
-            }
-            $this->logger->log(LOG_DEBUG, '-> default_action_name[%s]', $tmp);
-            $action_name = $tmp;
-        } else {
-            $action_name = $form_action_name;
-        }
 
-        // エントリポイントに配列が指定されている場合は指定以外のアクション名は拒否する
-        if (is_array($default_action_name)) {
-            if ($this->_isAcceptableActionName($action_name, $default_action_name) == false) {
-                // 指定以外のアクション名で合った場合は$fallback_action_name(or デフォルト)
-                $tmp = $fallback_action_name != "" ? $fallback_action_name : $default_action_name[0];
-                if ($tmp{strlen($tmp)-1} == '*') {
-                    $tmp = substr($tmp, 0, -1);
-                }
-                $this->logger->log(LOG_DEBUG, '-> fallback_action_name[%s]', $tmp);
-                $action_name = $tmp;
-            }
-        }
-
-        $this->logger->log(LOG_DEBUG, '<<< action_name[%s] >>>', $action_name);
-
-        return $action_name;
-    }
-
-    /**
-     *  フォームにより要求されたアクション名を返す
-     *
-     *  アプリケーションの性質に応じてこのメソッドをオーバーライドして下さい。
-     *  デフォルトでは"action_"で始まるフォーム値の"action_"の部分を除いたもの
-     *  ("action_sample"なら"sample")がアクション名として扱われます
-     *
-     *  @access protected
-     *  @return string  フォームにより要求されたアクション名
-     */
-    protected function _getActionName_Form()
-    {
-        if (isset($_SERVER['REQUEST_METHOD']) == false) {
-            return null;
-        }
-
-        $url_handler = $this->getUrlHandler();
-        if ($_SERVER['REQUEST_METHOD'] == "GET") {
-            $tmp_vars = $_GET;
-        } else if ($_SERVER['REQUEST_METHOD'] == "POST") {
-            $tmp_vars = $_POST;
-        }
-
-        if (empty($_SERVER['URL_HANDLER']) == false) {
-            $tmp_vars['__url_handler__'] = $_SERVER['URL_HANDLER'];
-            $tmp_vars['__url_info__'] = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : null;
-            $tmp_vars = $url_handler->requestToAction($tmp_vars);
-
-            if ($_SERVER['REQUEST_METHOD'] == "GET") {
-                $_GET = array_merge($_GET, $tmp_vars);
-            } else if ($_SERVER['REQUEST_METHOD'] == "POST") {
-                $_POST = array_merge($_POST, $tmp_vars);
-            }
-            $_REQUEST = array_merge($_REQUEST, $tmp_vars);
-        }
-
-        if (strcasecmp($_SERVER['REQUEST_METHOD'], 'post') == 0) {
-            $http_vars = $_POST;
-        } else {
-            $http_vars = $_GET;
-        }
-
-        // フォーム値からリクエストされたアクション名を取得する
-        $action_name = $sub_action_name = null;
-        foreach ($http_vars as $name => $value) {
-            if ($value == "" || strncmp($name, 'action_', 7) != 0) {
-                continue;
-            }
-
-            $tmp = substr($name, 7);
-
-            // type="image"対応
-            if (preg_match('/_x$/', $name) || preg_match('/_y$/', $name)) {
-                $tmp = substr($tmp, 0, strlen($tmp)-2);
-            }
-
-            // value="dummy"となっているものは優先度を下げる
-            if ($value == "dummy") {
-                $sub_action_name = $tmp;
-            } else {
-                $action_name = $tmp;
-            }
-        }
-        if ($action_name == null) {
-            $action_name = $sub_action_name;
-        }
-
-        return $action_name;
-    }
 
     /**
      *  アクション名を指定するクエリ/HTMLを生成する
@@ -819,28 +689,6 @@ class Ethna_Controller
         return $s;
     }
 
-
-    /**
-     *  アクション名が実行許可されているものかどうかを返す
-     *
-     *  @access private
-     *  @param  string  $action_name            リクエストされたアクション名
-     *  @param  array   $default_action_name    許可されているアクション名
-     *  @return bool    true:許可 false:不許可
-     */
-    private function _isAcceptableActionName($action_name, $default_action_name)
-    {
-        foreach (to_array($default_action_name) as $name) {
-            if ($action_name == $name) {
-                return true;
-            } else if ($name{strlen($name)-1} == '*') {
-                if (strncmp($action_name, substr($name, 0, -1), strlen($name)-1) == 0) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
 
 
     /**
