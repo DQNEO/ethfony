@@ -20,6 +20,7 @@ class Ethna_AppManager
 {
     /**     object  Ethna_Backend       backendオブジェクト */
     public $backend;
+    public $controller;
 
     /**     object  Ethna_Config        設定オブジェクト */
     public $config;
@@ -48,12 +49,13 @@ class Ethna_AppManager
     {
         // 基本オブジェクトの設定
         $this->backend = $backend;
-        $this->config = $backend->getConfig();
-        $this->i18n = $backend->getI18N();
-        $this->action_form = $backend->getActionForm();
-        $this->af = $this->action_form;
-        $this->session = $backend->getSession();
+        $this->controller = $controller = $backend->controller;
+        $this->config = $controller->getConfig();
+        $this->i18n = $controller->getI18N();
+        $this->action_form = $controller->getActionForm();
+        $this->session = $controller->getSession();
 
+        $this->af = $this->action_form;
     }
 
 
