@@ -32,9 +32,6 @@ class Ethna_Backend
     /** @protected    object  Ethna_ClassFactory  クラスファクトリオブジェクト */
     public $class_factory;
 
-    /** @protected    object  Ethna_Config        設定オブジェクト */
-    public $config;
-
     /** @protected    object  Ethna_I18N          i18nオブジェクト */
     public $i18n;
 
@@ -82,7 +79,6 @@ class Ethna_Backend
 
         $this->class_factory = $controller->getClassFactory();
 
-        $this->config = $controller->getConfig();
         $this->i18n = $controller->getI18N();
 
         $this->action_error = $controller->getActionError();
@@ -112,7 +108,7 @@ class Ethna_Backend
      */
     public function getConfig()
     {
-        return $this->config;
+        return $this->controller->getConfig();
     }
 
     /**
