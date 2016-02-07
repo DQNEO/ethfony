@@ -22,14 +22,8 @@ class Ethna_Backend
     /** @protected    object  Ethna_ActionError   アクションエラーオブジェクト */
     public $action_error;
 
-    /** @protected    object  Ethna_ActionError   アクションエラーオブジェクト($action_errorの省略形) */
-    public $ae;
-
     /** @protected    object  Ethna_ActionForm    アクションフォームオブジェクト */
     public $action_form;
-
-    /** @protected    object  Ethna_ActionForm    アクションフォームオブジェクト($action_formの省略形) */
-    public $af;
 
     /**
      *  Ethna_Backendクラスのコンストラクタ
@@ -44,7 +38,6 @@ class Ethna_Backend
         $this->ctl = $this->controller;
 
         $this->action_error = $controller->getActionError();
-        $this->ae = $this->action_error;
     }
 
     /**
@@ -121,7 +114,6 @@ class Ethna_Backend
     public function setActionForm($action_form)
     {
         $this->action_form = $action_form;
-        $this->af = $action_form;
     }
 
     /**
@@ -132,7 +124,6 @@ class Ethna_Backend
     public function setActionClass($action_class)
     {
         $this->action_class = $action_class;
-        $this->ac = $action_class;
     }
 
     /**
