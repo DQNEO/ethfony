@@ -99,19 +99,8 @@ class Ethna_Backend
      */
     public function getActionForm()
     {
-        return $this->action_form;
+        return  $this->controller->getActionForm();
     }
-
-    /**
-     *  アクションフォームオブジェクトのアクセサ(W)
-     *
-     *  @access public
-     */
-    public function setActionForm($action_form)
-    {
-        $this->action_form = $action_form;
-    }
-
 
     /**
      *  ログオブジェクトのアクセサ(R)

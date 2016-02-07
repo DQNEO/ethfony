@@ -591,7 +591,6 @@ class Ethna_Controller
         // アクションフォーム初期化
         // フォーム定義、フォーム値設定
         $this->action_form = $actionResolver->newActionForm($action_name, $this);
-        $backend->setActionForm($this->action_form);
         $this->action_form->setFormDef_PreHelper();
         $this->action_form->setFormVars();
 
@@ -609,7 +608,6 @@ class Ethna_Controller
         }
 
     }
-
 
     public function getActionFormName($action_name)
     {
