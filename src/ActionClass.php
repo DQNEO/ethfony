@@ -8,8 +8,14 @@
  *  @package    Ethna
  *  @version    $Id$
  */
-
+use Symfony\Component\HttpFoundation\Response;
 // {{{ Ethna_ActionClass
+
+class ActionAbortedException extends \RuntimeException
+{
+
+}
+
 /**
  *  action実行クラス
  *
@@ -115,13 +121,13 @@ class Ethna_ActionClass
     /** @var  Ethna_ViewResolver  */
     protected $viewResolver;
 
-    public function run(Ethna_ViewResolver $viewResolver)
+    public function run(Ethna_ViewResolver $viewResolver): Response
     {
         $this->viewResolver = $viewResolver;
 
         $forward_name = $this->authenticate();
         if ($forward_name === false) {
-            return null;
+            throw new ActionAbortedException();
         } else if ($forward_name !== null) {
             //Redirect Resposne or Ethna_ViewClass
             return $forward_name;
@@ -129,18 +135,20 @@ class Ethna_ActionClass
 
         $forward_name = $this->prepare();
         if ($forward_name === false) {
-            return null;
+            throw new ActionAbortedException();
         } else if ($forward_name !== null) {
             return $forward_name;
         }
 
         $forward_name = $this->perform();
         if ($forward_name === false) {
-            return null;
-        } else if ($forward_name !== null) {
-            return $forward_name;
+            throw new ActionAbortedException();
+        } else if ($forward_name === null) {
+            throw new ActionAbortedException();
         }
 
+
+        return $forward_name;
     }
 }
 // }}}

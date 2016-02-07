@@ -642,8 +642,8 @@ class Ethna_Controller
             $this->end();
         } else {
             $viewResolver = new Ethna_ViewResolver($backend, $this->logger, $this->getViewdir(), $this->getAppId(), $this->class_factory->getObjectName('view'));
-            $res = $ac->run($viewResolver);
-            $res->send();
+            $response = $ac->run($viewResolver);
+            $response->send();
             $this->end();
             return;
         }
