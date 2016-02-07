@@ -1016,7 +1016,7 @@ class Ethna_Controller
      */
     public function getDefaultActionPath($action_name)
     {
-        $r = preg_replace_callback('/_(.)/', function(array $matches){return '/' . strtoupper($matches[1]);}, ucfirst($action_name)) . '.' . $this->getExt('php');
+        $r = preg_replace_callback('/_(.)/', function(array $matches){return '/' . strtoupper($matches[1]);}, ucfirst($action_name)) . '.php';
         $this->logger->log(LOG_DEBUG, "default action path [%s]", $r);
 
         return $r;
