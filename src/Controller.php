@@ -584,7 +584,7 @@ class Ethna_Controller
         $this->logger->begin();
 
 
-        $actionResolver = new Ethna_ActionResolver($this->getAppId(), $this->logger, $this->class_factory, $this->_getGatewayPrefix(), $this->getActiondir());
+        $this->actionResolver = $actionResolver = new Ethna_ActionResolver($this->getAppId(), $this->logger, $this->class_factory, $this->_getGatewayPrefix(), $this->getActiondir());
         // アクション名の取得
         $action_name = $actionResolver->resolveActionName($default_action_name, $fallback_action_name);
         $this->action_name = $action_name;
@@ -624,7 +624,7 @@ class Ethna_Controller
 
     public function getActionFormName($action_name)
     {
-        return $actionResolver->getActionFormName($action_name);
+        return $this->actionResolver->getActionFormName($action_name);
     }
     /**
      *  エラーハンドラ
