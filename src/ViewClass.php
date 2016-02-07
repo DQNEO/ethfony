@@ -83,10 +83,8 @@ class Ethna_ViewClass
     {
         $this->backend = $backend;
 
-        $this->controller = $controller = $backend->getController();
-
-        $this->ctl = $c;
-        $this->ctl->view = $this;
+        $this->ctl = $this->controller = $controller = $backend->getController();
+        $this->controller->view = $this;
         $this->config = $this->controller->getConfig();
         $this->i18n = $this->controller->getI18N();
         $this->logger = $this->controller->getLogger();
