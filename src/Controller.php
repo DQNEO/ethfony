@@ -639,8 +639,7 @@ class Ethna_Controller
         $backend->setActionClass($ac);
 
         if ($this->getGateway() === GATEWAY_CLI) {
-            $ac->prepare();
-            $ac->perform();
+            $ac->runcli();
             $this->end();
         } else {
             $viewResolver = new Ethna_ViewResolver($backend, $this->logger, $this->getViewdir(), $this->getAppId(), $this->class_factory->getObjectName('view'));
