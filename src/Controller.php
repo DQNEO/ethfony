@@ -742,20 +742,6 @@ class Ethna_Controller
     }
 
     /**
-     *  デフォルト状態でのゲートウェイを取得する
-     *
-     *  @access protected
-     *  @return int     ゲートウェイ定義(GATEWAY_WWW, GATEWAY_CLI...)
-     */
-    protected function _getDefaultGateway($gateway)
-    {
-        if (is_null($GLOBALS['_Ethna_gateway']) == false) {
-            return $GLOBALS['_Ethna_gateway'];
-        }
-        return GATEWAY_WWW;
-    }
-
-    /**
      *  ゲートウェイに対応したクラス名のプレフィクスを取得する
      *
      *  @access public
