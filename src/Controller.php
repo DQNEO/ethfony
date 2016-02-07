@@ -82,6 +82,8 @@ class Ethna_Controller
     /** @protected    string  リクエストのゲートウェイ(www/cli/rest/soap...) */
     protected $gateway = GATEWAY_WWW;
 
+    protected $actionResolver;
+
     /**
      *  アプリケーションのエントリポイント
      *
