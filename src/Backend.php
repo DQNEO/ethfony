@@ -19,9 +19,6 @@
  */
 class Ethna_Backend
 {
-    /** @protected    object  Ethna_ClassFactory  クラスファクトリオブジェクト */
-    public $class_factory;
-
     /** @protected    object  Ethna_I18N          i18nオブジェクト */
     public $i18n;
 
@@ -66,8 +63,6 @@ class Ethna_Backend
         // オブジェクトの設定
         $this->controller = $controller;
         $this->ctl = $this->controller;
-
-        $this->class_factory = $controller->getClassFactory();
 
         $this->i18n = $controller->getI18N();
 
