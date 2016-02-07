@@ -81,22 +81,24 @@ class Ethna_ViewClass
      */
     public function __construct($backend, $forward_name, $forward_path)
     {
-        $c = $backend->getController();
+        $this->backend = $backend;
+
+        $this->controller = $controller = $backend->getController();
+
         $this->ctl = $c;
         $this->ctl->view = $this;
-        $this->backend = $backend;
-        $this->config = $this->backend->getConfig();
-        $this->i18n = $this->backend->getI18N();
-        $this->logger = $this->backend->getLogger();
-        $this->plugin = $this->backend->getPlugin();
+        $this->config = $this->controller->getConfig();
+        $this->i18n = $this->controller->getI18N();
+        $this->logger = $this->controller->getLogger();
+        $this->plugin = $this->controller->getPlugin();
 
-        $this->action_error = $this->backend->getActionError();
+        $this->action_error = $this->controller->getActionError();
         $this->ae = $this->action_error;
 
-        $this->action_form = $this->backend->getActionForm();
+        $this->action_form = $this->controller->getActionForm();
         $this->af = $this->action_form;
 
-        $this->session = $this->backend->getSession();
+        $this->session = $this->controller->getSession();
 
         $this->forward_name = $forward_name;
         $this->forward_path = $forward_path;
@@ -488,7 +490,7 @@ class Ethna_ViewClass
             }
         } else {
             // マネージャから取得
-            $mgr = $this->backend->getManager($split[0]);
+            $mgr = $this->controller->getManager($split[0]);
             $attr_list = $mgr->getAttrList($split[1]);
             if (is_array($attr_list)) {
                 foreach ($attr_list as $key => $val) {
@@ -1007,8 +1009,7 @@ class Ethna_ViewClass
      */
     function _getRenderer()
     {
-        $c = $this->backend->getController();
-        $renderer = $c->getRenderer();
+        $renderer = $this->controller->getRenderer();
 
         $form_array = $this->af->getArray();
         $app_array = $this->af->getAppArray();
