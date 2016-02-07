@@ -776,4 +776,66 @@ class Ethna_Controller
         return sprintf('%s_%sManager', $this->getAppId(), ucfirst($manager_id));
     }
 
+    /**
+     *  マネージャオブジェクトへのアクセサ(R)
+     *
+     *  @access public
+     *  @return object  Ethna_AppManager    マネージャオブジェクト
+     */
+    public function getManager($type)
+    {
+        return $this->getClassFactory()->getManager($type);
+    }
+
+    /**
+     *  アプリケーションの設定ディレクトリを取得する
+     *
+     *  @access public
+     *  @return string  設定ディレクトリのパス名
+     */
+    public function getEtcdir()
+    {
+        return $this->getDirectory('etc');
+    }
+
+    /**
+     *  アプリケーションのテンポラリディレクトリを取得する
+     *
+     *  @access public
+     *  @return string  テンポラリディレクトリのパス名
+     */
+    public function getTmpdir()
+    {
+        return $this->getDirectory('tmp');
+    }
+
+    /**
+     *  アプリケーションのテンプレートファイル拡張子を取得する
+     *
+     *  @access public
+     *  @return string  テンプレートファイルの拡張子
+     */
+    public function getTemplateext()
+    {
+        return $this->getExt('tpl');
+    }
+
+    /**
+     *  ログを出力する
+     *
+     *  @access public
+     *  @param  int     $level      ログレベル(LOG_DEBUG, LOG_NOTICE...)
+     *  @param  string  $message    ログメッセージ(printf形式)
+     */
+    public function log($level, $message)
+    {
+        $args = func_get_args();
+        if (count($args) > 2) {
+            array_splice($args, 0, 2);
+            $message = vsprintf($message, $args);
+        }
+        $this->getLogger()->log($level, $message);
+    }
+
+
 }

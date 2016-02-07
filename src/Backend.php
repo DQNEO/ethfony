@@ -139,7 +139,7 @@ class Ethna_Backend
      */
     public function getManager($type)
     {
-        return $this->controller->getClassFactory()->getManager($type);
+        return $this->controller->getManager($type);
     }
 
     /**
@@ -172,7 +172,7 @@ class Ethna_Backend
      */
     public function getEtcdir()
     {
-        return $this->controller->getDirectory('etc');
+        return $this->controller->getEtcdir();
     }
 
     /**
@@ -183,7 +183,7 @@ class Ethna_Backend
      */
     public function getTmpdir()
     {
-        return $this->controller->getDirectory('tmp');
+        return $this->controller->getTmpdir();
     }
 
     /**
@@ -211,7 +211,7 @@ class Ethna_Backend
             array_splice($args, 0, 2);
             $message = vsprintf($message, $args);
         }
-        $this->controller->getLogger()->log($level, $message);
+        $this->controller->log($level, $message);
     }
 
 }
