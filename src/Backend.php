@@ -291,7 +291,7 @@ class Ethna_Backend
             array_splice($args, 0, 2);
             $message = vsprintf($message, $args);
         }
-        $this->logger->log($level, $message);
+        $this->controller->getLogger()->log($level, $message);
     }
 
 }
