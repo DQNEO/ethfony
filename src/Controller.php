@@ -125,7 +125,7 @@ class Ethna_Controller
     public function __construct($gateway)
     {
         $this->gateway = $gateway;
-
+        $this->locale = 'ja_JP';
     }
 
     /**
@@ -585,7 +585,6 @@ class Ethna_Controller
         $session = $this->getSession();
         $session->restore();
 
-        $this->locale = 'ja_JP';
         $i18n = $this->getI18N();
         $i18n->setLanguage($this->locale);
 
