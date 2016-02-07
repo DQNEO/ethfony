@@ -31,12 +31,6 @@ class Ethna_Backend
     /** @protected    object  Ethna_ActionForm    アクションフォームオブジェクト($action_formの省略形) */
     public $af;
 
-    /** @protected    object  Ethna_Logger        ログオブジェクト */
-    public $logger;
-
-    /**#@-*/
-
-
     /**
      *  Ethna_Backendクラスのコンストラクタ
      *
@@ -51,8 +45,6 @@ class Ethna_Backend
 
         $this->action_error = $controller->getActionError();
         $this->ae = $this->action_error;
-
-        $this->logger = $this->controller->getLogger();
     }
 
     /**
@@ -151,7 +143,7 @@ class Ethna_Backend
      */
     public function getLogger()
     {
-        return $this->logger;
+        return $this->controller->getLogger();
     }
 
     /**
