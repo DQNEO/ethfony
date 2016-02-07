@@ -19,16 +19,6 @@
  */
 class Ethna_Backend
 {
-    /**#@+
-     *  @access     private
-     */
-
-    /** @protected    object  Ethna_Controller    controllerオブジェクト */
-    public $controller;
-
-    /** @protected    object  Ethna_Controller    controllerオブジェクト($controllerの省略形) */
-    public $ctl;
-
     /** @protected    object  Ethna_ClassFactory  クラスファクトリオブジェクト */
     public $class_factory;
 
