@@ -536,9 +536,6 @@ class Ethna_Controller
      */
     private function trigger($default_action_name = "", $fallback_action_name = "")
     {
-
-        mb_internal_encoding($this->encoding);
-        mb_regex_encoding($this->encoding);
         $GLOBALS['_Ethna_controller'] = $this;
         if ($this->base === "") {
             // EthnaコマンドなどでBASEが定義されていない場合がある
@@ -573,8 +570,6 @@ class Ethna_Controller
             }
         }
         // 初期設定
-        $this->locale = 'ja_JP';
-
         $this->config = $this->getConfig();
         $this->url = $this->config->get('url');
         if (empty($this->url) && PHP_SAPI != 'cli') {
@@ -617,10 +612,7 @@ class Ethna_Controller
         $session = $this->getSession();
         $session->restore();
 
-        // 言語切り替えフックを呼ぶ
-        //   $this->localeを書き換えた場合は
-        //   必ず Ethna_I18N クラスの setLanguageメソッドも呼ぶこと!
-        //   さもないとカタログその他が再ロードされない！
+        $this->locale = 'ja_JP';
         $i18n = $this->getI18N();
         $i18n->setLanguage($this->locale);
 
