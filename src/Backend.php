@@ -87,10 +87,6 @@ class Ethna_Backend
 
         $this->action_error = $controller->getActionError();
         $this->ae = $this->action_error;
-        $this->action_form = $controller->getActionForm();
-        $this->af = $this->action_form;
-        $this->action_class = null;
-        $this->ac = $this->action_class;
 
         $this->session = $this->controller->getSession();
         $this->plugin = $this->controller->getPlugin();
