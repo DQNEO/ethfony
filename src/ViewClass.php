@@ -94,6 +94,7 @@ class Ethna_ViewClass
     {
         $c = $backend->getController();
         $this->ctl = $c;
+        $this->ctl->view = $this;
         $this->backend = $backend;
         $this->config = $this->backend->getConfig();
         $this->i18n = $this->backend->getI18N();
@@ -117,11 +118,6 @@ class Ethna_ViewClass
     }
     // }}}
 
-    public function send()
-    {
-        $this->preforward();
-        $this->forward();
-    }
     // {{{ preforward
     /**
      *  画面表示前処理

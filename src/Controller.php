@@ -68,7 +68,7 @@ class Ethna_Controller
     protected $action_form = null;
 
     /** @protected    object  Ethna_View          ビューオブジェクト */
-    protected $view = null;
+    public $view = null;
 
     /** @protected    object  Ethna_Config        設定オブジェクト */
     protected $config = null;
@@ -644,22 +644,9 @@ class Ethna_Controller
         } else {
             $viewResolver = new Ethna_ViewResolver($backend, $this->logger, $this->getViewdir(), $this->getAppId(), $this->class_factory->getObjectName('view'));
             $res = $ac->run($viewResolver);
-            if (is_string($res)) {
-                throw new \Exception('action MUST not return string');
-            }
-            if ($res === null) {
-                $this->end();
-                return;
-            }
-
-            if ($res instanceof Response || $res instanceof Ethna_ViewClass) {
-                $this->view = $res;
-                $res->send();
-                $this->end();
-                return;
-            }
-
-
+            $res->send();
+            $this->end();
+            return;
         }
 
     }
