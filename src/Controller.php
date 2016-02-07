@@ -585,11 +585,12 @@ class Ethna_Controller
         $this->plugin->setLogger($this->logger);
         $this->logger->begin();
 
+        $this->actionResolver = new Ethna_ActionResolver($this->getAppId(), $this->logger, $this->class_factory, $this->_getGatewayPrefix(), $this->getActiondir());
         // アクション名の取得
-        $action_name = $this->_getActionName($default_action_name, $fallback_action_name);
+        $action_name = $this->actionResolver->_getActionName($default_action_name, $fallback_action_name);
 
         // アクション定義の取得
-        $action_obj = $this->_getAction($action_name);
+        $action_obj = $this->actionResolver->_getAction($action_name);
         if (is_null($action_obj)) {
             if ($fallback_action_name != "") {
                 $this->logger->log(LOG_DEBUG, 'undefined action [%s] -> try fallback action [%s]', $action_name, $fallback_action_name);
@@ -604,6 +605,7 @@ class Ethna_Controller
                 $action_name = $fallback_action_name;
             }
         }
+        unset($action_obj);
 
         $this->action_name = $action_name;
 
@@ -618,14 +620,14 @@ class Ethna_Controller
 
         // アクションフォーム初期化
         // フォーム定義、フォーム値設定
-        $form_name = $this->getActionFormName($action_name);
+        $form_name = $this->actionResolver->getActionFormName($action_name);
         $this->action_form = new $form_name($this);
         $backend->setActionForm($this->action_form);
         $this->action_form->setFormDef_PreHelper();
         $this->action_form->setFormVars();
 
 
-        $action_class_name = $this->getActionClassName($action_name);
+        $action_class_name = $this->actionResolver->getActionClassName($action_name);
         $ac = new $action_class_name($backend);
         $backend->setActionClass($ac);
 
@@ -643,6 +645,10 @@ class Ethna_Controller
     }
 
 
+    public function getActionFormName($action_name)
+    {
+        return $this->actionResolver->getActionFormName($action_name);
+    }
     /**
      *  エラーハンドラ
      *
@@ -813,37 +819,6 @@ class Ethna_Controller
         return $s;
     }
 
-    /**
-     *  フォームにより要求されたアクション名に対応する定義を返す
-     *
-     *  @param  string  $action_name    アクション名
-     *  @return array   アクション定義
-     */
-    public function _getAction($action_name)
-    {
-        $action = array();
-        $action_obj = array();
-
-        // アクションスクリプトのインクルード
-        $this->_includeActionScript($action_name);
-
-        $action_obj['class_name'] = $this->getDefaultActionClass($action_name);
-        $action_obj['form_name'] = $this->getDefaultFormClass($action_name);
-
-        // 必要条件の確認
-        if (class_exists($action_obj['class_name']) == false) {
-            $this->logger->log(LOG_NOTICE, 'action class is not defined [%s]', $action_obj['class_name']);
-            return null;
-        }
-        if (class_exists($action_obj['form_name']) == false) {
-            // フォームクラスは未定義でも良い
-            $class_name = $this->class_factory->getObjectName('form');
-            $this->logger->log(LOG_DEBUG, 'form class is not defined [%s] -> falling back to default [%s]', $action_obj['form_name'], $class_name);
-            $action_obj['form_name'] = $class_name;
-        }
-
-        return $action_obj;
-    }
 
     /**
      *  アクション名が実行許可されているものかどうかを返す
@@ -867,42 +842,6 @@ class Ethna_Controller
         return false;
     }
 
-    /**
-     *  指定されたアクションのフォームクラス名を返す(オブジェクトの生成は行わない)
-     *
-     *  @access public
-     *  @param  string  $action_name    アクション名
-     *  @return string  アクションのフォームクラス名
-     */
-    public function getActionFormName($action_name)
-    {
-        $action_obj = $this->_getAction($action_name);
-        if (is_null($action_obj)) {
-            return null;
-        }
-
-        return $action_obj['form_name'];
-    }
-
-    /**
-     *  アクションに対応するフォームクラス名が省略された場合のデフォルトクラス名を返す
-     *
-     *  デフォルトでは[プロジェクトID]_Form_[アクション名]となるので好み応じてオーバライドする
-     *
-     *  @access public
-     *  @param  string  $action_name    アクション名
-     *  @return string  アクションフォーム名
-     */
-    public function getDefaultFormClass($action_name, $gateway = null)
-    {
-        $gateway_prefix = $this->_getGatewayPrefix($gateway);
-
-        $postfix = preg_replace_callback('/_(.)/', function(array $matches){return strtoupper($matches[1]);}, ucfirst($action_name));
-        $r = sprintf("%s_%sForm_%s", $this->getAppId(), $gateway_prefix ? $gateway_prefix . "_" : "", $postfix);
-        $this->logger->log(LOG_DEBUG, "default action class [%s]", $r);
-
-        return $r;
-    }
 
     /**
      *  getDefaultFormClass()で取得したクラス名からアクション名を取得する
@@ -928,99 +867,6 @@ class Ethna_Controller
         return $action_name;
     }
 
-    /**
-     *  アクションに対応するフォームパス名が省略された場合のデフォルトパス名を返す
-     *
-     *  デフォルトでは_getDefaultActionPath()と同じ結果を返す(1ファイルに
-     *  アクションクラスとフォームクラスが記述される)ので、好みに応じて
-     *  オーバーライドする
-     *
-     *  @access public
-     *  @param  string  $action_name    アクション名
-     *  @return string  form classが定義されるスクリプトのパス名
-     */
-    public function getDefaultFormPath($action_name)
-    {
-        return $this->getDefaultActionPath($action_name);
-    }
-
-    /**
-     *  指定されたアクションのクラス名を返す(オブジェクトの生成は行わない)
-     *
-     *  @access public
-     *  @param  string  $action_name    アクションの名称
-     *  @return string  アクションのクラス名
-     */
-    public function getActionClassName($action_name)
-    {
-        $action_obj = $this->_getAction($action_name);
-        if ($action_obj == null) {
-            return null;
-        }
-
-        return $action_obj['class_name'];
-    }
-
-    /**
-     *  アクションに対応するアクションクラス名が省略された場合のデフォルトクラス名を返す
-     *
-     *  デフォルトでは[プロジェクトID]_Action_[アクション名]となるので好み応じてオーバライドする
-     *
-     *  @access public
-     *  @param  string  $action_name    アクション名
-     *  @return string  アクションクラス名
-     */
-    public function getDefaultActionClass($action_name, $gateway = null)
-    {
-        $gateway_prefix = $this->_getGatewayPrefix($gateway);
-
-        $postfix = preg_replace_callback('/_(.)/', function(array $matches){return strtoupper($matches[1]);}, ucfirst($action_name));
-        $r = sprintf("%s_%sAction_%s", $this->getAppId(), $gateway_prefix ? $gateway_prefix . "_" : "", $postfix);
-        $this->logger->log(LOG_DEBUG, "default action class [%s]", $r);
-
-        return $r;
-    }
-
-    /**
-     *  getDefaultActionClass()で取得したクラス名からアクション名を取得する
-     *
-     *  getDefaultActionClass()をオーバーライドした場合、こちらも合わせてオーバーライド
-     *  することを推奨(必須ではない)
-     *
-     *  @access public
-     *  @param  string  $class_name     アクションクラス名
-     *  @return string  アクション名
-     */
-    public function actionClassToName($class_name)
-    {
-        $prefix = sprintf("%s_Action_", $this->getAppId());
-        if (preg_match("/$prefix(.*)/", $class_name, $match) == 0) {
-            // 不明なクラス名
-            return null;
-        }
-        $target = $match[1];
-
-        $action_name = substr(preg_replace('/([A-Z])/e', "'_' . strtolower('\$1')", $target), 1);
-
-        return $action_name;
-    }
-
-    /**
-     *  アクションに対応するアクションパス名が省略された場合のデフォルトパス名を返す
-     *
-     *  デフォルトでは"foo_bar" -> "/Foo/Bar.php"となるので好み応じてオーバーライドする
-     *
-     *  @access public
-     *  @param  string  $action_name    アクション名
-     *  @return string  アクションクラスが定義されるスクリプトのパス名
-     */
-    public function getDefaultActionPath($action_name)
-    {
-        $r = preg_replace_callback('/_(.)/', function(array $matches){return '/' . strtoupper($matches[1]);}, ucfirst($action_name)) . '.php';
-        $this->logger->log(LOG_DEBUG, "default action path [%s]", $r);
-
-        return $r;
-    }
 
     /**
      *  テンプレートパス名から遷移名を取得する
@@ -1081,10 +927,9 @@ class Ethna_Controller
      *  @param  string  $gateway    ゲートウェイ
      *  @return string  ゲートウェイクラスプレフィクス
      */
-    protected function _getGatewayPrefix($gateway = null)
+    protected function _getGatewayPrefix()
     {
-        $gateway = is_null($gateway) ? $this->getGateway() : $gateway;
-        switch ($gateway) {
+        switch ( $this->getGateway()) {
         case GATEWAY_WWW:
             $prefix = '';
             break;
@@ -1114,36 +959,4 @@ class Ethna_Controller
         return sprintf('%s_%sManager', $this->getAppId(), ucfirst($manager_id));
     }
 
-    /**
-     *  アクションスクリプトをインクルードする
-     *
-     *  ただし、インクルードしたファイルにクラスが正しく定義されているかどうかは保証しない
-     *
-     *  @access private
-     *  @param  string  $action_name    アクション名
-     */
-    protected function _includeActionScript($action_name)
-    {
-        $class_path = $form_path = null;
-
-        $action_dir = $this->getActiondir();
-
-        $class_path = $this->getDefaultActionPath($action_name);
-        if (file_exists($action_dir . $class_path)) {
-            include_once $action_dir . $class_path;
-        } else {
-            $this->logger->log(LOG_INFO, 'file not found:'.$action_dir . $class_path);
-            return;
-        }
-
-        $form_path = $this->getDefaultFormPath($action_name);
-        if ($form_path == $class_path) {
-            return;
-        }
-        if (file_exists($action_dir . $form_path)) {
-            include_once $action_dir . $form_path;
-        } else {
-            $this->logger->log(LOG_DEBUG, 'default form file not found [%s] -> maybe falling back to default form class', $form_path);
-        }
-    }
 }
