@@ -69,20 +69,20 @@ class Ethna_ActionClass
      */
     public function __construct($backend)
     {
-        $c = $backend->getController();
+        $controller = $backend->getController();
         $this->backend = $backend;
-        $this->config = $this->backend->getConfig();
-        $this->i18n = $this->backend->getI18N();
+        $this->config = $controller->getConfig();
+        $this->i18n = $controller->getI18N();
 
-        $this->action_error = $this->backend->getActionError();
+        $this->action_error = $controller->getActionError();
         $this->ae = $this->action_error;
 
-        $this->action_form = $this->backend->getActionForm();
+        $this->action_form = $controller->getActionForm();
         $this->af = $this->action_form;
 
-        $this->session = $this->backend->getSession();
-        $this->plugin = $this->backend->getPlugin();
-        $this->logger = $this->backend->getLogger();
+        $this->session = $controller->getSession();
+        $this->plugin = $controller->getPlugin();
+        $this->logger = $controller->getLogger();
     }
 
     /**
