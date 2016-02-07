@@ -31,12 +31,6 @@ class Ethna_Backend
     /** @protected    object  Ethna_ActionForm    アクションフォームオブジェクト($action_formの省略形) */
     public $af;
 
-    /** @protected    object  Ethna_ActionClass   アクションクラスオブジェクト */
-    public $action_class;
-
-    /** @protected    object  Ethna_ActionClass   アクションクラスオブジェクト($action_classの省略形) */
-    public $ac;
-
     /** @protected    object  Ethna_Logger        ログオブジェクト */
     public $logger;
 
@@ -136,17 +130,6 @@ class Ethna_Backend
     {
         $this->action_form = $action_form;
         $this->af = $action_form;
-    }
-
-    /**
-     *  実行中のアクションクラスオブジェクトのアクセサ(R)
-     *
-     *  @access public
-     *  @return mixed   Ethna_ActionClass:アクションクラス null:アクションクラス未定
-     */
-    public function getActionClass()
-    {
-        return $this->action_class;
     }
 
     /**
