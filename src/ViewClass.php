@@ -107,6 +107,11 @@ class Ethna_ViewClass
     }
     // }}}
 
+    protected function getCurrentActionName()
+    {
+        return $this->ctl->getCurrentActionName();
+    }
+
     // {{{ preforward
     /**
      *  画面表示前処理
