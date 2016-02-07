@@ -37,8 +37,7 @@ class Ethna_MailSender
     /** @var    string  送信オプション */
     var $option = '';
 
-    /** @var    object  Ethna_Backend   backendオブジェクト */
-    var $backend;
+    var $controller;
 
     /** @var    object  Ethna_Config    設定オブジェクト */
     var $config;
@@ -53,8 +52,8 @@ class Ethna_MailSender
      */
     public function __construct($backend)
     {
-        $this->backend = $backend;
-        $this->config = $this->backend->getConfig();
+        $this->controller = $this->backend->getController();
+        $this->config = $this->controller()->getConfig();
     }
 
     /**
@@ -276,8 +275,7 @@ class Ethna_MailSender
      */
     function getRenderer()
     {
-        $c = $this->backend->getController();
-        return $c->getRenderer();
+        return $this->controller->getRenderer();
     }
 }
 // }}}
