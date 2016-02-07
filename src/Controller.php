@@ -596,7 +596,6 @@ class Ethna_Controller
         $this->action_form->setFormVars();
 
         $ac = $actionResolver->newAction($action_name, $backend);
-        $backend->setActionClass($ac);
 
         if ($this->getGateway() === GATEWAY_CLI) {
             $ac->runcli();

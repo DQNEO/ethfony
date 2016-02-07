@@ -112,15 +112,6 @@ class Ethna_Backend
         $this->action_form = $action_form;
     }
 
-    /**
-     *  実行中のアクションクラスオブジェクトのアクセサ(W)
-     *
-     *  @access public
-     */
-    public function setActionClass($action_class)
-    {
-        $this->action_class = $action_class;
-    }
 
     /**
      *  ログオブジェクトのアクセサ(R)
