@@ -632,7 +632,6 @@ class Ethna_Controller
         $this->action_form->setFormDef_PreHelper();
         $this->action_form->setFormVars();
 
-        // Action#perform 実行
 
         $action_class_name = $this->getActionClassName($action_name);
         $ac = new $action_class_name($backend);
