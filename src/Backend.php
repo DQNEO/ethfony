@@ -229,8 +229,7 @@ class Ethna_Backend
      */
     public function getManager($type)
     {
-        $_ret_object = $this->class_factory->getManager($type);
-        return $_ret_object;
+        return $this->controller->getClassFactory()->getManager($type);
     }
 
     /**
