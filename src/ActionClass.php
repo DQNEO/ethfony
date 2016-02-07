@@ -31,6 +31,7 @@ class Ethna_ActionClass
 
     /** @protected    object  Ethna_Backend       backendオブジェクト */
     protected $backend;
+    protected $controller;
 
     /** @protected    object  Ethna_Config        設定オブジェクト    */
     protected $config;
@@ -69,7 +70,7 @@ class Ethna_ActionClass
      */
     public function __construct($backend)
     {
-        $controller = $backend->getController();
+        $this->controller = $controller = $backend->getController();
         $this->backend = $backend;
         $this->config = $controller->getConfig();
         $this->i18n = $controller->getI18N();
