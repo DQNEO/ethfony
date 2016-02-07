@@ -231,7 +231,7 @@ class Ethna_Controller
             break;
         }
 
-        return (empty($this->directory[$key]) ? ($this->base . (empty($this->base) ? '' : '/')) : ($this->directory[$key] . "/"));
+        return $this->directory[$key] . "/";
     }
 
     /**
