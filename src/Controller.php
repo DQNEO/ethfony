@@ -556,7 +556,7 @@ class Ethna_Controller
                 $this->directory[$key] = $tmp;
             } else {
                 if (Ethna_Util::isAbsolute($value) == false) {
-                    $this->directory[$key] = $this->base . (empty($this->base) ? '' : '/') . $value;
+                    $this->directory[$key] = $this->base . '/' . $value;
                 }
             }
         }
