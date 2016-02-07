@@ -19,9 +19,6 @@
  */
 class Ethna_Backend
 {
-    /** @protected    object  Ethna_I18N          i18nオブジェクト */
-    public $i18n;
-
     /** @protected    object  Ethna_ActionError   アクションエラーオブジェクト */
     public $action_error;
 
@@ -63,8 +60,6 @@ class Ethna_Backend
         // オブジェクトの設定
         $this->controller = $controller;
         $this->ctl = $this->controller;
-
-        $this->i18n = $controller->getI18N();
 
         $this->action_error = $controller->getActionError();
         $this->ae = $this->action_error;
@@ -115,7 +110,7 @@ class Ethna_Backend
      */
     public function getI18N()
     {
-        return $this->i18n;
+        return $this->controller->getI18N();
     }
 
     /**
