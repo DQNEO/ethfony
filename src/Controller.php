@@ -535,14 +535,7 @@ class Ethna_Controller
     private function trigger($default_action_name = "", $fallback_action_name = "")
     {
         $GLOBALS['_Ethna_controller'] = $this;
-        if ($this->base === "") {
-            // EthnaコマンドなどでBASEが定義されていない場合がある
-            if (defined('BASE')) {
-                $this->base = BASE;
-            }
-        }
-
-
+        $this->base = BASE;
         // クラスファクトリオブジェクトの生成
         $class_factory = $this->class['class'];
         $this->class_factory = new $class_factory($this, $this->class);
