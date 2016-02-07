@@ -149,15 +149,9 @@ class Ethna_ViewClass
         $renderer = $this->_getRenderer();
         $this->_setDefault($renderer);
 
-        if ($this->has_default_header) {
-            $this->default_header['Content-Type'] = 'text/html; charset=' . $this->ctl->getEncoding();
-            $this->header($this->default_header);
-        }
-
         $e = $renderer->perform($this->forward_path);
         if (Ethna::isError($e)) {
-            echo '<h1>Rendering error:</h1>';
-            echo '<h2>Message: ' . $e->getMessage() . '</h2>';
+            throw new \Exception($e->getMessage());
         }
     }
     // }}}
