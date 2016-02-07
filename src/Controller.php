@@ -549,15 +549,11 @@ class Ethna_Controller
                 // Smartyプラグインディレクトリは配列で指定する
                 $tmp = array();
                 foreach (to_array($value) as $elt) {
-                    if (Ethna_Util::isAbsolute($elt) == false) {
-                        $tmp[] = $this->base . (empty($this->base) ? '' : '/') . $elt;
-                    }
+                    $tmp[] = $this->base . '/' . $elt;
                 }
                 $this->directory[$key] = $tmp;
             } else {
-                if (Ethna_Util::isAbsolute($value) == false) {
-                    $this->directory[$key] = $this->base . '/' . $value;
-                }
+                $this->directory[$key] = $this->base . '/' . $value;
             }
         }
         // 初期設定
