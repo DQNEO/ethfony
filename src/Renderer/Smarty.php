@@ -85,7 +85,7 @@ class Ethna_Renderer_Smarty extends Ethna_Renderer
         if ($template !== null) {
             $this->template = $template;
         }
-
+        set_error_handler(null);
         if ((is_absolute_path($this->template) && is_readable($this->template))
             || is_readable($this->template_dir . $this->template)) {
                 if ($capture === true) {
