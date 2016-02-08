@@ -32,9 +32,6 @@ class Ethna_Renderer
     /** @protected    array   config.phpのレンダラ設定 */
     protected $config;
 
-    /** @protected    array   default configuration for the renderer */
-    protected $config_default = array();
-
     /** @protected    string  template directory  */
     protected $template_dir;
 
@@ -71,7 +68,6 @@ class Ethna_Renderer
         $template_dir = $controller->getTemplatedir();
         $this->template_dir = $template_dir;
 
-        $this->config = $this->config_default;
         $this->logger = $this->controller->getLogger();
     }
 
