@@ -343,19 +343,5 @@ class Ethna_Renderer
     {
         return $this->perform($template);
     }
-    // }}}
 
-    /**
-     *  mergeConfig
-     *
-     *  Merge renderer configuration default and user config.
-     */
-    public function mergeConfig(array $config_default, array $user_config)
-    {
-        return array_merge(
-            $config_default,
-            $user_config
-        );
-    }
 }
-// }}}

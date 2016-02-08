@@ -48,12 +48,9 @@ class Ethna_Renderer_Smarty extends Ethna_Renderer
         $this->engine->compile_dir = $this->compile_dir;
         $this->engine->compile_id = md5($this->template_dir);
 
-        // get renderer config
-        $smarty_config = $this->config;
-
         // delimiter setting
-        $this->engine->left_delimiter = $smarty_config['left_delimiter'];
-        $this->engine->right_delimiter = $smarty_config['right_delimiter'];
+        $this->engine->left_delimiter = $this->config['left_delimiter'];
+        $this->engine->right_delimiter = $this->config['right_delimiter'];
 
         // コンパイルディレクトリは必須なので一応がんばってみる
         if (is_dir($this->engine->compile_dir) === false) {
