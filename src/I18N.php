@@ -25,9 +25,6 @@ class Ethna_I18N
     /** @protected    Ethna_Controller  コントローラーオブジェクト  */
     protected $ctl;
 
-    /** @protected    bool    gettextフラグ */
-    protected $use_gettext;
-
     /** @protected    string  ロケール */
     protected $locale;
 
@@ -62,18 +59,7 @@ class Ethna_I18N
 
         $this->ctl = Ethna_Controller::getInstance();
         $this->encoding = $this->ctl->getEncoding();
-        $config = $this->ctl->getConfig();
         $this->logger = $this->ctl->getLogger();
-        $this->use_gettext = $config->get('use_gettext') ? true : false;
-
-        //    gettext load check. 
-        if ($this->use_gettext === true
-         && !extension_loaded("gettext")) {
-            $this->logger->log(LOG_WARNING,
-                "You specify to use gettext in etc/config.php, "
-              . "but gettext extension was not installed !!!"
-            );
-        }
 
         $this->messages = false;  //  not initialized yet.
     }
@@ -105,19 +91,7 @@ class Ethna_I18N
     public function setLanguage($locale)
     {
         setlocale(LC_ALL, $locale . "." . $this->encoding);
-
-        if ($this->use_gettext) {
-            bind_textdomain_codeset($locale, $this->encoding);
-            bindtextdomain($locale, $this->locale_dir);
-            textdomain($locale);
-        }
-
         $this->locale = $locale;
-
-        //  強制的にメッセージカタログ再生成
-        if (!$this->use_gettext) {
-            $this->messages = $this->_makeEthnaMsgCatalog();
-        }
     }
 
     /**
@@ -129,36 +103,22 @@ class Ethna_I18N
      */
     public function get($msg)
     {
+        //
+        //  初期化されてない場合は、
+        //  Ethna独自のメッセージカタログを初期化
+        //
+        if ($this->messages === false) {
+            $this->messages = $this->_makeEthnaMsgCatalog();
+        }
 
-        if ($this->use_gettext) {
-
-            //
-            //    gettext から返されるメッセージは、
-            //    [appid]/locale/[locale_name]/LC_MESSAGES/[locale].mo から
-            //    返される。エンコーディング変換はgettext任せである
-            //
-            return gettext($msg);
-
-        } else {
-
-            //
-            //  初期化されてない場合は、
-            //  Ethna独自のメッセージカタログを初期化
-            //
-            if ($this->messages === false) {
-                $this->messages = $this->_makeEthnaMsgCatalog();
-            }
-
-            //
-            //  Ethna独自のメッセージは、
-            //  [appid]/locale/[locale_name]/LC_MESSAGES/*.ini から
-            //  返される。
-            //
-            if (isset($this->messages[$msg]) && !empty($this->messages[$msg])) {
-                $ret_message = $this->messages[$msg];
-                return $ret_message;
-            }
-
+        //
+        //  Ethna独自のメッセージは、
+        //  [appid]/locale/[locale_name]/LC_MESSAGES/*.ini から
+        //  返される。
+        //
+        if (isset($this->messages[$msg]) && !empty($this->messages[$msg])) {
+            $ret_message = $this->messages[$msg];
+            return $ret_message;
         }
 
         return $msg;

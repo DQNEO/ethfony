@@ -1,5 +1,4 @@
 <?php
-// vim: foldmethod=marker
 /**
  *  AppManager.php
  *
@@ -21,12 +20,10 @@ class Ethna_AppManager
 {
     /**     object  Ethna_Backend       backendオブジェクト */
     public $backend;
+    public $controller;
 
     /**     object  Ethna_Config        設定オブジェクト */
     public $config;
-
-    /**      object  Ethna_DB      DBオブジェクト */
-    public $db;
 
     /**     object  Ethna_I18N          i18nオブジェクト */
     public $i18n;
@@ -52,33 +49,14 @@ class Ethna_AppManager
     {
         // 基本オブジェクトの設定
         $this->backend = $backend;
-        $this->config = $backend->getConfig();
-        $this->i18n = $backend->getI18N();
-        $this->action_form = $backend->getActionForm();
+        $this->controller = $controller = $backend->controller;
+        $this->config = $controller->getConfig();
+        $this->i18n = $controller->getI18N();
+        $this->action_form = $controller->getActionForm();
+        $this->session = $controller->getSession();
+
         $this->af = $this->action_form;
-        $this->session = $backend->getSession();
-
-        $db_list = $backend->getDBList();
-        if (Ethna::isError($db_list) == false) {
-            foreach ($db_list as $elt) {
-                $varname = $elt['varname'];
-                $this->$varname = $elt['db'];
-            }
-        }
     }
 
-    /**
-     *  属性の一覧を返す
-     *
-     *  @access public
-     *  @param  string  $attr_name  属性の名前(変数名)
-     *  @return array   属性値一覧
-     */
-    function getAttrList($attr_name)
-    {
-        $varname = $attr_name . "_list";
-        return $this->$varname;
-    }
 
 }
-// }}}

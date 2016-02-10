@@ -32,9 +32,6 @@ class Ethna_Renderer
     /** @protected    array   config.phpのレンダラ設定 */
     protected $config;
 
-    /** @protected    array   default configuration for the renderer */
-    protected $config_default = array();
-
     /** @protected    string  template directory  */
     protected $template_dir;
 
@@ -71,15 +68,7 @@ class Ethna_Renderer
         $template_dir = $controller->getTemplatedir();
         $this->template_dir = $template_dir;
 
-        // load configuration
-        $config = $this->ctl->getConfig();
-        $renderer_config = $config->get('renderer');
-        $this->config = $this->mergeConfig(
-            $this->config_default,
-            (isset($renderer_config[$this->getName()]) ? $renderer_config[$this->getName()] : array())
-        );
-
-        $this->logger = $this->controller->getBackend()->getLogger();
+        $this->logger = $this->controller->getLogger();
     }
 
     /**
@@ -350,19 +339,5 @@ class Ethna_Renderer
     {
         return $this->perform($template);
     }
-    // }}}
 
-    /**
-     *  mergeConfig
-     *
-     *  Merge renderer configuration default and user config.
-     */
-    public function mergeConfig(array $config_default, array $user_config)
-    {
-        return array_merge(
-            $config_default,
-            $user_config
-        );
-    }
 }
-// }}}

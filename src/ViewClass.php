@@ -71,35 +71,6 @@ class Ethna_ViewClass
     /** @protected    boolean  配列フォームを呼んだカウンタをリセットするか否か */
     protected $reset_counter = false;
 
-    /**#@-*/
-
-    /**#@+
-     *  @access protected
-     */
-
-    /** @var  string レイアウト(HTMLの外枠を記述するファイル)のテンプレートファイルを指定(拡張子は除く)   */
-    protected $_layout_file = 'layout';
-
-    /**#@-*/
-
-    /**#@+
-     *  @access public
-     */
-
-    /** @var boolean  レイアウトテンプレートの使用フラグ       */
-    public $use_layout = true;
-
-    /** @var  boolean  デフォルトのヘッダ出力を使用するか否か  */
-    /**                ヘッダ出力を改造する場合はfalseにする   */
-    public $has_default_header = true;
-
-    /** @var  array    default header */
-    public $default_header = array(
-        'Pragma' => 'no-cache',
-        'Cache-Control' => 'no-cache, no-store, must-revalidate',
-    );
-
-    // {{{ Ethna_ViewClass
     /**
      *  Ethna_ViewClassのコンストラクタ
      *
@@ -110,21 +81,22 @@ class Ethna_ViewClass
      */
     public function __construct($backend, $forward_name, $forward_path)
     {
-        $c = $backend->getController();
-        $this->ctl = $c;
         $this->backend = $backend;
-        $this->config = $this->backend->getConfig();
-        $this->i18n = $this->backend->getI18N();
-        $this->logger = $this->backend->getLogger();
-        $this->plugin = $this->backend->getPlugin();
 
-        $this->action_error = $this->backend->getActionError();
+        $this->ctl = $this->controller = $controller = $backend->getController();
+        $this->controller->view = $this;
+        $this->config = $this->controller->getConfig();
+        $this->i18n = $this->controller->getI18N();
+        $this->logger = $this->controller->getLogger();
+        $this->plugin = $this->controller->getPlugin();
+
+        $this->action_error = $this->controller->getActionError();
         $this->ae = $this->action_error;
 
-        $this->action_form = $this->backend->getActionForm();
+        $this->action_form = $this->controller->getActionForm();
         $this->af = $this->action_form;
 
-        $this->session = $this->backend->getSession();
+        $this->session = $this->controller->getSession();
 
         $this->forward_name = $forward_name;
         $this->forward_path = $forward_path;
@@ -134,6 +106,11 @@ class Ethna_ViewClass
         }
     }
     // }}}
+
+    protected function getCurrentActionName()
+    {
+        return $this->ctl->getCurrentActionName();
+    }
 
     // {{{ preforward
     /**
@@ -166,176 +143,11 @@ class Ethna_ViewClass
         $renderer = $this->_getRenderer();
         $this->_setDefault($renderer);
 
-        if ($this->has_default_header) {
-            $this->default_header['Content-Type'] = 'text/html; charset=' . $this->ctl->getEncoding();
-            $this->header($this->default_header);
-        }
-
-        // using layout.tpl flag
-        if ($this->use_layout) {
-
-            // check : layout file existance
-            $layout = $this->getLayout();
-            if ($this->templateExists($layout)) {
-                $content = $renderer->perform($this->forward_path, true);
-
-                if (Ethna::isError($content)) {
-                    if ($content->getCode() == E_GENERAL) {
-                        $error = 404;
-                    }
-                    else {
-                        $error = 500;
-                    }
-
-                    $this->error($error);
-                    $content = $renderer->perform($this->forward_path, true);
-                }
-
-                $renderer->setProp('content', $content);
-                if (isset($_SERVER['REQUEST_URI'])) {
-                    $uri_hash = md5($_SERVER['REQUEST_URI']);
-                    $e = $renderer->perform($layout, $uri_hash);
-                }
-                else {
-                    $e = $renderer->perform($layout);
-                }
-            } else {
-                return Ethna::raiseWarning('file "'.$layout.'" not found');
-            }
-        } else {
-            $e = $renderer->perform($this->forward_path);
-        }
-
+        $e = $renderer->perform($this->forward_path);
         if (Ethna::isError($e)) {
-            echo '<h1>Rendering error:</h1>';
-            echo '<h2>Message: ' . $e->getMessage() . '</h2>';
+            throw new \Exception($e->getMessage());
         }
     }
-    // }}}
-
-    // {{{ header
-    /**
-     *  HTTPヘッダを送信します。
-     *
-     *  @param  mixed   ヘッダを設定する値
-     *                  配列指定の場合、header => value の形式
-     *                  整数指定の場合は、HTTPステータスコード
-     *                  文字列で指定する場合は、ヘッダ出力をそのまま指定
-     *  @access public
-     */
-    public function header($status)
-    {
-        if (is_array($status)) {
-            foreach ($status as $key => $status) {
-                header ($key . ": " . $status);
-            }
-        } else if (is_int($status)) {
-            $codes = array(
-                100 => "Continue",
-                101 => "Switching Protocols",
-                200 => "OK",
-                201 => "Created",
-                202 => "Accepted",
-                203 => "Non-Authoritative Information",
-                204 => "No Content",
-                205 => "Reset Content",
-                206 => "Partial Content",
-                300 => "Multiple Choices",
-                301 => "Moved Permanently",
-                302 => "Found",
-                303 => "See Other",
-                304 => "Not Modified",
-                305 => "Use Proxy",
-                307 => "Temporary Redirect",
-                400 => "Bad Request",
-                401 => "Unauthorized",
-                402 => "Payment Required",
-                403 => "Forbidden",
-                404 => "Not Found",
-                405 => "Method Not Allowed",
-                406 => "Not Acceptable",
-                407 => "Proxy Authentication Required",
-                408 => "Request Time-out",
-                409 => "Conflict",
-                410 => "Gone",
-                411 => "Length Required",
-                412 => "Precondition Failed",
-                413 => "Request Entity Too Large",
-                414 => "Request-URI Too Large",
-                415 => "Unsupported Media Type",
-                416 => "Requested range not satisfiable",
-                417 => "Expectation Failed",
-                500 => "Internal Server Error",
-                501 => "Not Implemented",
-                502 => "Bad Gateway",
-                503 => "Service Unavailable",
-                504 => "Gateway Time-out"
-            );
-
-            if (array_key_exists($status, $codes)) {
-                header("HTTP/1.1: {$status} {$codes[$status]}");
-            }
-        } else {
-            // check valid header
-            if (preg_match("/^.+\:\s.+$/", $status)) {
-                header($status);
-            }
-        }
-    }
-    // }}}
-
-    // {{{ redirect
-    /**
-     *  リダイレクト処理
-     *   - デフォルトのヘッダを送信しない
-     *   - レイアウトテンプレートの使用をしない
-     *
-     *  @param  string  リダイレクト先(URL)
-     *  @param  int     HTTPステータスコード (3xx)
-     *  @access public
-     */
-    public function redirect($url, $staus_code = 302)
-    {
-        $this->has_default_header = false;
-        $this->use_layout = false;
-
-        $this->header($staus_code);
-        $this->header(array('Location' => $url));
-    }
-    // }}}
-
-    // {{{ setLayout
-    /**
-     *  レイアウトテンプレートのファイル名を設定します。
-     *  レイアウトテンプレートは、HTML の外枠を設定するのに使用します。
-     *  
-     *  @param string $filename  レイアウトファイル名
-     *  @access public
-     */
-    public function setLayout($filename)
-    {
-        // check layout file existance
-        if ($this->templateExists($filename . '.' . $this->ctl->getExt('tpl'))) {
-            $this->_layout_file = $filename;
-            return true;
-        } else {
-            return Ethna::raiseWarning('file "'. $filename . '.' . $this->ctl->getExt('tpl') . '" not found');
-        }
-    }
-    // }}}
-
-    // {{{ getLayout
-    /**
-     *  レイアウトテンプレートファイル名を取得します。
-     *  
-     *  @return string  レイアウトテンプレートのファイル名
-     *  @access public
-     */
-    public function getLayout()
-    {
-        return $this->_layout_file . '.' . $this->ctl->getExt('tpl');
-    }
-    // }}}
 
     // {{{ getCurrentForwardName()
     /**
@@ -367,23 +179,6 @@ class Ethna_ViewClass
         else {
             return false;
         }
-    }
-    // }}}
-
-    // {{{ error 
-    /**
-     *  エラーページ出力用のHTTPステータスコードを指定します。
-     *
-     *  @param  int  HTTPステータスコード
-     *  @access public
-     */
-    public function error($code)
-    {
-        $this->header($code);
-
-        // template 以下に error404.tpl とかがあれば， 
-        // preforward で $this->error(404); とかすればいい
-        $this->forward_path = "error{$code}.tpl";
     }
     // }}}
 
@@ -693,7 +488,7 @@ class Ethna_ViewClass
             }
         } else {
             // マネージャから取得
-            $mgr = $this->backend->getManager($split[0]);
+            $mgr = $this->controller->getManager($split[0]);
             $attr_list = $mgr->getAttrList($split[1]);
             if (is_array($attr_list)) {
                 foreach ($attr_list as $key => $val) {
@@ -1212,8 +1007,7 @@ class Ethna_ViewClass
      */
     function _getRenderer()
     {
-        $c = $this->backend->getController();
-        $renderer = $c->getRenderer();
+        $renderer = $this->controller->getRenderer();
 
         $form_array = $this->af->getArray();
         $app_array = $this->af->getAppArray();

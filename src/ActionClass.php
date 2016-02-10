@@ -8,8 +8,14 @@
  *  @package    Ethna
  *  @version    $Id$
  */
-
+use Symfony\Component\HttpFoundation\Response;
 // {{{ Ethna_ActionClass
+
+class ActionAbortedException extends \RuntimeException
+{
+
+}
+
 /**
  *  action実行クラス
  *
@@ -25,6 +31,7 @@ class Ethna_ActionClass
 
     /** @protected    object  Ethna_Backend       backendオブジェクト */
     protected $backend;
+    protected $controller;
 
     /** @protected    object  Ethna_Config        設定オブジェクト    */
     protected $config;
@@ -63,20 +70,20 @@ class Ethna_ActionClass
      */
     public function __construct($backend)
     {
-        $c = $backend->getController();
+        $this->controller = $controller = $backend->getController();
         $this->backend = $backend;
-        $this->config = $this->backend->getConfig();
-        $this->i18n = $this->backend->getI18N();
+        $this->config = $controller->getConfig();
+        $this->i18n = $controller->getI18N();
 
-        $this->action_error = $this->backend->getActionError();
+        $this->action_error = $controller->getActionError();
         $this->ae = $this->action_error;
 
-        $this->action_form = $this->backend->getActionForm();
+        $this->action_form = $controller->getActionForm();
         $this->af = $this->action_form;
 
-        $this->session = $this->backend->getSession();
-        $this->plugin = $this->backend->getPlugin();
-        $this->logger = $this->backend->getLogger();
+        $this->session = $controller->getSession();
+        $this->plugin = $controller->getPlugin();
+        $this->logger = $controller->getLogger();
     }
 
     /**
@@ -112,5 +119,37 @@ class Ethna_ActionClass
         return null;
     }
 
+    /** @var  Ethna_ViewResolver  */
+    protected $viewResolver;
+
+    public function run(Ethna_ViewResolver $viewResolver): Response
+    {
+        $this->viewResolver = $viewResolver;
+
+        $forward_name = $this->authenticate();
+        if ($forward_name === false) {
+            throw new ActionAbortedException();
+        } else if ($forward_name !== null) {
+            //Redirect Resposne or Ethna_ViewClass
+            return $forward_name;
+        }
+
+        $forward_name = $this->prepare();
+        if ($forward_name === false) {
+            throw new ActionAbortedException();
+        } else if ($forward_name !== null) {
+            return $forward_name;
+        }
+
+        $forward_name = $this->perform();
+        if ($forward_name === false) {
+            throw new ActionAbortedException();
+        } else if ($forward_name === null) {
+            throw new ActionAbortedException();
+        }
+
+
+        return $forward_name;
+    }
 }
 // }}}

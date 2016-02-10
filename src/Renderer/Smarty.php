@@ -22,7 +22,7 @@ class Ethna_Renderer_Smarty extends Ethna_Renderer
     /** @private    string compile directory  */
     private $compile_dir;
 
-    protected $config_default = array(
+    protected $config = array(
         'left_delimiter' => '{',
         'right_delimiter' => '}',
     );
@@ -48,12 +48,9 @@ class Ethna_Renderer_Smarty extends Ethna_Renderer
         $this->engine->compile_dir = $this->compile_dir;
         $this->engine->compile_id = md5($this->template_dir);
 
-        // get renderer config
-        $smarty_config = $this->config;
-
         // delimiter setting
-        $this->engine->left_delimiter = $smarty_config['left_delimiter'];
-        $this->engine->right_delimiter = $smarty_config['right_delimiter'];
+        $this->engine->left_delimiter = $this->config['left_delimiter'];
+        $this->engine->right_delimiter = $this->config['right_delimiter'];
 
         // コンパイルディレクトリは必須なので一応がんばってみる
         if (is_dir($this->engine->compile_dir) === false) {
@@ -88,7 +85,7 @@ class Ethna_Renderer_Smarty extends Ethna_Renderer
         if ($template !== null) {
             $this->template = $template;
         }
-
+        set_error_handler(null);
         if ((is_absolute_path($this->template) && is_readable($this->template))
             || is_readable($this->template_dir . $this->template)) {
                 if ($capture === true) {
@@ -99,7 +96,7 @@ class Ethna_Renderer_Smarty extends Ethna_Renderer
                     $this->engine->display($this->template);
                 }
         } else {
-            return Ethna::raiseWarning('template not found ' .$this->template_dir .  $this->template, 500);
+            throw new \Exception('template not found ' .$this->template_dir .  $this->template);
         }
     }
 
