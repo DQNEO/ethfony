@@ -44,13 +44,6 @@ class Ethna_Config
 
         // 設定ファイルの読み込み
         $r = $this->_getConfig();
-        if (Ethna::isError($r)) {
-            // この時点ではlogging等は出来ない(Loggerオブジェクトが生成されていない)
-            $fp = fopen("php://stderr", "r");
-            fputs($fp, sprintf("error occured while reading config file(s) [%s]\n"), $r->getInfo(0));
-            fclose($fp);
-            $this->controller->fatal();
-        }
     }
 
     /**
@@ -87,15 +80,16 @@ class Ethna_Config
      *  設定ファイルを読み込む
      *
      *  @access private
-     *  @return mixed   0:正常終了 Ethna_Error:エラー
+
      */
     function _getConfig()
     {
         $config = array();
-        $file = $this->_getConfigFile();
-        if (file_exists($file)) {
-            include_once($file);
+        $file = $this->getConfigFile();
+        if (! file_exists($file)) {
+            throw new Exception("file $file is not found");
         }
+        include_once($file);
 
         // デフォルト値設定
         if (isset($_SERVER['HTTP_HOST']) && isset($config['url']) == false) {
@@ -136,16 +130,6 @@ class Ethna_Config
         } else {
             fputs($fp, sprintf("'%s',\n", $value));
         }
-    }
-
-    /**
-     *  設定ファイル名を取得する
-     *
-     *  @deprecated
-     */
-    public function _getConfigFile()
-    {
-        return $this->getConfigFile();
     }
 
     /**
