@@ -114,25 +114,6 @@ class Ethna_Config
     }
 
     /**
-     *  設定ファイルに設定値を書き込む
-     *
-     *  @access private
-     */
-    function _setConfigValue($fp, $key, $value, $level)
-    {
-        fputs($fp, sprintf("%s'%s' => ", str_repeat("    ", $level+1), $key));
-        if (is_array($value)) {
-            fputs($fp, sprintf("array(\n"));
-            foreach ($value as $k => $v) {
-                $this->_setConfigValue($fp, $k, $v, $level+1);
-            }
-            fputs($fp, sprintf("%s),\n", str_repeat("    ", $level+1)));
-        } else {
-            fputs($fp, sprintf("'%s',\n", $value));
-        }
-    }
-
-    /**
      *  設定ファイル名を取得する
      *
      *  @return string  設定ファイルへのフルパス名
