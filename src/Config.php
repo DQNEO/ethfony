@@ -42,8 +42,7 @@ class Ethna_Config
     {
         $this->controller = $controller;
 
-        // 設定ファイルの読み込み
-        $r = $this->_getConfig();
+        $this->load();
     }
 
     /**
@@ -79,13 +78,11 @@ class Ethna_Config
     /**
      *  設定ファイルを読み込む
      *
-     *  @access private
-
      */
-    function _getConfig()
+    private function load()
     {
         $config = array();
-        $file = $this->getConfigFile();
+        $file = $this->getConfigFilePath();
         if (! file_exists($file)) {
             throw new Exception("file $file is not found");
         }
@@ -118,7 +115,7 @@ class Ethna_Config
      *
      *  @return string  設定ファイルへのフルパス名
      */
-    public function getConfigFile()
+    protected function getConfigFilePath()
     {
         return $this->controller->getDirectory('etc') . '/' . $this->filename;
     }
