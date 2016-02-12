@@ -26,6 +26,43 @@ class Ethna_ActionResolver
         $this->actionDir = $actionDir;
     }
 
+    public function resolveActionName($default_action_name, $fallback_action_name)
+    {
+        $action_name = $this->_getActionName($default_action_name, $fallback_action_name);
+        // アクション定義の取得
+        $action_obj = $this->_getAction($action_name);
+        if (is_null($action_obj)) {
+            if ($fallback_action_name != "") {
+                $this->logger->log(LOG_DEBUG, 'undefined action [%s] -> try fallback action [%s]', $action_name, $fallback_action_name);
+                $action_obj = $this->_getAction($fallback_action_name);
+            }
+
+            if (is_null($action_obj)) {
+                $this->logger->end();
+                $r = Ethna::raiseError("undefined action [%s]", E_APP_UNDEFINED_ACTION, $action_name);
+                throw new \Exception($r->getMessage());
+
+            } else {
+                $action_name = $fallback_action_name;
+            }
+        }
+        unset($action_obj);
+        return $action_name;
+    }
+
+    public function newAction($action_name, $backend)
+    {
+        $action_class_name = $this->getActionClassName($action_name);
+        return new $action_class_name($backend);
+    }
+
+    public function newActionForm($action_name, $ctl)
+    {
+        $form_class_name = $this->getActionFormName($action_name);
+        return  new $form_class_name($ctl);
+
+    }
+
     /**
      *  アクションに対応するアクションパス名が省略された場合のデフォルトパス名を返す
      *
@@ -35,7 +72,7 @@ class Ethna_ActionResolver
      *  @param  string  $action_name    アクション名
      *  @return string  アクションクラスが定義されるスクリプトのパス名
      */
-    public function getDefaultActionPath($action_name)
+    protected function getDefaultActionPath($action_name)
     {
         $r = preg_replace_callback('/_(.)/', function(array $matches){return '/' . strtoupper($matches[1]);}, ucfirst($action_name)) . '.php';
         $this->logger->log(LOG_DEBUG, "default action path [%s]", $r);
@@ -54,7 +91,7 @@ class Ethna_ActionResolver
      *  @param  string  $action_name    アクション名
      *  @return string  form classが定義されるスクリプトのパス名
      */
-    public function getDefaultFormPath($action_name)
+    protected function getDefaultFormPath($action_name)
     {
         return $this->getDefaultActionPath($action_name);
     }
@@ -68,7 +105,7 @@ class Ethna_ActionResolver
      *  @param  string  $action_name    アクション名
      *  @return string  アクションクラス名
      */
-    public function getDefaultActionClass($action_name)
+    protected function getDefaultActionClass($action_name)
     {
         $gateway_prefix  = $this->gatewayPrefix;
 
@@ -89,7 +126,7 @@ class Ethna_ActionResolver
      *  @param  string  $class_name     アクションクラス名
      *  @return string  アクション名
      */
-    public function actionClassToName($class_name)
+    protected function actionClassToName($class_name)
     {
         $prefix = sprintf("%s_Action_", $this->appId());
         if (preg_match("/$prefix(.*)/", $class_name, $match) == 0) {
@@ -112,7 +149,7 @@ class Ethna_ActionResolver
      *  @param  string  $action_name    アクション名
      *  @return string  アクションフォーム名
      */
-    public function getDefaultFormClass($action_name)
+    protected function getDefaultFormClass($action_name)
     {
         $gateway_prefix = $this->gatewayPrefix;
 
@@ -162,7 +199,7 @@ class Ethna_ActionResolver
      *  @param  string  $action_name    アクション名
      *  @return array   アクション定義
      */
-    public function _getAction($action_name)
+    protected function _getAction($action_name)
     {
         $action = array();
         $action_obj = array();
@@ -195,7 +232,7 @@ class Ethna_ActionResolver
      *  @param  string  $action_name    アクション名
      *  @return string  アクションのフォームクラス名
      */
-    public function getActionFormName($action_name)
+    protected function getActionFormName($action_name)
     {
         $action_obj = $this->_getAction($action_name);
         if (is_null($action_obj)) {
@@ -212,7 +249,7 @@ class Ethna_ActionResolver
      *  @param  string  $action_name    アクションの名称
      *  @return string  アクションのクラス名
      */
-    public function getActionClassName($action_name)
+    protected function getActionClassName($action_name)
     {
         $action_obj = $this->_getAction($action_name);
         if ($action_obj == null) {
@@ -280,7 +317,7 @@ class Ethna_ActionResolver
      *  @param  mixed   $default_action_name    指定のアクション名
      *  @return string  実行するアクション名
      */
-    protected function _getActionName($default_action_name)
+    protected function _getActionName($default_action_name  )
     {
         // フォームから要求されたアクション名を取得する
         $form_action_name = $this->_getActionName_Form();
@@ -305,41 +342,5 @@ class Ethna_ActionResolver
     }
 
 
-    public function resolveActionName($default_action_name, $fallback_action_name)
-    {
-        $action_name = $this->_getActionName($default_action_name, $fallback_action_name);
-        // アクション定義の取得
-        $action_obj = $this->_getAction($action_name);
-        if (is_null($action_obj)) {
-            if ($fallback_action_name != "") {
-                $this->logger->log(LOG_DEBUG, 'undefined action [%s] -> try fallback action [%s]', $action_name, $fallback_action_name);
-                $action_obj = $this->_getAction($fallback_action_name);
-            }
-
-            if (is_null($action_obj)) {
-                $this->logger->end();
-                $r = Ethna::raiseError("undefined action [%s]", E_APP_UNDEFINED_ACTION, $action_name);
-                throw new \Exception($r->getMessage());
-
-            } else {
-                $action_name = $fallback_action_name;
-            }
-        }
-        unset($action_obj);
-        return $action_name;
-    }
-
-    public function newAction($action_name, $backend)
-    {
-        $action_class_name = $this->getActionClassName($action_name);
-        return new $action_class_name($backend);
-    }
-
-    public function newActionForm($action_name, $ctl)
-    {
-        $form_class_name = $this->getActionFormName($action_name);
-        return  new $form_class_name($ctl);
-
-    }
 
 }
