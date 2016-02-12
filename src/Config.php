@@ -88,10 +88,6 @@ class Ethna_Config
         }
         include_once($file);
 
-        // デフォルト値設定
-        if (isset($_SERVER['HTTP_HOST']) && isset($config['url']) == false) {
-            $config['url'] = sprintf("http://%s/", $_SERVER['HTTP_HOST']);
-        }
         if (isset($config['dsn']) == false) {
             $config['dsn'] = "";
         }
