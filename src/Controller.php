@@ -575,8 +575,7 @@ class Ethna_Controller
 
         // オブジェクト生成
         $backend = $this->getBackend();
-        $session = $this->getSession();
-        $session->restore();
+        $this->getSession()->restore();
 
         $i18n = $this->getI18N();
         $i18n->setLanguage($this->locale);
