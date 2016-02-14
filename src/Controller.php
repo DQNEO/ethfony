@@ -110,9 +110,89 @@ class Ethna_Controller
         $_SERVER['REMOTE_ADDR'] = "0.0.0.0";
 
         $c = new $class_name(GATEWAY_CLI);
-        $c->trigger($action_name);
+        $c->triggerCLI($action_name);
     }
 
+    /**
+     *  フレームワークの処理を実行する(WWW)
+     *
+     *  引数$default_action_nameに配列が指定された場合、その配列で指定された
+     *  アクション以外は受け付けない(指定されていないアクションが指定された
+     *  場合、配列の先頭で指定されたアクションが実行される)
+     *
+     *  @access private
+     *  @param  mixed   $default_action_name    指定のアクション名
+     *  @param  mixed   $fallback_action_name   アクション名が決定できなかった場合に実行されるアクション名
+     */
+    private function triggerCLI($default_action_name = "", $fallback_action_name = "")
+    {
+        $GLOBALS['_Ethna_controller'] = $this;
+        $this->base = BASE;
+        // クラスファクトリオブジェクトの生成
+        $class_factory = $this->class['class'];
+        $this->class_factory = new $class_factory($this, $this->class);
+
+        Ethna::setErrorCallback(array($this, 'handleError'));
+
+        // ディレクトリ名の設定(相対パス->絶対パス)
+        foreach ($this->directory as $key => $value) {
+            if ($key == 'plugins') {
+                // Smartyプラグインディレクトリは配列で指定する
+                $tmp = array();
+                foreach (to_array($value) as $elt) {
+                    $tmp[] = $this->base . '/' . $elt;
+                }
+                $this->directory[$key] = $tmp;
+            } else {
+                $this->directory[$key] = $this->base . '/' . $value;
+            }
+        }
+        $config = $this->getConfig();
+        $this->url = $config->get('url');
+        if (empty($this->url) && PHP_SAPI != 'cli') {
+            $this->url = Ethna_Util::getUrlFromRequestUri();
+            $config->set('url', $this->url);
+        }
+
+        $this->plugin = $this->getPlugin();
+
+        $this->logger = $this->getLogger();
+        $this->plugin->setLogger($this->logger);
+        $this->logger->begin();
+
+        $httpVars = self::getHttpVars();
+        $this->actionResolver = $actionResolver = new Ethna_ActionResolver($httpVars, $this->getAppId(), $this->logger, $this->class_factory, $this->_getGatewayPrefix(), $this->getActiondir());
+        // アクション名の取得
+        $action_name = $actionResolver->resolveActionName($default_action_name, $fallback_action_name);
+        $this->action_name = $action_name;
+
+        // オブジェクト生成
+        $backend = $this->getBackend();
+        $this->getSession()->restore();
+
+        $i18n = $this->getI18N();
+        $i18n->setLanguage($this->locale);
+
+        // アクションフォーム初期化
+        // フォーム定義、フォーム値設定
+        $this->action_form = $actionResolver->newActionForm($action_name, $this);
+        $this->action_form->setFormDef_PreHelper();
+        $this->action_form->setFormVars($httpVars);
+
+        $ac = $actionResolver->newAction($action_name, $backend);
+
+        if ($this->getGateway() === GATEWAY_CLI) {
+            $ac->runcli();
+            $this->end();
+        } else {
+            $viewResolver = new Ethna_ViewResolver($backend, $this->logger, $this->getViewdir(), $this->getAppId(), $this->class_factory->getObjectName('view'));
+            $response = $ac->run($viewResolver);
+            $response->send();
+            $this->end();
+            return;
+        }
+
+    }
 
     /**
      *  Ethna_Controllerクラスのコンストラクタ
