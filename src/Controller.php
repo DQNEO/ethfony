@@ -579,8 +579,8 @@ class Ethna_Controller
         $this->plugin->setLogger($this->logger);
         $this->logger->begin();
 
-
-        $this->actionResolver = $actionResolver = new Ethna_ActionResolver($this->getAppId(), $this->logger, $this->class_factory, $this->_getGatewayPrefix(), $this->getActiondir());
+        $httpVars = self::getHttpVars();
+        $this->actionResolver = $actionResolver = new Ethna_ActionResolver($httpVars, $this->getAppId(), $this->logger, $this->class_factory, $this->_getGatewayPrefix(), $this->getActiondir());
         // アクション名の取得
         $action_name = $actionResolver->resolveActionName($default_action_name, $fallback_action_name);
         $this->action_name = $action_name;
@@ -596,7 +596,7 @@ class Ethna_Controller
         // フォーム定義、フォーム値設定
         $this->action_form = $actionResolver->newActionForm($action_name, $this);
         $this->action_form->setFormDef_PreHelper();
-        $this->action_form->setFormVars(self::getHttpVars());
+        $this->action_form->setFormVars($httpVars);
 
         $ac = $actionResolver->newAction($action_name, $backend);
 

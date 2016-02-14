@@ -8,6 +8,7 @@
  */
 class Ethna_ActionResolver
 {
+    private $httpVars;
     private $appId;
     private $logger;
     private $class_factory;
@@ -17,8 +18,9 @@ class Ethna_ActionResolver
     /**
      * Ethna_ActionResolver constructor.
      */
-    public function __construct($appId, $logger, $class_factory, $gatewayPrefix, $actionDir)
+    public function __construct(array $httpVars, $appId, $logger, $class_factory, $gatewayPrefix, $actionDir)
     {
+        $this->httpVars = $httpVars;
         $this->appId = $appId;
         $this->logger = $logger;
         $this->class_factory = $class_factory;
@@ -271,16 +273,7 @@ class Ethna_ActionResolver
      */
     protected function _getActionName_Form()
     {
-        if (isset($_SERVER['REQUEST_METHOD']) == false) {
-            return null;
-        }
-
-        if (strcasecmp($_SERVER['REQUEST_METHOD'], 'post') == 0) {
-            $http_vars = $_POST;
-        } else {
-            $http_vars = $_GET;
-        }
-
+        $http_vars = $this->httpVars;
         // フォーム値からリクエストされたアクション名を取得する
         $action_name = $sub_action_name = null;
         foreach ($http_vars as $name => $value) {
