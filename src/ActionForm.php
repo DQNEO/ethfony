@@ -174,19 +174,10 @@ class Ethna_ActionForm
     /**
      *  ユーザから送信されたフォーム値をフォーム値定義に従ってインポートする
      *
-     *  @access public
-     *  @todo   多次元の配列への対応
      */
-    public function setFormVars()
+    public function setFormVars(array $http_vars)
     {
-        if (isset($_SERVER['REQUEST_METHOD']) == false) {
-            return;
-        } else if (strcasecmp($_SERVER['REQUEST_METHOD'], 'post') == 0) {
-            $http_vars = $_POST;
-        } else {
-            $http_vars = $_GET;
-        }
-        
+
         foreach ($this->form as $name => $def) {
             $type = is_array($def['type']) ? $def['type'][0] : $def['type'];
             if ($type == VAR_TYPE_FILE) {

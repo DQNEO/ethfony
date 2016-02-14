@@ -516,6 +516,21 @@ class Ethna_Controller
         return $this->gateway;
     }
 
+    /**
+     *
+     */
+    public static function getHttpVars(): array
+    {
+        if (isset($_SERVER['REQUEST_METHOD']) == false) {
+            return [];
+        } else if (strcasecmp($_SERVER['REQUEST_METHOD'], 'post') == 0) {
+            $http_vars = $_POST;
+        } else {
+            $http_vars = $_GET;
+        }
+
+        return $http_vars;
+    }
 
     /**
      *  フレームワークの処理を実行する(WWW)
@@ -581,7 +596,7 @@ class Ethna_Controller
         // フォーム定義、フォーム値設定
         $this->action_form = $actionResolver->newActionForm($action_name, $this);
         $this->action_form->setFormDef_PreHelper();
-        $this->action_form->setFormVars();
+        $this->action_form->setFormVars(self::getHttpVars());
 
         $ac = $actionResolver->newAction($action_name, $backend);
 
