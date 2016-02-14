@@ -101,9 +101,6 @@ class Ethna_Controller
      */
     public static function main_CLI($class_name, $action_name)
     {
-        $_SERVER['HTTP_USER_AGENT'] = '';
-        $_SERVER['REMOTE_ADDR'] = "0.0.0.0";
-
         $c = new $class_name();
         $c->triggerCLI($action_name);
     }
