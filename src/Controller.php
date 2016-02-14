@@ -119,7 +119,7 @@ class Ethna_Controller
      *  @access private
      *  @param  mixed   $default_action_name    指定のアクション名
      */
-    private function triggerCLI($default_action_name)
+    private function triggerCLI($action_name)
     {
         $GLOBALS['_Ethna_controller'] = $this;
         $this->base = BASE;
@@ -150,9 +150,6 @@ class Ethna_Controller
         $this->plugin->setLogger($this->logger);
         $this->logger->begin();
 
-        $httpVars = self::getHttpVars();
-        // アクション名の取得
-        $action_name = $default_action_name;
         $this->action_name = $action_name;
 
         $backend = $this->getBackend();
