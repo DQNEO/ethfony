@@ -114,17 +114,12 @@ class Ethna_Controller
     }
 
     /**
-     *  フレームワークの処理を実行する(WWW)
-     *
-     *  引数$default_action_nameに配列が指定された場合、その配列で指定された
-     *  アクション以外は受け付けない(指定されていないアクションが指定された
-     *  場合、配列の先頭で指定されたアクションが実行される)
+     *  フレームワークの処理を実行する(CLI)
      *
      *  @access private
      *  @param  mixed   $default_action_name    指定のアクション名
-     *  @param  mixed   $fallback_action_name   アクション名が決定できなかった場合に実行されるアクション名
      */
-    private function triggerCLI($default_action_name = "", $fallback_action_name = "")
+    private function triggerCLI($default_action_name)
     {
         $GLOBALS['_Ethna_controller'] = $this;
         $this->base = BASE;
