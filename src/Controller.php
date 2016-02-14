@@ -45,7 +45,7 @@ class Ethna_Controller
      * @protected    string ロケール名(e.x ja_JP, en_US 等),
      *                  (ロケール名は ll_cc の形式。ll = 言語コード cc = 国コード)
      */
-    protected $locale;
+    protected $locale = 'ja_JP';
 
     protected $encoding = 'UTF-8';
 
@@ -169,7 +169,6 @@ class Ethna_Controller
      */
     public function __construct()
     {
-        $this->locale = 'ja_JP';
     }
 
     /**
