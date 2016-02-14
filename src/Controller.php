@@ -144,10 +144,6 @@ class Ethna_Controller
         }
         $config = $this->getConfig();
         $this->url = $config->get('url');
-        if (empty($this->url) && PHP_SAPI != 'cli') {
-            $this->url = Ethna_Util::getUrlFromRequestUri();
-            $config->set('url', $this->url);
-        }
 
         $this->plugin = $this->getPlugin();
 
