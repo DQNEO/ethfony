@@ -91,19 +91,6 @@ class Ethna_Controller
         $c->trigger($action_name, $fallback_action_name);
     }
 
-    /**
-     *  CLIアプリケーションのエントリポイント
-     *
-     *  @access public
-     *  @param  string  $class_name     アプリケーションコントローラのクラス名
-     *  @param  string  $action_name    実行するアクション名
-     *  @static
-     */
-    public static function main_CLI($class_name, $action_name)
-    {
-        $c = new $class_name();
-        $c->triggerCLI($action_name);
-    }
 
     /**
      *  フレームワークの処理を実行する(CLI)
@@ -111,7 +98,7 @@ class Ethna_Controller
      *  @access private
      *  @param  mixed   $default_action_name    指定のアクション名
      */
-    private function triggerCLI($action_name)
+    public function console($action_name)
     {
         $GLOBALS['_Ethna_controller'] = $this;
         $this->base = BASE;
