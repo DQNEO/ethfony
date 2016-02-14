@@ -260,28 +260,6 @@ class Ethna_Controller
     }
 
     /**
-     *  アクションディレクトリ名を決定する
-     *
-     *  @access public
-     *  @return string  アクションディレクトリ
-     */
-    public function getActiondir($gateway = null)
-    {
-        $key = 'action';
-        $gateway = is_null($gateway) ? $this->getGateway() : $gateway;
-        switch ($gateway) {
-        case GATEWAY_WWW:
-            $key = 'action';
-            break;
-        case GATEWAY_CLI:
-            $key = 'action_cli';
-            break;
-        }
-
-        return $this->directory[$key] . "/";
-    }
-
-    /**
      *  ビューディレクトリ名を決定する
      *
      *  @access public
@@ -633,7 +611,8 @@ class Ethna_Controller
         $this->logger->begin();
 
         $httpVars = self::getHttpVars();
-        $this->actionResolver = $actionResolver = new Ethna_ActionResolver($httpVars, $this->getAppId(), $this->logger, $this->class_factory, $this->_getGatewayPrefix(), $this->getActiondir());
+        $actionDir = $this->directory['action'] . "/";
+        $this->actionResolver = $actionResolver = new Ethna_ActionResolver($httpVars, $this->getAppId(), $this->logger, $this->class_factory, $this->_getGatewayPrefix(), $actionDir);
         // アクション名の取得
         $action_name = $actionResolver->resolveActionName($default_action_name, $fallback_action_name);
         $this->action_name = $action_name;
