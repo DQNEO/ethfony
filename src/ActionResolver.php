@@ -232,7 +232,7 @@ class Ethna_ActionResolver
      *  @param  string  $action_name    アクション名
      *  @return string  アクションのフォームクラス名
      */
-    protected function getActionFormName($action_name)
+    public function getActionFormName($action_name)
     {
         $action_obj = $this->_getAction($action_name);
         if (is_null($action_obj)) {
