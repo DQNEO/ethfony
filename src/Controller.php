@@ -612,7 +612,7 @@ class Ethna_Controller
 
         $httpVars = self::getHttpVars();
         $actionDir = $this->directory['action'] . "/";
-        $this->actionResolver = $actionResolver = new Ethna_ActionResolver($httpVars, $this->getAppId(), $this->logger, $this->class_factory, $this->_getGatewayPrefix(), $actionDir);
+        $this->actionResolver = $actionResolver = new Ethna_ActionResolver($httpVars, $this->getAppId(), $this->logger, $this->class_factory, $actionDir);
         // アクション名の取得
         $action_name = $actionResolver->resolveActionName($default_action_name, $fallback_action_name);
         $this->action_name = $action_name;
@@ -632,16 +632,10 @@ class Ethna_Controller
 
         $ac = $actionResolver->newAction($action_name, $backend);
 
-        if ($this->getGateway() === GATEWAY_CLI) {
-            $ac->runcli();
-            $this->end();
-        } else {
-            $viewResolver = new Ethna_ViewResolver($backend, $this->logger, $this->getViewdir(), $this->getAppId(), $this->class_factory->getObjectName('view'));
-            $response = $ac->run($viewResolver);
-            $response->send();
-            $this->end();
-            return;
-        }
+        $viewResolver = new Ethna_ViewResolver($backend, $this->logger, $this->getViewdir(), $this->getAppId(), $this->class_factory->getObjectName('view'));
+        $response = $ac->run($viewResolver);
+        $response->send();
+        $this->end();
 
     }
 
@@ -771,30 +765,6 @@ class Ethna_Controller
             trigger_error("cannot get renderer", E_USER_ERROR);
         }
         return $this->renderer;
-    }
-
-    /**
-     *  ゲートウェイに対応したクラス名のプレフィクスを取得する
-     *
-     *  @access public
-     *  @param  string  $gateway    ゲートウェイ
-     *  @return string  ゲートウェイクラスプレフィクス
-     */
-    protected function _getGatewayPrefix()
-    {
-        switch ( $this->getGateway()) {
-        case GATEWAY_WWW:
-            $prefix = '';
-            break;
-        case GATEWAY_CLI:
-            $prefix = 'Cli';
-            break;
-        default:
-            $prefix = '';
-            break;
-        }
-
-        return $prefix;
     }
 
     /**

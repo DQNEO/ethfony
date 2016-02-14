@@ -12,19 +12,17 @@ class Ethna_ActionResolver
     private $appId;
     private $logger;
     private $class_factory;
-    private $gatewayPrefix;
     private $actionDir;
 
     /**
      * Ethna_ActionResolver constructor.
      */
-    public function __construct(array $httpVars, $appId, $logger, $class_factory, $gatewayPrefix, $actionDir)
+    public function __construct(array $httpVars, $appId, $logger, $class_factory, $actionDir)
     {
         $this->httpVars = $httpVars;
         $this->appId = $appId;
         $this->logger = $logger;
         $this->class_factory = $class_factory;
-        $this->gatewayPrefix = $gatewayPrefix;
         $this->actionDir = $actionDir;
     }
 
@@ -109,10 +107,8 @@ class Ethna_ActionResolver
      */
     protected function getDefaultActionClass($action_name)
     {
-        $gateway_prefix  = $this->gatewayPrefix;
-
         $postfix = preg_replace_callback('/_(.)/', function(array $matches){return strtoupper($matches[1]);}, ucfirst($action_name));
-        $r = sprintf("%s_%sAction_%s", $this->appId, $gateway_prefix ? $gateway_prefix . "_" : "", $postfix);
+        $r = sprintf("%s_Action_%s", $this->appId, $postfix);
         $this->logger->log(LOG_DEBUG, "default action class [%s]", $r);
 
         return $r;
@@ -153,10 +149,8 @@ class Ethna_ActionResolver
      */
     protected function getDefaultFormClass($action_name)
     {
-        $gateway_prefix = $this->gatewayPrefix;
-
         $postfix = preg_replace_callback('/_(.)/', function(array $matches){return strtoupper($matches[1]);}, ucfirst($action_name));
-        $r = sprintf("%s_%sForm_%s", $this->appId, $gateway_prefix ? $gateway_prefix . "_" : "", $postfix);
+        $r = sprintf("%s_Form_%s", $this->appId, $postfix);
         $this->logger->log(LOG_DEBUG, "default action class [%s]", $r);
 
         return $r;
