@@ -275,12 +275,6 @@ function is_absolute_path($path)
 }
 // }}}
 
-/** ゲートウェイ: WWW */
-define('GATEWAY_WWW', 1);
-
-/** ゲートウェイ: CLI */
-define('GATEWAY_CLI', 2);
-
 /** DB種別定義: R/W */
 define('DB_TYPE_RW', 1);
 

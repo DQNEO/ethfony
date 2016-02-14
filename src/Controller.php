@@ -13,8 +13,6 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  *  コントローラクラス
  *
- *  @todo       gatewayでswitchしてるところがダサダサ
- *
  *  @author     Masaki Fujimoto <fujimoto@php.net>
  *  @access     public
  *  @package    Ethna
@@ -76,9 +74,6 @@ class Ethna_Controller
     /** @protected    object  Ethna_Plugin        プラグインオブジェクト */
     protected $plugin = null;
 
-    /** @protected    string  リクエストのゲートウェイ(www/cli/rest/soap...) */
-    protected $gateway = GATEWAY_WWW;
-
     protected $actionResolver;
 
     /**
@@ -92,7 +87,7 @@ class Ethna_Controller
      */
     public static function main($class_name, $action_name = "", $fallback_action_name = "")
     {
-        $c = new $class_name(GATEWAY_WWW);
+        $c = new $class_name();
         $c->trigger($action_name, $fallback_action_name);
     }
 
@@ -109,7 +104,7 @@ class Ethna_Controller
         $_SERVER['HTTP_USER_AGENT'] = '';
         $_SERVER['REMOTE_ADDR'] = "0.0.0.0";
 
-        $c = new $class_name(GATEWAY_CLI);
+        $c = new $class_name();
         $c->triggerCLI($action_name);
     }
 
@@ -172,9 +167,8 @@ class Ethna_Controller
      *
      *  @access     public
      */
-    public function __construct($gateway)
+    public function __construct()
     {
-        $this->gateway = $gateway;
         $this->locale = 'ja_JP';
     }
 
@@ -538,16 +532,6 @@ class Ethna_Controller
     }
 
     /**
-     *  ゲートウェイを取得する
-     *
-     *  @access public
-     */
-    public function getGateway()
-    {
-        return $this->gateway;
-    }
-
-    /**
      *
      */
     public static function getHttpVars(): array
@@ -689,7 +673,6 @@ class Ethna_Controller
      *  @access public
      *  @param  string  $action action to request
      *  @param  string  $type   hidden, url...
-     *  @todo   consider gateway
      */
     public function getActionRequest($action, $type = "hidden")
     {
