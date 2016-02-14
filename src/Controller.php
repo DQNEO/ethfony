@@ -160,7 +160,7 @@ class Ethna_Controller
         $form_class_name = $this->class_factory->getObjectName('form');
         $this->action_form = new $form_class_name($this);
 
-        $action_class_name = sprintf("%s_Cli_Action_%s", ucfirst(strtolower($this->appid)), ucfirst($action_name));
+        $action_class_name = sprintf("%s_Command_%s", ucfirst(strtolower($this->appid)), ucfirst($action_name));
         require_once $this->directory['action_cli'] . '/' . ucfirst($action_name) . '.php';
         $ac = new $action_class_name($backend);
 
