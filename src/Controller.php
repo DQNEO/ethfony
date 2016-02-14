@@ -82,13 +82,12 @@ class Ethna_Controller
      *  @access public
      *  @param  string  $class_name     アプリケーションコントローラのクラス名
      *  @param  mixed   $action_name    指定のアクション名(省略可)
-     *  @param  mixed   $fallback_action_name   アクションが決定できなかった場合に実行されるアクション名(省略可)
      *  @static
      */
-    public static function main($class_name, $action_name = "", $fallback_action_name = "")
+    public static function main($class_name, $action_name = "")
     {
         $c = new $class_name();
-        $c->trigger($action_name, $fallback_action_name);
+        $c->trigger($action_name);
     }
 
 
@@ -539,9 +538,8 @@ class Ethna_Controller
      *
      *  @access private
      *  @param  mixed   $default_action_name    指定のアクション名
-     *  @param  mixed   $fallback_action_name   アクション名が決定できなかった場合に実行されるアクション名
      */
-    private function trigger($default_action_name = "", $fallback_action_name = "")
+    private function trigger($default_action_name = "")
     {
         $GLOBALS['_Ethna_controller'] = $this;
         $this->base = BASE;
@@ -581,7 +579,7 @@ class Ethna_Controller
         $actionDir = $this->directory['action'] . "/";
         $this->actionResolver = $actionResolver = new Ethna_ActionResolver($httpVars, $this->getAppId(), $this->logger, $this->class_factory, $actionDir);
         // アクション名の取得
-        $action_name = $actionResolver->resolveActionName($default_action_name, $fallback_action_name);
+        $action_name = $actionResolver->resolveActionName($default_action_name);
         $this->action_name = $action_name;
 
         // オブジェクト生成
