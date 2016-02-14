@@ -57,16 +57,15 @@ class Ethna_Session
      */
     public function __construct($ctl, $appid)
     {
-        $this->ctl = $ctl;
-        $this->logger = $this->ctl->getLogger();
+        $this->logger = $ctl->getLogger();
 
-        $config = $this->ctl->getConfig()->get('session');
+        $config = $ctl->getConfig()->get('session');
         if ($config) {
             $this->config = array_merge($this->config, $config);
         }
 
         $this->session_save_dir = $this->config['path'];
-        if (($dir = $this->ctl->getDirectory($this->config['path'])) !== null) {
+        if (($dir = $ctl->getDirectory($this->config['path'])) !== null) {
             $this->session_save_dir = $dir;
         }
         $this->session_name = $appid . $this->config['suffix'];
