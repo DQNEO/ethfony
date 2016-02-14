@@ -152,24 +152,21 @@ class Ethna_Controller
         $this->logger->begin();
 
         $httpVars = self::getHttpVars();
-        $this->actionResolver = $actionResolver = new Ethna_ActionResolver($httpVars, $this->getAppId(), $this->logger, $this->class_factory, $this->_getGatewayPrefix(), $this->getActiondir());
+        $actionResolver = new Ethna_ActionResolver($httpVars, $this->getAppId(), $this->logger, $this->class_factory, $this->_getGatewayPrefix(), $this->getActiondir());
         // アクション名の取得
-        $action_name = $actionResolver->resolveActionName($default_action_name, $fallback_action_name);
+        $action_name = $default_action_name;
         $this->action_name = $action_name;
 
-        // オブジェクト生成
         $backend = $this->getBackend();
 
         $i18n = $this->getI18N();
         $i18n->setLanguage($this->locale);
 
-        // アクションフォーム初期化
-        // フォーム定義、フォーム値設定
-        $this->action_form = $actionResolver->newActionForm($action_name, $this);
-        $this->action_form->setFormDef_PreHelper();
-        $this->action_form->setFormVars($httpVars);
+        $form_class_name = $this->class_factory->getObjectName('form');
+        $this->action_form = new $form_class_name($this);
+        $action_class_name = $actionResolver->getActionClassName($action_name);
+        $ac = new $action_class_name($backend);
 
-        $ac = $actionResolver->newAction($action_name, $backend);
         $ac->runcli();
     }
 

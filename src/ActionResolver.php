@@ -251,7 +251,7 @@ class Ethna_ActionResolver
      *  @param  string  $action_name    アクションの名称
      *  @return string  アクションのクラス名
      */
-    protected function getActionClassName($action_name)
+    public function getActionClassName($action_name)
     {
         $action_obj = $this->_getAction($action_name);
         if ($action_obj == null) {
