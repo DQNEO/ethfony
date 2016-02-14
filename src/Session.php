@@ -79,15 +79,7 @@ class Ethna_Session
         session_cache_expire($this->config['cache_expire']);
 
         $this->session_start = false;
-        if (isset($_SERVER['REQUEST_METHOD']) == false) {
-            return;
-        }
 
-        if (strcasecmp($_SERVER['REQUEST_METHOD'], 'post') == 0) {
-            $http_vars = $_POST;
-        } else {
-            $http_vars = $_GET;
-        }
     }
 
 
