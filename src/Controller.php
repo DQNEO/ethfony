@@ -539,7 +539,6 @@ class Ethna_Controller
         $class_factory = $this->class['class'];
         $this->class_factory = new $class_factory($this, $this->class);
 
-        // エラーハンドラの設定
         Ethna::setErrorCallback(array($this, 'handleError'));
 
         // ディレクトリ名の設定(相対パス->絶対パス)
@@ -555,7 +554,6 @@ class Ethna_Controller
                 $this->directory[$key] = $this->base . '/' . $value;
             }
         }
-        // 初期設定
         $config = $this->getConfig();
         $this->url = $config->get('url');
         if (empty($this->url) && PHP_SAPI != 'cli') {
@@ -563,10 +561,8 @@ class Ethna_Controller
             $config->set('url', $this->url);
         }
 
-        // プラグインオブジェクトの用意
         $this->plugin = $this->getPlugin();
 
-        // ログ出力開始
         $this->logger = $this->getLogger();
         $this->plugin->setLogger($this->logger);
         $this->logger->begin();
