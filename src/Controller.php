@@ -123,7 +123,6 @@ class Ethna_Controller
     {
         $GLOBALS['_Ethna_controller'] = $this;
         $this->base = BASE;
-        // クラスファクトリオブジェクトの生成
         $class_factory = $this->class['class'];
         $this->class_factory = new $class_factory($this, $this->class);
 
@@ -152,7 +151,6 @@ class Ethna_Controller
         $this->logger->begin();
 
         $httpVars = self::getHttpVars();
-        $actionResolver = new Ethna_ActionResolver($httpVars, $this->getAppId(), $this->logger, $this->class_factory, $this->_getGatewayPrefix(), $this->getActiondir());
         // アクション名の取得
         $action_name = $default_action_name;
         $this->action_name = $action_name;
@@ -164,7 +162,9 @@ class Ethna_Controller
 
         $form_class_name = $this->class_factory->getObjectName('form');
         $this->action_form = new $form_class_name($this);
-        $action_class_name = $actionResolver->getActionClassName($action_name);
+
+        $action_class_name = sprintf("%s_Cli_Action_%s", ucfirst(strtolower($this->appid)), ucfirst($action_name));
+        require_once $this->directory['action_cli'] . '/' . ucfirst($action_name) . '.php';
         $ac = new $action_class_name($backend);
 
         $ac->runcli();
