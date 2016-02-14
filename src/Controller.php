@@ -171,10 +171,7 @@ class Ethna_Controller
         $this->action_form->setFormVars($httpVars);
 
         $ac = $actionResolver->newAction($action_name, $backend);
-
         $ac->runcli();
-        $this->end();
-
     }
 
     /**
