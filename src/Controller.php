@@ -70,9 +70,6 @@ class Ethna_Controller
     /** @protected    object  Ethna_View          ビューオブジェクト */
     public $view = null;
 
-    /** @protected    object  Ethna_Config        設定オブジェクト */
-    protected $config = null;
-
     /** @protected    object  Ethna_Logger        ログオブジェクト */
     protected $logger = null;
 
@@ -559,11 +556,11 @@ class Ethna_Controller
             }
         }
         // 初期設定
-        $this->config = $this->getConfig();
-        $this->url = $this->config->get('url');
+        $config = $this->getConfig();
+        $this->url = $config->get('url');
         if (empty($this->url) && PHP_SAPI != 'cli') {
             $this->url = Ethna_Util::getUrlFromRequestUri();
-            $this->config->set('url', $this->url);
+            $config->set('url', $this->url);
         }
 
         // プラグインオブジェクトの用意
