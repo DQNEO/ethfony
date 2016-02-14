@@ -28,19 +28,12 @@ class Ethna_ActionResolver
 
     public function resolveActionName($default_action_name)
     {
-        $fallback_action_name = '';
         $action_name = $this->_getActionName($default_action_name);
-        // アクション定義の取得
         $action_obj = $this->_getAction($action_name);
         if (is_null($action_obj)) {
-            if (is_null($action_obj)) {
-                $this->logger->end();
-                $r = Ethna::raiseError("undefined action [%s]", E_APP_UNDEFINED_ACTION, $action_name);
-                throw new \Exception($r->getMessage());
-
-            } else {
-                $action_name = $fallback_action_name;
-            }
+            $this->logger->end();
+            $r = Ethna::raiseError("undefined action [%s]", E_APP_UNDEFINED_ACTION, $action_name);
+            throw new \Exception($r->getMessage());
         }
         unset($action_obj);
         return $action_name;
