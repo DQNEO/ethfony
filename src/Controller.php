@@ -127,12 +127,9 @@ class Ethna_Controller
 
     /**
      *  アプリケーション実行後の後始末を行います。
-     *
-     *  @access protected
      */
     protected function end()
     {
-        //  必要に応じてオーバライドして下さい。
         $this->logger->end();
     }
 
