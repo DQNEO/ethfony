@@ -92,9 +92,7 @@ class Ethna_ActionResolver
             include_once $this->actionDir . $class_path;
         } else {
             $this->logger->log(LOG_INFO, 'file not found:'. $this->actionDir . $class_path);
-            return;
         }
-
     }
 
     /**
