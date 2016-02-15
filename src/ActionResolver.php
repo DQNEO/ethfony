@@ -29,7 +29,7 @@ class Ethna_ActionResolver
     public function resolveActionName($default_action_name)
     {
         $action_name = $this->_getActionName($default_action_name);
-        list($action_class_name, ) = $this->_getAction($action_name);
+        list($action_class_name, ) = $this->getClassNames($action_name);
         if (is_null($action_class_name)) {
             $this->logger->end();
             $r = Ethna::raiseError("undefined action [%s]", E_APP_UNDEFINED_ACTION, $action_name);
@@ -183,7 +183,7 @@ class Ethna_ActionResolver
      *  @param  string  $action_name    アクション名
      *  @return array   アクション定義
      */
-    protected function _getAction($action_name)
+    protected function getClassNames($action_name)
     {
 
         // アクションスクリプトのインクルード
@@ -216,7 +216,7 @@ class Ethna_ActionResolver
      */
     public function getActionFormName($action_name)
     {
-        list(,$form_class_name)= $this->_getAction($action_name);
+        list(,$form_class_name)= $this->getClassNames($action_name);
         if (is_null($form_class_name)) {
             return null;
         }
@@ -233,7 +233,7 @@ class Ethna_ActionResolver
      */
     public function getActionClassName($action_name)
     {
-        list($action_class_name, ) = $this->_getAction($action_name);
+        list($action_class_name, ) = $this->getClassNames($action_name);
         if ($action_class_name == null) {
             return null;
         }
