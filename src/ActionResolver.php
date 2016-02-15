@@ -79,7 +79,7 @@ class Ethna_ActionResolver
      *  フォームにより要求されたアクション名に対応する定義を返す
      *
      * @param  string $action_name アクション名
-     * @return array   アクション定義
+     * @return array  クラス名
      */
     protected function getClassNames($action_name)
     {
