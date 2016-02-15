@@ -60,7 +60,7 @@ class Ethna_ActionResolver
      *  @param  string  $action_name    アクション名
      *  @return string  アクションクラスが定義されるスクリプトのパス名
      */
-    protected function getDefaultActionPath($action_name)
+    protected function getActionPath($action_name)
     {
         $r = preg_replace_callback('/_(.)/', function(array $matches){return '/' . strtoupper($matches[1]);}, ucfirst($action_name)) . '.php';
         $this->logger->log(LOG_DEBUG, "default action path [%s]", $r);
@@ -79,9 +79,9 @@ class Ethna_ActionResolver
      *  @param  string  $action_name    アクション名
      *  @return string  form classが定義されるスクリプトのパス名
      */
-    protected function getDefaultFormPath($action_name)
+    protected function getFormPath($action_name)
     {
-        return $this->getDefaultActionPath($action_name);
+        return $this->getActionPath($action_name);
     }
 
     /**
@@ -118,11 +118,9 @@ class Ethna_ActionResolver
      */
     protected function _includeActionScript($action_name)
     {
-        $class_path = $form_path = null;
-
         $action_dir = $this->actionDir;
 
-        $class_path = $this->getDefaultActionPath($action_name);
+        $class_path = $this->getActionPath($action_name);
         if (file_exists($action_dir . $class_path)) {
             include_once $action_dir . $class_path;
         } else {
@@ -130,7 +128,7 @@ class Ethna_ActionResolver
             return;
         }
 
-        $form_path = $this->getDefaultFormPath($action_name);
+        $form_path = $this->getFormPath($action_name);
         if ($form_path == $class_path) {
             return;
         }
