@@ -50,7 +50,7 @@ class Ethna_ActionResolver
         return  new $form_class_name($ctl);
 
     }
-    
+
     /**
      *  getDefaultActionClass()で取得したクラス名からアクション名を取得する
      *
@@ -85,15 +85,13 @@ class Ethna_ActionResolver
      */
     protected function _includeActionScript($action_name)
     {
-        $action_dir = $this->actionDir;
-
         // "foo_bar" -> "/Foo/Bar.php"となる
         $class_path = preg_replace_callback('/_(.)/', function(array $matches){return '/' . strtoupper($matches[1]);}, ucfirst($action_name)) . '.php';
         $this->logger->log(LOG_DEBUG, "default action path [%s]", $class_path);
-        if (file_exists($action_dir . $class_path)) {
-            include_once $action_dir . $class_path;
+        if (file_exists($this->actionDir . $class_path)) {
+            include_once $this->actionDir . $class_path;
         } else {
-            $this->logger->log(LOG_INFO, 'file not found:'.$action_dir . $class_path);
+            $this->logger->log(LOG_INFO, 'file not found:'. $this->actionDir . $class_path);
             return;
         }
 
