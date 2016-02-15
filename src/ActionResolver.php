@@ -26,7 +26,7 @@ class Ethna_ActionResolver
         $this->actionDir = $actionDir;
     }
 
-    public function resolveActionName($default_action_name)
+    public function resolveActionName(string $default_action_name)
     {
         $action_name = $this->_getActionName($default_action_name);
         list($action_class_name,) = $this->getClassNames($action_name);
@@ -202,7 +202,7 @@ class Ethna_ActionResolver
      * @param  mixed $default_action_name 指定のアクション名
      * @return string  実行するアクション名
      */
-    protected function _getActionName($default_action_name)
+    protected function _getActionName(string $default_action_name)
     {
         // フォームから要求されたアクション名を取得する
         $form_action_name = $this->_getActionName_Form();
@@ -210,13 +210,9 @@ class Ethna_ActionResolver
         $this->logger->log(LOG_DEBUG, 'form_action_name[%s]', $form_action_name);
 
         // フォームからの指定が無い場合はエントリポイントに指定されたデフォルト値を利用する
-        if ($form_action_name == "" && count($default_action_name) > 0) {
-            $tmp = is_array($default_action_name) ? $default_action_name[0] : $default_action_name;
-            if ($tmp{strlen($tmp) - 1} == '*') {
-                $tmp = substr($tmp, 0, -1);
-            }
-            $this->logger->log(LOG_DEBUG, '-> default_action_name[%s]', $tmp);
-            $action_name = $tmp;
+        if ($form_action_name == "" && $default_action_name) {
+            $this->logger->log(LOG_DEBUG, '-> default_action_name[%s]', $default_action_name);
+            $action_name = $default_action_name;
         } else {
             $action_name = $form_action_name;
         }
