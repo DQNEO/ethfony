@@ -8,11 +8,11 @@
  */
 class Ethna_ActionResolver
 {
-    private $httpVars;
-    private $appId;
-    private $logger;
-    private $default_form_class;
-    private $actionDir;
+    protected $httpVars;
+    protected $appId;
+    protected $logger;
+    protected $default_form_class;
+    protected $actionDir;
 
     /**
      * Ethna_ActionResolver constructor.
