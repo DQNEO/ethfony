@@ -29,7 +29,7 @@ class Ethna_ActionResolver
     public function resolveActionName($default_action_name)
     {
         $action_name = $this->_getActionName($default_action_name);
-        list($action_class_name, ) = $this->getClassNames($action_name);
+        list($action_class_name,) = $this->getClassNames($action_name);
         if (is_null($action_class_name)) {
             $this->logger->end();
             $r = Ethna::raiseError("undefined action [%s]", E_APP_UNDEFINED_ACTION, $action_name);
@@ -47,7 +47,7 @@ class Ethna_ActionResolver
     public function newActionForm($action_name, $ctl)
     {
         $form_class_name = $this->getActionFormName($action_name);
-        return  new $form_class_name($ctl);
+        return new $form_class_name($ctl);
 
     }
 
@@ -57,9 +57,9 @@ class Ethna_ActionResolver
      *  getDefaultActionClass()をオーバーライドした場合、こちらも合わせてオーバーライド
      *  することを推奨(必須ではない)
      *
-     *  @access public
-     *  @param  string  $class_name     アクションクラス名
-     *  @return string  アクション名
+     * @access public
+     * @param  string $class_name アクションクラス名
+     * @return string  アクション名
      */
     protected function actionClassToName($class_name)
     {
@@ -78,23 +78,27 @@ class Ethna_ActionResolver
     /**
      *  フォームにより要求されたアクション名に対応する定義を返す
      *
-     *  @param  string  $action_name    アクション名
-     *  @return array   アクション定義
+     * @param  string $action_name アクション名
+     * @return array   アクション定義
      */
     protected function getClassNames($action_name)
     {
 
         // アクションスクリプトのインクルード
         // "foo_bar" -> "/Foo/Bar.php"となる
-        $class_path = preg_replace_callback('/_(.)/', function(array $matches){return '/' . strtoupper($matches[1]);}, ucfirst($action_name)) . '.php';
+        $class_path = preg_replace_callback('/_(.)/', function (array $matches) {
+                return '/' . strtoupper($matches[1]);
+            }, ucfirst($action_name)) . '.php';
         $this->logger->log(LOG_DEBUG, "default action path [%s]", $class_path);
         if (file_exists($this->actionDir . $class_path)) {
             include_once $this->actionDir . $class_path;
         } else {
-            $this->logger->log(LOG_INFO, 'file not found:'. $this->actionDir . $class_path);
+            $this->logger->log(LOG_INFO, 'file not found:' . $this->actionDir . $class_path);
         }
 
-        $postfix = preg_replace_callback('/_(.)/', function(array $matches){return strtoupper($matches[1]);}, ucfirst($action_name));
+        $postfix = preg_replace_callback('/_(.)/', function (array $matches) {
+            return strtoupper($matches[1]);
+        }, ucfirst($action_name));
         $action_class_name = sprintf("%s_Action_%s", $this->appId, $postfix);
         $this->logger->log(LOG_DEBUG, "default action class [%s]", $action_class_name);
         if (class_exists($action_class_name) == false) {
@@ -102,7 +106,9 @@ class Ethna_ActionResolver
             return [null, null];
         }
 
-        $form_postfix = preg_replace_callback('/_(.)/', function(array $matches){return strtoupper($matches[1]);}, ucfirst($action_name));
+        $form_postfix = preg_replace_callback('/_(.)/', function (array $matches) {
+            return strtoupper($matches[1]);
+        }, ucfirst($action_name));
         $form_class_name = sprintf("%s_Form_%s", $this->appId, $form_postfix);
         $this->logger->log(LOG_DEBUG, "default form class [%s]", $form_class_name);
         if (class_exists($form_class_name) == false) {
@@ -118,13 +124,13 @@ class Ethna_ActionResolver
     /**
      *  指定されたアクションのフォームクラス名を返す(オブジェクトの生成は行わない)
      *
-     *  @access public
-     *  @param  string  $action_name    アクション名
-     *  @return string  アクションのフォームクラス名
+     * @access public
+     * @param  string $action_name アクション名
+     * @return string  アクションのフォームクラス名
      */
     public function getActionFormName($action_name)
     {
-        list(,$form_class_name)= $this->getClassNames($action_name);
+        list(, $form_class_name) = $this->getClassNames($action_name);
         if (is_null($form_class_name)) {
             return null;
         }
@@ -135,13 +141,13 @@ class Ethna_ActionResolver
     /**
      *  指定されたアクションのクラス名を返す(オブジェクトの生成は行わない)
      *
-     *  @access public
-     *  @param  string  $action_name    アクションの名称
-     *  @return string  アクションのクラス名
+     * @access public
+     * @param  string $action_name アクションの名称
+     * @return string  アクションのクラス名
      */
     public function getActionClassName($action_name)
     {
-        list($action_class_name, ) = $this->getClassNames($action_name);
+        list($action_class_name,) = $this->getClassNames($action_name);
         if ($action_class_name == null) {
             return null;
         }
@@ -156,8 +162,8 @@ class Ethna_ActionResolver
      *  デフォルトでは"action_"で始まるフォーム値の"action_"の部分を除いたもの
      *  ("action_sample"なら"sample")がアクション名として扱われます
      *
-     *  @access protected
-     *  @return string  フォームにより要求されたアクション名
+     * @access protected
+     * @return string  フォームにより要求されたアクション名
      */
     protected function _getActionName_Form()
     {
@@ -173,7 +179,7 @@ class Ethna_ActionResolver
 
             // type="image"対応
             if (preg_match('/_x$/', $name) || preg_match('/_y$/', $name)) {
-                $tmp = substr($tmp, 0, strlen($tmp)-2);
+                $tmp = substr($tmp, 0, strlen($tmp) - 2);
             }
 
             // value="dummy"となっているものは優先度を下げる
@@ -194,11 +200,11 @@ class Ethna_ActionResolver
     /**
      *  実行するアクション名を返す
      *
-     *  @access protected
-     *  @param  mixed   $default_action_name    指定のアクション名
-     *  @return string  実行するアクション名
+     * @access protected
+     * @param  mixed $default_action_name 指定のアクション名
+     * @return string  実行するアクション名
      */
-    protected function _getActionName($default_action_name  )
+    protected function _getActionName($default_action_name)
     {
         // フォームから要求されたアクション名を取得する
         $form_action_name = $this->_getActionName_Form();
@@ -208,7 +214,7 @@ class Ethna_ActionResolver
         // フォームからの指定が無い場合はエントリポイントに指定されたデフォルト値を利用する
         if ($form_action_name == "" && count($default_action_name) > 0) {
             $tmp = is_array($default_action_name) ? $default_action_name[0] : $default_action_name;
-            if ($tmp{strlen($tmp)-1} == '*') {
+            if ($tmp{strlen($tmp) - 1} == '*') {
                 $tmp = substr($tmp, 0, -1);
             }
             $this->logger->log(LOG_DEBUG, '-> default_action_name[%s]', $tmp);
@@ -221,7 +227,6 @@ class Ethna_ActionResolver
 
         return $action_name;
     }
-
 
 
 }
