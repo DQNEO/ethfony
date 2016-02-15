@@ -139,7 +139,7 @@ class Ethna_ActionResolver
     {
         $postfix = preg_replace_callback('/_(.)/', function(array $matches){return strtoupper($matches[1]);}, ucfirst($action_name));
         $r = sprintf("%s_Form_%s", $this->appId, $postfix);
-        $this->logger->log(LOG_DEBUG, "default action class [%s]", $r);
+        $this->logger->log(LOG_DEBUG, "default form class [%s]", $r);
 
         return $r;
     }
