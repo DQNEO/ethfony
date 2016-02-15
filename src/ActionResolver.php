@@ -190,13 +190,12 @@ class Ethna_ActionResolver
         $this->_includeActionScript($action_name);
 
         $action_class_name = $this->getDefaultActionClass($action_name);
-        $form_class_name = $this->getDefaultFormClass($action_name);
-
-        // 必要条件の確認
         if (class_exists($action_class_name) == false) {
             $this->logger->log(LOG_NOTICE, 'action class is not defined [%s]', $action_class_name);
             return [null, null];
         }
+
+        $form_class_name = $this->getDefaultFormClass($action_name);
         if (class_exists($form_class_name) == false) {
             // フォームクラスは未定義でも良い
             $class_name = $this->class_factory->getObjectName('form');
