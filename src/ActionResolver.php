@@ -212,14 +212,12 @@ class Ethna_ActionResolver
         // フォームからの指定が無い場合はエントリポイントに指定されたデフォルト値を利用する
         if ($form_action_name == "" && $default_action_name) {
             $this->logger->log(LOG_DEBUG, '-> default_action_name[%s]', $default_action_name);
-            $action_name = $default_action_name;
+            return $default_action_name;
         } else {
-            $action_name = $form_action_name;
+            $this->logger->log(LOG_DEBUG, '<<< action_name[%s] >>>', $form_action_name);
+            return $form_action_name;
         }
 
-        $this->logger->log(LOG_DEBUG, '<<< action_name[%s] >>>', $action_name);
-
-        return $action_name;
     }
 
 
