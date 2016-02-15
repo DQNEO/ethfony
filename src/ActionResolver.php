@@ -102,6 +102,7 @@ class Ethna_ActionResolver
         }, ucfirst($action_name));
         $action_class_name = sprintf("%s_Action_%s", $this->appId, $postfix);
         $this->logger->log(LOG_DEBUG, "default action class [%s]", $action_class_name);
+        // actionクラスが存在しなければ探索中止
         if (class_exists($action_class_name) == false) {
             $this->logger->log(LOG_NOTICE, 'action class is not defined [%s]', $action_class_name);
             return [null, null];
