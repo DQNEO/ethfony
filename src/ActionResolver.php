@@ -85,24 +85,6 @@ class Ethna_ActionResolver
     }
 
     /**
-     *  アクションに対応するアクションクラス名が省略された場合のデフォルトクラス名を返す
-     *
-     *  デフォルトでは[プロジェクトID]_Action_[アクション名]となるので好み応じてオーバライドする
-     *
-     *  @access public
-     *  @param  string  $action_name    アクション名
-     *  @return string  アクションクラス名
-     */
-    protected function getDefaultActionClass($action_name)
-    {
-        $postfix = preg_replace_callback('/_(.)/', function(array $matches){return strtoupper($matches[1]);}, ucfirst($action_name));
-        $r = sprintf("%s_Action_%s", $this->appId, $postfix);
-        $this->logger->log(LOG_DEBUG, "default action class [%s]", $r);
-
-        return $r;
-    }
-
-    /**
      *  getDefaultActionClass()で取得したクラス名からアクション名を取得する
      *
      *  getDefaultActionClass()をオーバーライドした場合、こちらも合わせてオーバーライド
@@ -124,24 +106,6 @@ class Ethna_ActionResolver
         $action_name = substr(preg_replace('/([A-Z])/e', "'_' . strtolower('\$1')", $target), 1);
 
         return $action_name;
-    }
-
-    /**
-     *  アクションに対応するフォームクラス名が省略された場合のデフォルトクラス名を返す
-     *
-     *  デフォルトでは[プロジェクトID]_Form_[アクション名]となるので好み応じてオーバライドする
-     *
-     *  @access public
-     *  @param  string  $action_name    アクション名
-     *  @return string  アクションフォーム名
-     */
-    protected function getDefaultFormClass($action_name)
-    {
-        $postfix = preg_replace_callback('/_(.)/', function(array $matches){return strtoupper($matches[1]);}, ucfirst($action_name));
-        $r = sprintf("%s_Form_%s", $this->appId, $postfix);
-        $this->logger->log(LOG_DEBUG, "default form class [%s]", $r);
-
-        return $r;
     }
 
     /**
@@ -189,13 +153,17 @@ class Ethna_ActionResolver
         // アクションスクリプトのインクルード
         $this->_includeActionScript($action_name);
 
-        $action_class_name = $this->getDefaultActionClass($action_name);
+        $postfix = preg_replace_callback('/_(.)/', function(array $matches){return strtoupper($matches[1]);}, ucfirst($action_name));
+        $action_class_name = sprintf("%s_Action_%s", $this->appId, $postfix);
+        $this->logger->log(LOG_DEBUG, "default action class [%s]", $action_class_name);
         if (class_exists($action_class_name) == false) {
             $this->logger->log(LOG_NOTICE, 'action class is not defined [%s]', $action_class_name);
             return [null, null];
         }
 
-        $form_class_name = $this->getDefaultFormClass($action_name);
+        $form_postfix = preg_replace_callback('/_(.)/', function(array $matches){return strtoupper($matches[1]);}, ucfirst($action_name));
+        $form_class_name = sprintf("%s_Form_%s", $this->appId, $form_postfix);
+        $this->logger->log(LOG_DEBUG, "default form class [%s]", $form_class_name);
         if (class_exists($form_class_name) == false) {
             // フォームクラスは未定義でも良い
             $class_name = $this->class_factory->getObjectName('form');
