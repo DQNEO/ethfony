@@ -106,10 +106,7 @@ class Ethna_ActionResolver
             return [null, null];
         }
 
-        $form_postfix = preg_replace_callback('/_(.)/', function (array $matches) {
-            return strtoupper($matches[1]);
-        }, ucfirst($action_name));
-        $form_class_name = sprintf("%s_Form_%s", $this->appId, $form_postfix);
+        $form_class_name = sprintf("%s_Form_%s", $this->appId, $postfix);
         $this->logger->log(LOG_DEBUG, "default form class [%s]", $form_class_name);
         if (class_exists($form_class_name) == false) {
             // フォームクラスは未定義でも良い
