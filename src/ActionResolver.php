@@ -86,9 +86,10 @@ class Ethna_ActionResolver
 
         // アクションスクリプトのインクルード
         // "foo_bar" -> "/Foo/Bar.php"となる
-        $class_path = preg_replace_callback('/_(.)/', function (array $matches) {
+        $postfix = preg_replace_callback('/_(.)/', function (array $matches) {
                 return '/' . strtoupper($matches[1]);
-            }, ucfirst($action_name)) . '.php';
+            }, ucfirst($action_name));
+        $class_path = $postfix . '.php';
         $this->logger->log(LOG_DEBUG, "default action path [%s]", $class_path);
         if (file_exists($this->actionDir . $class_path)) {
             include_once $this->actionDir . $class_path;
