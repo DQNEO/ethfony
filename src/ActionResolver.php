@@ -50,40 +50,7 @@ class Ethna_ActionResolver
         return  new $form_class_name($ctl);
 
     }
-
-    /**
-     *  アクションに対応するアクションパス名が省略された場合のデフォルトパス名を返す
-     *
-     *  デフォルトでは"foo_bar" -> "/Foo/Bar.php"となるので好み応じてオーバーライドする
-     *
-     *  @access public
-     *  @param  string  $action_name    アクション名
-     *  @return string  アクションクラスが定義されるスクリプトのパス名
-     */
-    protected function getActionPath($action_name)
-    {
-        $r = preg_replace_callback('/_(.)/', function(array $matches){return '/' . strtoupper($matches[1]);}, ucfirst($action_name)) . '.php';
-        $this->logger->log(LOG_DEBUG, "default action path [%s]", $r);
-
-        return $r;
-    }
-
-    /**
-     *  アクションに対応するフォームパス名が省略された場合のデフォルトパス名を返す
-     *
-     *  デフォルトでは_getDefaultActionPath()と同じ結果を返す(1ファイルに
-     *  アクションクラスとフォームクラスが記述される)ので、好みに応じて
-     *  オーバーライドする
-     *
-     *  @access public
-     *  @param  string  $action_name    アクション名
-     *  @return string  form classが定義されるスクリプトのパス名
-     */
-    protected function getFormPath($action_name)
-    {
-        return $this->getActionPath($action_name);
-    }
-
+    
     /**
      *  getDefaultActionClass()で取得したクラス名からアクション名を取得する
      *
@@ -120,7 +87,9 @@ class Ethna_ActionResolver
     {
         $action_dir = $this->actionDir;
 
-        $class_path = $this->getActionPath($action_name);
+        // "foo_bar" -> "/Foo/Bar.php"となる
+        $class_path = preg_replace_callback('/_(.)/', function(array $matches){return '/' . strtoupper($matches[1]);}, ucfirst($action_name)) . '.php';
+        $this->logger->log(LOG_DEBUG, "default action path [%s]", $class_path);
         if (file_exists($action_dir . $class_path)) {
             include_once $action_dir . $class_path;
         } else {
@@ -128,15 +97,6 @@ class Ethna_ActionResolver
             return;
         }
 
-        $form_path = $this->getFormPath($action_name);
-        if ($form_path == $class_path) {
-            return;
-        }
-        if (file_exists($action_dir . $form_path)) {
-            include_once $action_dir . $form_path;
-        } else {
-            $this->logger->log(LOG_DEBUG, 'default form file not found [%s] -> maybe falling back to default form class', $form_path);
-        }
     }
 
     /**
