@@ -29,13 +29,12 @@ class Ethna_ActionResolver
     public function resolveActionName($default_action_name)
     {
         $action_name = $this->_getActionName($default_action_name);
-        $action_obj = $this->_getAction($action_name);
-        if (is_null($action_obj)) {
+        list($action_class_name, ) = $this->_getAction($action_name);
+        if (is_null($action_class_name)) {
             $this->logger->end();
             $r = Ethna::raiseError("undefined action [%s]", E_APP_UNDEFINED_ACTION, $action_name);
             throw new \Exception($r->getMessage());
         }
-        unset($action_obj);
         return $action_name;
     }
 
@@ -186,28 +185,26 @@ class Ethna_ActionResolver
      */
     protected function _getAction($action_name)
     {
-        $action = array();
-        $action_obj = array();
 
         // アクションスクリプトのインクルード
         $this->_includeActionScript($action_name);
 
-        $action_obj['class_name'] = $this->getDefaultActionClass($action_name);
-        $action_obj['form_name'] = $this->getDefaultFormClass($action_name);
+        $action_class_name = $this->getDefaultActionClass($action_name);
+        $form_class_name = $this->getDefaultFormClass($action_name);
 
         // 必要条件の確認
-        if (class_exists($action_obj['class_name']) == false) {
-            $this->logger->log(LOG_NOTICE, 'action class is not defined [%s]', $action_obj['class_name']);
-            return null;
+        if (class_exists($action_class_name) == false) {
+            $this->logger->log(LOG_NOTICE, 'action class is not defined [%s]', $action_class_name);
+            return [null, null];
         }
-        if (class_exists($action_obj['form_name']) == false) {
+        if (class_exists($form_class_name) == false) {
             // フォームクラスは未定義でも良い
             $class_name = $this->class_factory->getObjectName('form');
-            $this->logger->log(LOG_DEBUG, 'form class is not defined [%s] -> falling back to default [%s]', $action_obj['form_name'], $class_name);
-            $action_obj['form_name'] = $class_name;
+            $this->logger->log(LOG_DEBUG, 'form class is not defined [%s] -> falling back to default [%s]', $form_class_name, $class_name);
+            $form_class_name = $class_name;
         }
 
-        return $action_obj;
+        return [$action_class_name, $form_class_name];
     }
 
     /**
@@ -219,12 +216,12 @@ class Ethna_ActionResolver
      */
     public function getActionFormName($action_name)
     {
-        $action_obj = $this->_getAction($action_name);
-        if (is_null($action_obj)) {
+        list(,$form_class_name)= $this->_getAction($action_name);
+        if (is_null($form_class_name)) {
             return null;
         }
 
-        return $action_obj['form_name'];
+        return $form_class_name;
     }
 
     /**
@@ -236,12 +233,12 @@ class Ethna_ActionResolver
      */
     public function getActionClassName($action_name)
     {
-        $action_obj = $this->_getAction($action_name);
-        if ($action_obj == null) {
+        list($action_class_name, ) = $this->_getAction($action_name);
+        if ($action_class_name == null) {
             return null;
         }
 
-        return $action_obj['class_name'];
+        return $action_class_name;
     }
 
     /**
