@@ -11,18 +11,18 @@ class Ethna_ActionResolver
     private $httpVars;
     private $appId;
     private $logger;
-    private $class_factory;
+    private $default_form_class;
     private $actionDir;
 
     /**
      * Ethna_ActionResolver constructor.
      */
-    public function __construct(array $httpVars, $appId, $logger, $class_factory, $actionDir)
+    public function __construct(array $httpVars, $appId, $logger, $default_form_class, $actionDir)
     {
         $this->httpVars = $httpVars;
         $this->appId = $appId;
         $this->logger = $logger;
-        $this->class_factory = $class_factory;
+        $this->default_form_class = $default_form_class;
         $this->actionDir = $actionDir;
     }
 
@@ -110,10 +110,9 @@ class Ethna_ActionResolver
         $form_class_name = sprintf("%s_Form_%s", $this->appId, $postfix);
         $this->logger->log(LOG_DEBUG, "default form class [%s]", $form_class_name);
         if (class_exists($form_class_name) == false) {
-            // フォームクラスは未定義でも良い
-            $class_name = $this->class_factory->getObjectName('form');
-            $this->logger->log(LOG_DEBUG, 'form class is not defined [%s] -> falling back to default [%s]', $form_class_name, $class_name);
-            $form_class_name = $class_name;
+            // 当該フォームクラスが存在しなければ基底フォームクラスを使う
+            $this->logger->log(LOG_DEBUG, 'form class is not defined [%s] -> falling back to default [%s]', $form_class_name, $this->default_form_class);
+            $form_class_name = $this->default_form_class;
         }
 
         return [$action_class_name, $form_class_name];

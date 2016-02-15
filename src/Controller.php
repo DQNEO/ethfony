@@ -577,7 +577,8 @@ class Ethna_Controller
 
         $httpVars = self::getHttpVars();
         $actionDir = $this->directory['action'] . "/";
-        $this->actionResolver = $actionResolver = new Ethna_ActionResolver($httpVars, $this->getAppId(), $this->logger, $this->class_factory, $actionDir);
+        $default_form_class = $this->class_factory->getObjectName('form');
+        $this->actionResolver = $actionResolver = new Ethna_ActionResolver($httpVars, $this->getAppId(), $this->logger, $default_form_class, $actionDir);
         // アクション名の取得
         $action_name = $actionResolver->resolveActionName($default_action_name);
         $this->action_name = $action_name;
