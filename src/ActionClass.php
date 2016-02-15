@@ -60,7 +60,8 @@ class Ethna_ActionClass
     /** @protected    object  Ethna_Logger    ログオブジェクト */
     protected $logger;
 
-    /**#@-*/
+    /** @var  Ethna_ViewResolver  */
+    protected $viewResolver;
 
     /**
      *  Ethna_ActionClassのコンストラクタ
@@ -68,7 +69,7 @@ class Ethna_ActionClass
      *  @access public
      *  @param  object  Ethna_Backend   $backend    backendオブジェクト
      */
-    public function __construct($backend)
+    public function __construct($backend, $viewResolver)
     {
         $this->controller = $controller = $backend->getController();
         $this->backend = $backend;
@@ -84,6 +85,7 @@ class Ethna_ActionClass
         $this->session = $controller->getSession();
         $this->plugin = $controller->getPlugin();
         $this->logger = $controller->getLogger();
+        $this->viewResolver = $viewResolver;
     }
 
     /**
@@ -119,12 +121,8 @@ class Ethna_ActionClass
         return null;
     }
 
-    /** @var  Ethna_ViewResolver  */
-    protected $viewResolver;
-
-    public function run(Ethna_ViewResolver $viewResolver): Response
+    public function run(): Response
     {
-        $this->viewResolver = $viewResolver;
 
         $forward_name = $this->authenticate();
         if ($forward_name === false) {

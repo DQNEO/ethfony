@@ -38,10 +38,10 @@ class Ethna_ActionResolver
         return $action_name;
     }
 
-    public function newAction($action_name, $backend)
+    public function newAction($action_name, $backend, $viewResolver)
     {
         $action_class_name = $this->getActionClassName($action_name);
-        return new $action_class_name($backend);
+        return new $action_class_name($backend, $viewResolver);
     }
 
     public function newActionForm($action_name, $ctl)
