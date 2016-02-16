@@ -8,7 +8,7 @@
  *  @package    Ethna
  *  @version    $Id$
  */
-
+use Ethna_Request as Request;
 // {{{ Ethna_ActionForm
 /**
  *  アクションフォームクラス
@@ -175,29 +175,30 @@ class Ethna_ActionForm
      *  ユーザから送信されたフォーム値をフォーム値定義に従ってインポートする
      *
      */
-    public function setFormVars(array $http_vars)
+    public function setFormVars(Request $reqeust)
     {
-
+        $http_vars = $reqeust->getHttpVars();
+        $_files = $reqeust->files->all();
         foreach ($this->form as $name => $def) {
             $type = is_array($def['type']) ? $def['type'][0] : $def['type'];
             if ($type == VAR_TYPE_FILE) {
                 // ファイルの場合
 
                 // 値の有無の検査
-                if (isset($_FILES[$name]) == false || is_null($_FILES[$name])) {
+                if (isset($_files[$name]) == false || is_null($_files[$name])) {
                     $this->form_vars[$name] = null;
                     continue;
                 }
 
                 // 配列構造の検査
                 if (is_array($def['type'])) {
-                    if (is_array($_FILES[$name]['tmp_name']) == false) {
+                    if (is_array($_files[$name]['tmp_name']) == false) {
                         $this->handleError($name, E_FORM_WRONGTYPE_ARRAY);
                         $this->form_vars[$name] = null;
                         continue;
                     }
                 } else {
-                    if (is_array($_FILES[$name]['tmp_name'])) {
+                    if (is_array($_files[$name]['tmp_name'])) {
                         $this->handleError($name, E_FORM_WRONGTYPE_SCALAR);
                         $this->form_vars[$name] = null;
                         continue;
@@ -208,21 +209,21 @@ class Ethna_ActionForm
                 if (is_array($def['type'])) {
                     $files = array();
                     // ファイルデータを再構成
-                    foreach (array_keys($_FILES[$name]['name']) as $key) {
+                    foreach (array_keys($_files[$name]['name']) as $key) {
                         $files[$key] = array();
-                        $files[$key]['name'] = $_FILES[$name]['name'][$key];
-                        $files[$key]['type'] = $_FILES[$name]['type'][$key];
-                        $files[$key]['size'] = $_FILES[$name]['size'][$key];
-                        $files[$key]['tmp_name'] = $_FILES[$name]['tmp_name'][$key];
-                        if (isset($_FILES[$name]['error']) == false) {
+                        $files[$key]['name'] = $_files[$name]['name'][$key];
+                        $files[$key]['type'] = $_files[$name]['type'][$key];
+                        $files[$key]['size'] = $_files[$name]['size'][$key];
+                        $files[$key]['tmp_name'] = $_files[$name]['tmp_name'][$key];
+                        if (isset($_files[$name]['error']) == false) {
                             // PHP 4.2.0 以前
                             $files[$key]['error'] = 0;
                         } else {
-                            $files[$key]['error'] = $_FILES[$name]['error'][$key];
+                            $files[$key]['error'] = $_files[$name]['error'][$key];
                         }
                     }
                 } else {
-                    $files = $_FILES[$name];
+                    $files = $_files[$name];
                     if (isset($files['error']) == false) {
                         $files['error'] = 0;
                     }
