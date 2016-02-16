@@ -23,7 +23,7 @@ class Ethna_ViewClass
      *  @access private
      */
 
-    /** @protected    object  Ethna_Controller    Controllerオブジェクト */
+    /** @protected    object  Ethna_Kernel    Controllerオブジェクト */
     protected $ctl;
 
     /** @public    object  Ethna_Backend       backendオブジェクト */
@@ -202,7 +202,7 @@ class Ethna_ViewClass
 
         //    現在のアクションと等しければ、対応する
         //    アクションフォームを設定
-        $ctl = Ethna_Controller::getInstance();
+        $ctl = Ethna_Kernel::getInstance();
         if ($action === $ctl->getCurrentActionName()) {
             $this->helper_action_form[$action] = $this->af;
         } else {

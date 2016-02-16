@@ -18,7 +18,7 @@ function smarty_function_message($params, &$smarty)
         return '';
     }
 
-    $c = Ethna_Controller::getInstance();
+    $c = Ethna_Kernel::getInstance();
     $action_error = $c->getActionError();
 
     $message = $action_error->getMessage($params['name']);

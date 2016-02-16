@@ -79,7 +79,7 @@ class Ethna_ActionForm
      *  Ethna_ActionFormクラスのコンストラクタ
      *
      *  @access public
-     *  @param  object  Ethna_Controller    $controller    controllerオブジェクト
+     *  @param  object  Ethna_Kernel    $controller    controllerオブジェクト
      */
     public function __construct($controller)
     {
@@ -624,7 +624,7 @@ class Ethna_ActionForm
         }
 
         // Ethna_Backendの設定
-        $c = Ethna_Controller::getInstance();
+        $c = Ethna_Kernel::getInstance();
         $this->backend = $c->getBackend();
 
         return to_array($this->get($name));

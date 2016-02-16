@@ -22,7 +22,7 @@ class Ethna_I18N
      *  @access private
      */
 
-    /** @protected    Ethna_Controller  コントローラーオブジェクト  */
+    /** @protected    Ethna_Kernel  コントローラーオブジェクト  */
     protected $ctl;
 
     /** @protected    string  ロケール */
@@ -57,7 +57,7 @@ class Ethna_I18N
         $this->locale_dir = $locale_dir;
         $this->appid = $appid;
 
-        $this->ctl = Ethna_Controller::getInstance();
+        $this->ctl = Ethna_Kernel::getInstance();
         $this->encoding = $this->ctl->getEncoding();
         $this->logger = $this->ctl->getLogger();
 
@@ -146,7 +146,7 @@ class Ethna_I18N
 
         //    Ethna_I18N#setLanguage を呼び出さず
         //    このメソッドを呼び出すと、ロケール名が空になる
-        //    その場合は Ethna_Controller の設定を補う
+        //    その場合は Ethna_Kernel の設定を補う
         if (empty($this->locale)) {
             list($this->locale, $cli_enc) = $this->ctl->getLanguage();
         }

@@ -16,7 +16,7 @@ function smarty_function_url($params, &$smarty)
         unset($query[$key]);
     }
 
-    $c = Ethna_Controller::getInstance();
+    $c = Ethna_Kernel::getInstance();
     $config = $c->getConfig();
     $url_handler = $c->getUrlHandler();
     list($path, $path_key) = $url_handler->actionToRequest($action, $query);

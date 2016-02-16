@@ -23,10 +23,10 @@ class Ethna_Renderer
      *  @access private
      */
 
-    /** @protected    object  Ethna_Controller    controllerオブジェクト */
+    /** @protected    object  Ethna_Kernel    controllerオブジェクト */
     protected $controller;
 
-    /** @protected    object  Ethna_Controller    controllerオブジェクト($controllerの省略形) */
+    /** @protected    object  Ethna_Kernel    controllerオブジェクト($controllerの省略形) */
     protected $ctl;
 
     /** @protected    array   config.phpのレンダラ設定 */

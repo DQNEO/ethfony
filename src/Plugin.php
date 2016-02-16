@@ -28,10 +28,10 @@ class Ethna_Plugin
      *  @access private
      */
 
-    /** @protected    object  Ethna_Controller    コントローラオブジェクト */
+    /** @protected    object  Ethna_Kernel    コントローラオブジェクト */
     protected $controller;
 
-    /** @protected    object  Ethna_Controller    コントローラオブジェクト($controllerの省略形) */
+    /** @protected    object  Ethna_Kernel    コントローラオブジェクト($controllerの省略形) */
     protected $ctl;
 
     /** @protected    object  Ethna_Logger        ログオブジェクト */
@@ -50,7 +50,7 @@ class Ethna_Plugin
      *  Ethna_Pluginのコンストラクタ
      *
      *  @access public
-     *  @param  object  Ethna_Controller    $controller コントローラオブジェクト
+     *  @param  object  Ethna_Kernel    $controller コントローラオブジェクト
      */
     public function __construct($controller)
     {
@@ -451,7 +451,7 @@ class Ethna_Plugin
      */
     public static function import($type, $name = null)
     {
-        $ctl = Ethna_Controller::getInstance();
+        $ctl = Ethna_Kernel::getInstance();
         $plugin = $ctl->getPlugin();
 
         $plugin->includePlugin($type, $name);

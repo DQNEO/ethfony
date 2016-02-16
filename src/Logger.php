@@ -52,10 +52,10 @@ class Ethna_Logger extends Ethna_AppManager
         'debug'     => array('name' => 'LOG_DEBUG',     'value' => 0),
     );
 
-    /** @protected    object  Ethna_Controller    controllerオブジェクト */
+    /** @protected    object  Ethna_Kernel    controllerオブジェクト */
     public $controller;
 
-    /** @protected    object  Ethna_Controller    controllerオブジェクト($controllerの省略形) */
+    /** @protected    object  Ethna_Kernel    controllerオブジェクト($controllerの省略形) */
     public $ctl;
 
     /** @protected    array   ログファシリティ */
@@ -96,7 +96,7 @@ class Ethna_Logger extends Ethna_AppManager
      *  Ethna_Loggerクラスのコンストラクタ
      *
      *  @access public
-     *  @param  object  Ethna_Controller    $controller controllerオブジェクト
+     *  @param  object  Ethna_Kernel    $controller controllerオブジェクト
      */
     public function __construct($controller)
     {

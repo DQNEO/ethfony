@@ -6,7 +6,7 @@
  */
 function smarty_function_form_submit($params, &$smarty)
 {
-    $c = Ethna_Controller::getInstance();
+    $c = Ethna_Kernel::getInstance();
     $view = $c->getView();
     if ($view === null) {
         return null;

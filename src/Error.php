@@ -61,7 +61,7 @@ class Ethna_Error
      */
     public function __construct($message = null, $code = null, $mode = null, $options = null)
     {
-        $controller = Ethna_Controller::getInstance();
+        $controller = Ethna_Kernel::getInstance();
         if ($controller !== null) {
             $this->i18n = $controller->getI18N();
         }

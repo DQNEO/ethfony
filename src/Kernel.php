@@ -148,7 +148,7 @@ class Ethna_Kernel
     }
 
     /**
-     *  Ethna_Controllerクラスのコンストラクタ
+     *  Ethna_Kernelクラスのコンストラクタ
      *
      *  @access     public
      */
@@ -168,7 +168,7 @@ class Ethna_Kernel
      *  (現在アクティブな)コントローラのインスタンスを返す
      *
      *  @access public
-     *  @return object  Ethna_Controller    コントローラのインスタンス
+     *  @return object  Ethna_Kernel    コントローラのインスタンス
      *  @static
      */
     public static function getInstance()
@@ -221,7 +221,7 @@ class Ethna_Kernel
      *
      *  @access public
      *  @return string  テンプレートディレクトリ
-     *  @see    Ethna_Controller#_getDefaultLanguage
+     *  @see    Ethna_Kernel#_getDefaultLanguage
      */
     public function getTemplatedir()
     {

@@ -10,7 +10,7 @@ function smarty_block_form($params, $content, &$smarty, &$repeat)
         // default
         if (isset($params['default']) === false) {
             // 指定なしのときは $form を使う
-            $c = Ethna_Controller::getInstance();
+            $c = Ethna_Kernel::getInstance();
             $af = $c->getActionForm();
 
             // c.f. http://smarty.php.net/manual/en/plugins.block.functions.php
@@ -21,7 +21,7 @@ function smarty_block_form($params, $content, &$smarty, &$repeat)
         // 動的フォームヘルパを呼ぶ
         if (isset($params['ethna_action'])) {
             $ethna_action = $params['ethna_action'];
-            $c = Ethna_Controller::getInstance();
+            $c = Ethna_Kernel::getInstance();
             $view = $c->getView();
             $view->addActionFormHelper($ethna_action, true);
         }
@@ -32,7 +32,7 @@ function smarty_block_form($params, $content, &$smarty, &$repeat)
     } else {
         // {/form}: ブロック全体を出力
 
-        $c = Ethna_Controller::getInstance();
+        $c = Ethna_Kernel::getInstance();
         $view = $c->getView();
         if ($view === null) {
             return null;

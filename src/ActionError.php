@@ -209,7 +209,7 @@ class Ethna_ActionError
     private function _getActionForm()
     {
         if (isset($this->action_form) == false) {
-            $controller = Ethna_Controller::getInstance();
+            $controller = Ethna_Kernel::getInstance();
             $this->action_form = $controller->getActionForm();
         }
         return $this->action_form;
@@ -224,7 +224,7 @@ class Ethna_ActionError
     private function _getLogger()
     {
         if (is_null($this->logger)) {
-            $controller = Ethna_Controller::getInstance();
+            $controller = Ethna_Kernel::getInstance();
             $this->logger = $controller->getLogger();
         }
         return $this->logger;

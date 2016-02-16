@@ -25,7 +25,7 @@ class Ethna_Backend
      *  Ethna_Backendクラスのコンストラクタ
      *
      *  @access public
-     *  @param  object  Ethna_Controller    $controller    コントローラオブジェクト
+     *  @param  object  Ethna_Kernel    $controller    コントローラオブジェクト
      */
     public function __construct($controller)
     {
@@ -36,7 +36,7 @@ class Ethna_Backend
      *  controllerオブジェクトへのアクセサ(R)
      *
      *  @access public
-     *  @return object  Ethna_Controller    controllerオブジェクト
+     *  @return object  Ethna_Kernel    controllerオブジェクト
      */
     public function getController()
     {

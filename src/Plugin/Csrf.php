@@ -27,7 +27,7 @@ class Ethna_Plugin_Csrf
 
     protected $controller;
 
-    /** @protected    object  Ethna_Controller    controllerオブジェクト($controllerの省略形) */
+    /** @protected    object  Ethna_Kernel    controllerオブジェクト($controllerの省略形) */
     protected $ctl;
 
     /** @protected    object  Ethna_Config        設定オブジェクト */
@@ -46,7 +46,7 @@ class Ethna_Plugin_Csrf
      *  Csrfのコンストラクタ
      *
      *  @access public
-     *  @param  object  Ethna_Controller    $controller    コントローラオブジェクト
+     *  @param  object  Ethna_Kernel    $controller    コントローラオブジェクト
      */
     public function __construct($controller)
     {

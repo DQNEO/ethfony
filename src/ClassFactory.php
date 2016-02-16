@@ -27,10 +27,10 @@ class Ethna_ClassFactory
      *  @access private
      */
 
-    /** @protected    object  Ethna_Controller    controllerオブジェクト */
+    /** @protected    object  Ethna_Kernel    controllerオブジェクト */
     protected $controller;
 
-    /** @protected    object  Ethna_Controller    controllerオブジェクト(省略形) */
+    /** @protected    object  Ethna_Kernel    controllerオブジェクト(省略形) */
     protected $ctl;
 
     /** @protected    array   クラス定義 */
@@ -52,7 +52,7 @@ class Ethna_ClassFactory
      *  Ethna_ClassFactoryクラスのコンストラクタ
      *
      *  @access public
-     *  @param  object  Ethna_Controller    $controller    controllerオブジェクト
+     *  @param  object  Ethna_Kernel    $controller    controllerオブジェクト
      *  @param  array                       $class          クラス定義
      */
     public function __construct($controller, $class)
@@ -136,7 +136,7 @@ class Ethna_ClassFactory
             }
         }
 
-        //  Ethna_Controllerで定義されたクラスキーの場合
+        //  Ethna_Kernelで定義されたクラスキーの場合
         //  はメソッド情報を集める
         if (isset($this->method_list[$class_name]) == false) {
             $this->method_list[$class_name] = get_class_methods($class_name);
