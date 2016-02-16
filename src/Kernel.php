@@ -92,7 +92,7 @@ class Ethna_Kernel
         $request = Request::createFromGlobals();
         $response = $c->handle($request, $default_action_name);
         $response->send();
-        $c->terminate();
+        $c->terminate($request, $response);
 
     }
 
@@ -163,7 +163,7 @@ class Ethna_Kernel
     /**
      *  アプリケーション実行後の後始末を行います。
      */
-    protected function terminate()
+    protected function terminate(Request $request, Response $response)
     {
         $this->logger->end();
     }
