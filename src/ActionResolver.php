@@ -181,7 +181,9 @@ class Ethna_ActionResolver
             $action_name = $sub_action_name;
         }
 
-        return $action_name;
+        $form_action_name =  $action_name;
+        $form_action_name = preg_replace('/[^a-z0-9\-_]+/i', '', $form_action_name);
+        return $form_action_name;
     }
 
 
@@ -196,7 +198,6 @@ class Ethna_ActionResolver
     {
         // フォームから要求されたアクション名を取得する
         $form_action_name = $this->_getActionName_Form($request);
-        $form_action_name = preg_replace('/[^a-z0-9\-_]+/i', '', $form_action_name);
         $this->logger->log(LOG_DEBUG, 'form_action_name[%s]', $form_action_name);
 
         // フォームからの指定が無い場合はエントリポイントに指定されたデフォルト値を利用する
