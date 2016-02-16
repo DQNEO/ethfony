@@ -533,7 +533,7 @@ class Ethna_Kernel
      *  @access private
      *  @param  mixed   $default_action_name    指定のアクション名
      */
-    private function handle(Request $request): Response
+    public function handle(Request $request): Response
     {
         $default_action_name = $this->default_action_name;
         $GLOBALS['_Ethna_controller'] = $this;
