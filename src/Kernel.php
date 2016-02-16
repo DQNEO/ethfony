@@ -87,11 +87,12 @@ class Ethna_Kernel
      */
     public static function main(string $class_name, string $default_action_name = "")
     {
-        $c = new $class_name();
+        /** @var Ethna_Kernel $kernel */
+        $kernel = new $class_name();
         $request = Request::createFromGlobals();
-        $response = $c->handle($request, $default_action_name);
+        $response = $kernel->handle($request, $default_action_name);
         $response->send();
-        $c->end();
+        $kernel->end();
 
     }
 
