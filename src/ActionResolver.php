@@ -158,10 +158,9 @@ class Ethna_ActionResolver
      */
     protected function _getActionName_Form()
     {
-        $http_vars = $this->httpVars;
         // フォーム値からリクエストされたアクション名を取得する
         $action_name = $sub_action_name = null;
-        foreach ($http_vars as $name => $value) {
+        foreach ($this->httpVars as $name => $value) {
             if ($value == "" || strncmp($name, 'action_', 7) != 0) {
                 continue;
             }
