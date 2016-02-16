@@ -87,12 +87,12 @@ class Ethna_Kernel
      */
     public static function main(string $class_name, string $default_action_name = "")
     {
-        /** @var Ethna_Kernel $kernel */
-        $kernel = new $class_name();
+        /** @var Ethna_Kernel $c */
+        $c = new $class_name();
         $request = Request::createFromGlobals();
-        $response = $kernel->handle($request, $default_action_name);
+        $response = $c->handle($request, $default_action_name);
         $response->send();
-        $kernel->end();
+        $c->terminate();
 
     }
 
@@ -163,7 +163,7 @@ class Ethna_Kernel
     /**
      *  アプリケーション実行後の後始末を行います。
      */
-    protected function end()
+    protected function terminate()
     {
         $this->logger->end();
     }
