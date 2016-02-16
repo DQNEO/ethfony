@@ -87,7 +87,7 @@ class Ethna_Controller
     public static function main(string $class_name, string $default_action_name = "")
     {
         $c = new $class_name();
-        $c->trigger($default_action_name);
+        $c->handle($default_action_name);
     }
 
 
@@ -539,7 +539,7 @@ class Ethna_Controller
      *  @access private
      *  @param  mixed   $default_action_name    指定のアクション名
      */
-    private function trigger(string $default_action_name = "")
+    private function handle(string $default_action_name = "")
     {
         $GLOBALS['_Ethna_controller'] = $this;
         $this->base = BASE;
