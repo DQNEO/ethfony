@@ -38,7 +38,7 @@ class Ethna_ActionResolver
         return $action_name;
     }
 
-    public function getController($action_name, $backend, $viewResolver)
+    public function getController($action_name, $backend, $viewResolver): callable
     {
         list($action_class_name ,$void ,$method) = $this->getClassNames($action_name);
         if ($action_class_name == null) {
@@ -48,12 +48,9 @@ class Ethna_ActionResolver
         if ($method === null) {
             $method = 'run';
         }
-        $callable = function() use ($action_class_name, $backend, $viewResolver, $method) {
-            $ac = new $action_class_name($backend, $viewResolver);
-            return $ac->$method();
-        };
+        $ac = new $action_class_name($backend, $viewResolver);
 
-        return $callable;
+        return [$ac, $method];
     }
 
     public function newActionForm($action_name, $ctl)
