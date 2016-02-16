@@ -520,9 +520,7 @@ class Ethna_Controller
      */
     private function getHttpVars(Request $request): array
     {
-        if (isset($_SERVER['REQUEST_METHOD']) == false) {
-            return [];
-        } else if ($request->isMethod('POST')) {
+        if ($request->isMethod('POST')) {
             $http_vars = $request->request->all();
         } else {
             $http_vars = $request->query->all();
