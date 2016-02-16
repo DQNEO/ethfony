@@ -84,10 +84,10 @@ class Ethna_Controller
      *  @param  mixed   $action_name    指定のアクション名(省略可)
      *  @static
      */
-    public static function main(string $class_name, string $action_name = "")
+    public static function main(string $class_name, string $default_action_name = "")
     {
         $c = new $class_name();
-        $c->trigger($action_name);
+        $c->trigger($default_action_name);
     }
 
 
