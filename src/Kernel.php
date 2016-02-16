@@ -20,6 +20,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class Ethna_Kernel
 {
+    protected $default_action_name;
+
     /** @var    string      アプリケーションID */
     protected $appid = 'ETHNA';
 
@@ -88,9 +90,9 @@ class Ethna_Kernel
     public static function main(string $class_name, string $default_action_name = "")
     {
         /** @var Ethna_Kernel $c */
-        $c = new $class_name();
+        $c = new $class_name($default_action_name);
         $request = Request::createFromGlobals();
-        $response = $c->handle($request, $default_action_name);
+        $response = $c->handle($request);
         $response->send();
         $c->terminate($request, $response);
 
@@ -156,8 +158,9 @@ class Ethna_Kernel
      *
      *  @access     public
      */
-    public function __construct()
+    public function __construct(string $default_action_name = '')
     {
+        $this->default_action_name = $default_action_name;
     }
 
     /**
@@ -530,8 +533,9 @@ class Ethna_Kernel
      *  @access private
      *  @param  mixed   $default_action_name    指定のアクション名
      */
-    private function handle(Request $request, string $default_action_name = ""): Response
+    private function handle(Request $request): Response
     {
+        $default_action_name = $this->default_action_name;
         $GLOBALS['_Ethna_controller'] = $this;
         $this->base = BASE;
         // クラスファクトリオブジェクトの生成
