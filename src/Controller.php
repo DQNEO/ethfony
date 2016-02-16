@@ -518,7 +518,7 @@ class Ethna_Controller
     /**
      *
      */
-    public static function getHttpVars(): array
+    private static function getHttpVars(): array
     {
         if (isset($_SERVER['REQUEST_METHOD']) == false) {
             return [];
