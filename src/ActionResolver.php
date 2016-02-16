@@ -36,17 +36,22 @@ class Ethna_ActionResolver
         return $action_name;
     }
 
-    public function getController(Request $request, $action_name, $backend, $viewResolver): callable
+    public function getController(Request $request, $action_name, $backend, $action_form, $viewResolver): callable
     {
         list($action_class_name ,$void ,$method) = $this->getClassNames($action_name);
         if ($action_class_name == null) {
             throw new \Exception('action class not found');
         }
 
+
         if ($method === null) {
             $method = 'run';
         }
-        $ac = new $action_class_name($backend, $viewResolver);
+
+        $action_form->setFormDef_PreHelper();
+        $action_form->setFormVars($request);
+
+        $ac = new $action_class_name($backend, $action_form, $viewResolver);
 
         return [$ac, $method];
     }

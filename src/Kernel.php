@@ -589,11 +589,9 @@ class Ethna_Kernel
         // アクションフォーム初期化
         // フォーム定義、フォーム値設定
         $this->action_form = $actionResolver->newActionForm($action_name, $this);
-        $this->action_form->setFormDef_PreHelper();
-        $this->action_form->setFormVars($request);
 
         $viewResolver = new Ethna_ViewResolver($backend, $this->logger, $this->getViewdir(), $this->getAppId(), $this->class_factory->getObjectName('view'));
-        $callable = $actionResolver->getController($request, $action_name, $backend, $viewResolver);
+        $callable = $actionResolver->getController($request, $action_name, $backend, $this->action_form, $viewResolver);
         $arguments = [$request];
         $response = call_user_func_array($callable, $arguments);
         return $response;

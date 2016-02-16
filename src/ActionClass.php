@@ -70,7 +70,7 @@ class Ethna_ActionClass
      *  @access public
      *  @param  object  Ethna_Backend   $backend    backendオブジェクト
      */
-    public function __construct($backend, $viewResolver)
+    public function __construct($backend, $action_form, $viewResolver)
     {
         $this->controller = $controller = $backend->getController();
         $this->backend = $backend;
@@ -80,7 +80,7 @@ class Ethna_ActionClass
         $this->action_error = $controller->getActionError();
         $this->ae = $this->action_error;
 
-        $this->action_form = $controller->getActionForm();
+        $this->action_form = $action_form;
         $this->af = $this->action_form;
 
         $this->session = $controller->getSession();
