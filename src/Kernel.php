@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
  *  @access     public
  *  @package    Ethna
  */
-class Ethna_Controller
+class Ethna_Kernel
 {
     /** @var    string      アプリケーションID */
     protected $appid = 'ETHNA';
@@ -799,4 +799,4 @@ class Ethna_Controller
 
 }
 
-class_alias('Ethna_Controller', 'Ethna_Kernel');
+class_alias('Ethna_Kernel', 'Ethna_Controller');
