@@ -579,14 +579,13 @@ class Ethna_Controller
         $this->plugin->setLogger($this->logger);
         $this->logger->begin();
 
-        $httpVars = $request->getHttpVars();
         $actionDir = $this->directory['action'] . "/";
         $default_form_class = $this->class_factory->getObjectName('form');
         $actionResolverClass = $this->class['action_resolver'];
         /** @var Ethna_ActionResolver $actionResolver */
-        $this->actionResolver = $actionResolver = new $actionResolverClass($httpVars, $this->getAppId(), $this->logger, $default_form_class, $actionDir);
+        $this->actionResolver = $actionResolver = new $actionResolverClass($this->getAppId(), $this->logger, $default_form_class, $actionDir);
         // アクション名の取得
-        $action_name = $actionResolver->resolveActionName($default_action_name);
+        $action_name = $actionResolver->resolveActionName($request, $default_action_name);
         $this->action_name = $action_name;
 
         // オブジェクト生成
@@ -600,7 +599,7 @@ class Ethna_Controller
         // フォーム定義、フォーム値設定
         $this->action_form = $actionResolver->newActionForm($action_name, $this);
         $this->action_form->setFormDef_PreHelper();
-        $this->action_form->setFormVars($httpVars);
+        $this->action_form->setFormVars($request->getHttpVars());
 
         $viewResolver = new Ethna_ViewResolver($backend, $this->logger, $this->getViewdir(), $this->getAppId(), $this->class_factory->getObjectName('view'));
         $callable = $actionResolver->getController($action_name, $backend, $viewResolver);

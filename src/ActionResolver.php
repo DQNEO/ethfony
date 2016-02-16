@@ -8,7 +8,6 @@
  */
 class Ethna_ActionResolver
 {
-    protected $httpVars;
     protected $appId;
     protected $logger;
     protected $default_form_class;
@@ -17,18 +16,17 @@ class Ethna_ActionResolver
     /**
      * Ethna_ActionResolver constructor.
      */
-    public function __construct(array $httpVars, $appId, $logger, $default_form_class, $actionDir)
+    public function __construct($appId, $logger, $default_form_class, $actionDir)
     {
-        $this->httpVars = $httpVars;
         $this->appId = $appId;
         $this->logger = $logger;
         $this->default_form_class = $default_form_class;
         $this->actionDir = $actionDir;
     }
 
-    public function resolveActionName(string $default_action_name)
+    public function resolveActionName(Ethna_Request $request, string $default_action_name)
     {
-        $action_name = $this->_getActionName($default_action_name);
+        $action_name = $this->_getActionName($request, $default_action_name);
         list($action_class_name,,) = $this->getClassNames($action_name);
         if (is_null($action_class_name)) {
             $this->logger->end();
@@ -156,11 +154,11 @@ class Ethna_ActionResolver
      * @access protected
      * @return string  フォームにより要求されたアクション名
      */
-    protected function _getActionName_Form()
+    protected function _getActionName_Form(Ethna_Request $request)
     {
         // フォーム値からリクエストされたアクション名を取得する
         $action_name = $sub_action_name = null;
-        foreach ($this->httpVars as $name => $value) {
+        foreach ($request->getHttpVars() as $name => $value) {
             if ($value == "" || strncmp($name, 'action_', 7) != 0) {
                 continue;
             }
@@ -194,10 +192,10 @@ class Ethna_ActionResolver
      * @param  mixed $default_action_name 指定のアクション名
      * @return string  実行するアクション名
      */
-    protected function _getActionName(string $default_action_name)
+    protected function _getActionName(Ethna_Request $request ,string $default_action_name)
     {
         // フォームから要求されたアクション名を取得する
-        $form_action_name = $this->_getActionName_Form();
+        $form_action_name = $this->_getActionName_Form($request);
         $form_action_name = preg_replace('/[^a-z0-9\-_]+/i', '', $form_action_name);
         $this->logger->log(LOG_DEBUG, 'form_action_name[%s]', $form_action_name);
 
