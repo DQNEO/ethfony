@@ -11,6 +11,23 @@
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+class Ethna_Request extends Request
+{
+    /**
+     *
+     */
+    public function getHttpVars(): array
+    {
+        if ($this->isMethod('POST')) {
+            $http_vars = $this->request->all();
+        } else {
+            $http_vars = $this->query->all();
+        }
+
+        return $http_vars;
+    }
+
+}
 /**
  *  コントローラクラス
  *
@@ -88,7 +105,7 @@ class Ethna_Controller
     public static function main(string $class_name, string $default_action_name = "")
     {
         $c = new $class_name();
-        $request = Request::createFromGlobals();
+        $request = Ethna_Request::createFromGlobals();
         $c->handle($request, $default_action_name);
     }
 
@@ -515,19 +532,6 @@ class Ethna_Controller
         return $this->encoding;
     }
 
-    /**
-     *
-     */
-    private function getHttpVars(Request $request): array
-    {
-        if ($request->isMethod('POST')) {
-            $http_vars = $request->request->all();
-        } else {
-            $http_vars = $request->query->all();
-        }
-
-        return $http_vars;
-    }
 
     /**
      *  フレームワークの処理を実行する(WWW)
@@ -539,7 +543,7 @@ class Ethna_Controller
      *  @access private
      *  @param  mixed   $default_action_name    指定のアクション名
      */
-    private function handle(Request $request, string $default_action_name = "")
+    private function handle(Ethna_Request $request, string $default_action_name = "")
     {
         $GLOBALS['_Ethna_controller'] = $this;
         $this->base = BASE;
@@ -575,7 +579,7 @@ class Ethna_Controller
         $this->plugin->setLogger($this->logger);
         $this->logger->begin();
 
-        $httpVars = $this->getHttpVars($request);
+        $httpVars = $request->getHttpVars();
         $actionDir = $this->directory['action'] . "/";
         $default_form_class = $this->class_factory->getObjectName('form');
         $actionResolverClass = $this->class['action_resolver'];
