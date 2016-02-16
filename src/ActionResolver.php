@@ -1,5 +1,5 @@
 <?php
-
+use Ethna_Request as Request;
 /**
  * Created by PhpStorm.
  * User: DQNEO
@@ -24,7 +24,7 @@ class Ethna_ActionResolver
         $this->actionDir = $actionDir;
     }
 
-    public function resolveActionName(Ethna_Request $request, string $default_action_name)
+    public function resolveActionName(Request $request, string $default_action_name)
     {
         $action_name = $request->getActionName($default_action_name);
         list($action_class_name,,) = $this->getClassNames($action_name);
@@ -36,7 +36,7 @@ class Ethna_ActionResolver
         return $action_name;
     }
 
-    public function getController($action_name, $backend, $viewResolver): callable
+    public function getController(Request $request, $action_name, $backend, $viewResolver): callable
     {
         list($action_class_name ,$void ,$method) = $this->getClassNames($action_name);
         if ($action_class_name == null) {
