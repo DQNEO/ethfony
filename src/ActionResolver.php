@@ -29,7 +29,7 @@ class Ethna_ActionResolver
     public function resolveActionName(string $default_action_name)
     {
         $action_name = $this->_getActionName($default_action_name);
-        list($action_class_name,) = $this->getClassNames($action_name);
+        list($action_class_name,,) = $this->getClassNames($action_name);
         if (is_null($action_class_name)) {
             $this->logger->end();
             $r = Ethna::raiseError("undefined action [%s]", E_APP_UNDEFINED_ACTION, $action_name);
@@ -38,10 +38,22 @@ class Ethna_ActionResolver
         return $action_name;
     }
 
-    public function newAction($action_name, $backend, $viewResolver)
+    public function getController($action_name, $backend, $viewResolver)
     {
-        $action_class_name = $this->getActionClassName($action_name);
-        return new $action_class_name($backend, $viewResolver);
+        list($action_class_name ,$void ,$method) = $this->getClassNames($action_name);
+        if ($action_class_name == null) {
+            throw new \Exception('action class not found');
+        }
+
+        if ($method === null) {
+            $method = 'run';
+        }
+        $callable = function() use ($action_class_name, $backend, $viewResolver, $method) {
+            $ac = new $action_class_name($backend, $viewResolver);
+            return $ac->$method();
+        };
+
+        return $callable;
     }
 
     public function newActionForm($action_name, $ctl)
@@ -116,7 +128,7 @@ class Ethna_ActionResolver
             $form_class_name = $this->default_form_class;
         }
 
-        return [$action_class_name, $form_class_name];
+        return [$action_class_name, $form_class_name, null];
     }
 
     /**
@@ -128,7 +140,7 @@ class Ethna_ActionResolver
      */
     public function getActionFormName($action_name)
     {
-        list(, $form_class_name) = $this->getClassNames($action_name);
+        list(, $form_class_name,) = $this->getClassNames($action_name);
         if (is_null($form_class_name)) {
             return null;
         }
@@ -136,22 +148,6 @@ class Ethna_ActionResolver
         return $form_class_name;
     }
 
-    /**
-     *  指定されたアクションのクラス名を返す(オブジェクトの生成は行わない)
-     *
-     * @access public
-     * @param  string $action_name アクションの名称
-     * @return string  アクションのクラス名
-     */
-    public function getActionClassName($action_name)
-    {
-        list($action_class_name,) = $this->getClassNames($action_name);
-        if ($action_class_name == null) {
-            return null;
-        }
-
-        return $action_class_name;
-    }
 
     /**
      *  フォームにより要求されたアクション名を返す

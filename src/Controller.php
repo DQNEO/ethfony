@@ -599,8 +599,8 @@ class Ethna_Controller
         $this->action_form->setFormVars($httpVars);
 
         $viewResolver = new Ethna_ViewResolver($backend, $this->logger, $this->getViewdir(), $this->getAppId(), $this->class_factory->getObjectName('view'));
-        $ac = $actionResolver->newAction($action_name, $backend, $viewResolver);
-        $response = $ac->run();
+        $callable = $actionResolver->getController($action_name, $backend, $viewResolver);
+        $response = $callable();
         $response->send();
         $this->end();
 
