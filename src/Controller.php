@@ -8,6 +8,7 @@
  *  @version    $Id$
  */
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -87,7 +88,8 @@ class Ethna_Controller
     public static function main(string $class_name, string $default_action_name = "")
     {
         $c = new $class_name();
-        $c->handle($default_action_name);
+        $request = Request::createFromGlobals();
+        $c->handle($request, $default_action_name);
     }
 
 
@@ -539,7 +541,7 @@ class Ethna_Controller
      *  @access private
      *  @param  mixed   $default_action_name    指定のアクション名
      */
-    private function handle(string $default_action_name = "")
+    private function handle(Request $request, string $default_action_name = "")
     {
         $GLOBALS['_Ethna_controller'] = $this;
         $this->base = BASE;
