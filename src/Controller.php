@@ -8,26 +8,9 @@
  *  @version    $Id$
  */
 
-use Symfony\Component\HttpFoundation\Request;
+use Ethna_Request as Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class Ethna_Request extends Request
-{
-    /**
-     *
-     */
-    public function getHttpVars(): array
-    {
-        if ($this->isMethod('POST')) {
-            $http_vars = $this->request->all();
-        } else {
-            $http_vars = $this->query->all();
-        }
-
-        return $http_vars;
-    }
-
-}
 /**
  *  コントローラクラス
  *
@@ -105,7 +88,7 @@ class Ethna_Controller
     public static function main(string $class_name, string $default_action_name = "")
     {
         $c = new $class_name();
-        $request = Ethna_Request::createFromGlobals();
+        $request = Request::createFromGlobals();
         $c->handle($request, $default_action_name);
     }
 
@@ -543,7 +526,7 @@ class Ethna_Controller
      *  @access private
      *  @param  mixed   $default_action_name    指定のアクション名
      */
-    private function handle(Ethna_Request $request, string $default_action_name = "")
+    private function handle(Request $request, string $default_action_name = "")
     {
         $GLOBALS['_Ethna_controller'] = $this;
         $this->base = BASE;
