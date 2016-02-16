@@ -9,6 +9,7 @@
  *  @version    $Id$
  */
 use Symfony\Component\HttpFoundation\Response;
+use Ethna_Request as Request;
 // {{{ Ethna_ActionClass
 
 class ActionAbortedException extends \RuntimeException
