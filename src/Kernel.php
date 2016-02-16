@@ -89,7 +89,10 @@ class Ethna_Kernel
     {
         $c = new $class_name();
         $request = Request::createFromGlobals();
-        $c->handle($request, $default_action_name);
+        $response = $c->handle($request, $default_action_name);
+        $response->send();
+        $c->end();
+
     }
 
 
@@ -526,7 +529,7 @@ class Ethna_Kernel
      *  @access private
      *  @param  mixed   $default_action_name    指定のアクション名
      */
-    private function handle(Request $request, string $default_action_name = "")
+    private function handle(Request $request, string $default_action_name = ""): Response
     {
         $GLOBALS['_Ethna_controller'] = $this;
         $this->base = BASE;
@@ -588,9 +591,7 @@ class Ethna_Kernel
         $callable = $actionResolver->getController($request, $action_name, $backend, $viewResolver);
         $arguments = [$request];
         $response = call_user_func_array($callable, $arguments);
-        $response->send();
-        $this->end();
-
+        return $response;
     }
 
     public function getActionFormName($action_name)
