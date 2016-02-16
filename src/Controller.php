@@ -518,14 +518,14 @@ class Ethna_Controller
     /**
      *
      */
-    private static function getHttpVars(): array
+    private function getHttpVars(Request $request): array
     {
         if (isset($_SERVER['REQUEST_METHOD']) == false) {
             return [];
-        } else if (strcasecmp($_SERVER['REQUEST_METHOD'], 'post') == 0) {
-            $http_vars = $_POST;
+        } else if ($request->isMethod('POST')) {
+            $http_vars = $request->request->all();
         } else {
-            $http_vars = $_GET;
+            $http_vars = $request->query->all();
         }
 
         return $http_vars;
@@ -577,7 +577,7 @@ class Ethna_Controller
         $this->plugin->setLogger($this->logger);
         $this->logger->begin();
 
-        $httpVars = self::getHttpVars();
+        $httpVars = $this->getHttpVars($request);
         $actionDir = $this->directory['action'] . "/";
         $default_form_class = $this->class_factory->getObjectName('form');
         $actionResolverClass = $this->class['action_resolver'];
