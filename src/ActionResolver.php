@@ -50,9 +50,6 @@ class Ethna_ActionResolver
             $method = 'run';
         }
 
-        $action_form->setFormDef_PreHelper();
-        $action_form->setFormVars($request);
-
         $ac = new $action_class_name($backend, $action_form, $viewResolver);
 
         return [$ac, $method];

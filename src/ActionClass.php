@@ -9,6 +9,7 @@
  *  @version    $Id$
  */
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -124,8 +125,11 @@ class Ethna_ActionClass
         return null;
     }
 
-    public function run(): Response
+    public function run(Request $request): Response
     {
+        $this->af->setFormDef_PreHelper();
+        $this->af->setFormVars($request);
+
 
         $forward_name = $this->authenticate();
         if ($forward_name === false) {
