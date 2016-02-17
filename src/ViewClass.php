@@ -79,7 +79,7 @@ class Ethna_ViewClass
      *  @param  string  $forward_name   ビューに関連付けられている遷移名
      *  @param  string  $forward_path   ビューに関連付けられているテンプレートファイル名
      */
-    public function __construct($backend, $forward_name, $forward_path)
+    public function __construct($backend, Ethna_ActionForm $action_form, $forward_name, $forward_path)
     {
         $this->backend = $backend;
 
@@ -93,8 +93,8 @@ class Ethna_ViewClass
         $this->action_error = $this->controller->getActionError();
         $this->ae = $this->action_error;
 
-        $this->action_form = $this->controller->getActionForm();
-        $this->af = $this->action_form;
+        $this->action_form = $action_form;
+        $this->af = $action_form;
 
         $this->session = $this->controller->getSession();
 
