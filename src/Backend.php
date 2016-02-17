@@ -88,17 +88,6 @@ class Ethna_Backend
     }
 
     /**
-     *  アクションフォームオブジェクトのアクセサ(R)
-     *
-     *  @access public
-     *  @return object  Ethna_ActionForm    アクションフォームオブジェクト
-     */
-    public function getActionForm()
-    {
-        return  $this->controller->getActionForm();
-    }
-
-    /**
      *  ログオブジェクトのアクセサ(R)
      *
      *  @access public
