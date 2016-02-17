@@ -8,8 +8,10 @@
  *  @package    Ethna
  *  @version    $Id$
  */
-use Symfony\Component\HttpFoundation\Response;
 use Ethna_Request as Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+
 // {{{ Ethna_ActionClass
 
 class ActionAbortedException extends \RuntimeException
@@ -150,5 +152,23 @@ class Ethna_ActionClass
 
         return $forward_name;
     }
+
+    /**
+     */
+    protected function view(string $forward_name, array $parameters = []):Response
+    {
+        foreach ($parameters as $key => $val) {
+            $this->af->setApp($key, $val);
+        }
+
+        $view = $this->viewResolver->getView($forward_name, $this->af);
+
+        return new StreamedResponse(function() use($view) {
+            $view->preforward();
+            $view->forward();
+        });
+    }
+
+
 }
 // }}}
