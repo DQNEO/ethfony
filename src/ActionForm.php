@@ -8,7 +8,8 @@
  *  @package    Ethna
  *  @version    $Id$
  */
-use Ethna_Request as Request;
+use Symfony\Component\HttpFoundation\Request;
+
 // {{{ Ethna_ActionForm
 /**
  *  アクションフォームクラス
@@ -177,7 +178,7 @@ class Ethna_ActionForm
      */
     public function setFormVars(Request $reqeust)
     {
-        $http_vars = $reqeust->getHttpVars();
+        $http_vars = (new Ethna_RequestWrapper($reqeust))->getHttpVars();
         $_files = $reqeust->files->all();
         foreach ($this->form as $name => $def) {
             $type = is_array($def['type']) ? $def['type'][0] : $def['type'];

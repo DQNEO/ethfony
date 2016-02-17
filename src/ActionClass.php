@@ -8,7 +8,7 @@
  *  @package    Ethna
  *  @version    $Id$
  */
-use Ethna_Request as Request;
+
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 

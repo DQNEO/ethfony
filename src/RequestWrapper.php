@@ -1,17 +1,25 @@
 <?php
 use Symfony\Component\HttpFoundation\Request;
 
-class Ethna_Request extends Request
+class Ethna_RequestWrapper
 {
+    /** @var Request  */
+    private $request;
+
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
+    }
+
     /**
      *
      */
     public function getHttpVars(): array
     {
-        if ($this->isMethod('POST')) {
-            $http_vars = $this->request->all();
+        if ($this->request->isMethod('POST')) {
+            $http_vars = $this->request->request->all();
         } else {
-            $http_vars = $this->query->all();
+            $http_vars = $this->request->query->all();
         }
 
         return $http_vars;

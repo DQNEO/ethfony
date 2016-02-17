@@ -1,5 +1,6 @@
 <?php
-use Ethna_Request as Request;
+use Symfony\Component\HttpFoundation\Request;
+
 /**
  * Created by PhpStorm.
  * User: DQNEO
@@ -26,7 +27,8 @@ class Ethna_ActionResolver
 
     public function resolveActionName(Request $request, string $default_action_name)
     {
-        $action_name = $request->getActionName($default_action_name);
+        $action_name = (new Ethna_RequestWrapper($request))->getActionName($default_action_name);
+
         list($action_class_name,,) = $this->getClassNames($action_name);
         if (is_null($action_class_name)) {
             $this->logger->end();

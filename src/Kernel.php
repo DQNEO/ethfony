@@ -8,7 +8,7 @@
  *  @version    $Id$
  */
 
-use Ethna_Request as Request;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
