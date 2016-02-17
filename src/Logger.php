@@ -17,7 +17,7 @@
  *  @access     public
  *  @package    Ethna
  */
-class Ethna_Logger extends Ethna_AppManager
+class Ethna_Logger
 {
     // {{{ properties
     /**#@+

@@ -97,7 +97,8 @@ class Ethna_ClassFactory
         }
 
         $backend = $this->controller->getBackend();
-        $obj = new $class_name($backend);
+
+        $obj = new $class_name($backend,$backend->getConfig(), $backend->getI18N(), $backend->getSession(), $backend->controller->getActionForm());
 
         //  生成したオブジェクトはキャッシュする
         if (isset($this->manager[$type]) == false || is_object($this->manager[$type]) == false) {
