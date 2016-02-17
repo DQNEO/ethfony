@@ -11,6 +11,7 @@
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\TerminableInterface;
 
 /**
  *  コントローラクラス
@@ -19,7 +20,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  *  @access     public
  *  @package    Ethna
  */
-class Ethna_Kernel implements HttpKernelInterface
+class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
 {
     protected $default_action_name;
 
@@ -167,7 +168,7 @@ class Ethna_Kernel implements HttpKernelInterface
     /**
      *  アプリケーション実行後の後始末を行います。
      */
-    protected function terminate(Request $request, Response $response)
+    public function terminate(Request $request, Response $response)
     {
         $this->logger->end();
     }
