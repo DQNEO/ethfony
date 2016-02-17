@@ -10,6 +10,7 @@
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  *  コントローラクラス
@@ -18,7 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
  *  @access     public
  *  @package    Ethna
  */
-class Ethna_Kernel
+class Ethna_Kernel implements HttpKernelInterface
 {
     protected $default_action_name;
 
@@ -533,7 +534,7 @@ class Ethna_Kernel
      *  @access private
      *  @param  mixed   $default_action_name    指定のアクション名
      */
-    public function handle(Request $request): Response
+    public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true): Response
     {
         $default_action_name = $this->default_action_name;
         $GLOBALS['_Ethna_controller'] = $this;
