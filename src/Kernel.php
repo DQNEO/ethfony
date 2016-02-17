@@ -531,8 +531,6 @@ class Ethna_Kernel implements HttpKernelInterface
      *  アクション以外は受け付けない(指定されていないアクションが指定された
      *  場合、配列の先頭で指定されたアクションが実行される)
      *
-     *  @access private
-     *  @param  mixed   $default_action_name    指定のアクション名
      */
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true): Response
     {
