@@ -73,7 +73,7 @@ define('OBJECT_IMPORT_CONVERT_NULL', 2);
  */
 function _et($message)
 {
-    $ctl = Ethna_Controller::getInstance();
+    $ctl = Ethna_Kernel::getInstance();
     $i18n = $ctl->getI18N();
     return $i18n->get($message);
 }
@@ -136,7 +136,7 @@ function ethna_error_handler($errno, $errstr, $errfile, $errline)
     }
 
     // $logger->log()
-    $c = Ethna_Controller::getInstance();
+    $c = Ethna_Kernel::getInstance();
     if ($c !== null) {
         $logger = $c->getLogger();
         $logger->log($level, sprintf("[PHP] %s: %s in %s on line %d",
@@ -215,7 +215,7 @@ function to_array($v)
  */
 function is_error($name = null)
 {
-    $c = Ethna_Controller::getInstance();
+    $c = Ethna_Kernel::getInstance();
     $action_error = $c->getActionError();
     if ($name !== null) {
         return $action_error->isError($name);
