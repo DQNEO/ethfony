@@ -56,13 +56,7 @@ class Ethna_ClassFactory
     /** @protected    array   生成済みアプリケーションマネージャオブジェクトキャッシュ */
     protected $manager = array();
 
-    /** @protected    array   メソッド一覧キャッシュ */
-    protected $method_list = array();
-
-    /**#@-*/
-
-
-    /**
+        /**
      *  Ethna_ClassFactoryクラスのコンストラクタ
      *
      *  @access public
@@ -92,15 +86,6 @@ class Ethna_ClassFactory
         // ethna classes
         $class_name = $this->class[$key];
 
-        //  Ethna_Kernelで定義されたクラスキーの場合
-        //  はメソッド情報を集める
-        if (isset($this->method_list[$class_name]) == false) {
-            $this->method_list[$class_name] = get_class_methods($class_name);
-            for ($i = 0; $i < count($this->method_list[$class_name]); $i++) {
-                $this->method_list[$class_name][$i] = strtolower($this->method_list[$class_name][$i]);
-            }
-        }
-
         if (isset($this->object[$key]) && is_object($this->object[$key])) {
             return $this->object[$key];
         }
@@ -111,8 +96,6 @@ class Ethna_ClassFactory
         $method = sprintf('_getObject_%s', ucfirst($key));
         if (method_exists($this, $method)) {
             $object = $this->$method($class_name);
-        } else if (in_array("getinstance", $this->method_list[$class_name])) {
-            $object = call_user_func(array($class_name, 'getInstance'));
         } else {
             $object = new $class_name();
         }
