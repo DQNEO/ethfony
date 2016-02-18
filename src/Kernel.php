@@ -107,10 +107,6 @@ class Ethna_ClassFactory
     }
 
 
-    function _getObject_Plugin($class_name)
-    {
-        return new $class_name($this->ctl);
-    }
 
     function _getObject_Renderer($class_name)
     {
@@ -569,7 +565,12 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
      */
     public function getPlugin()
     {
-        return $this->class_factory->getObject('plugin');
+        static $obj = null;
+        if ($obj === null) {
+            $class_name = $this->class['plugin'];
+            $obj = new $class_name($this);
+        }
+        return $obj;
     }
 
     /**
