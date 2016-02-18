@@ -89,8 +89,6 @@ class Ethna_ClassFactory
      */
     function getObject($key)
     {
-        $object = null;
-
         // ethna classes
         $class_name = $this->class[$key];
 
@@ -112,6 +110,7 @@ class Ethna_ClassFactory
             return $this->object[$key];
         }
 
+        $object = null;
 
         //  インスタンス化のヘルパがあればそれを使う
         $method = sprintf('_getObject_%s', ucfirst($key));
