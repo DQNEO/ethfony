@@ -126,6 +126,10 @@ class Ethna_ClassFactory
         return $object;
     }
 
+    function _getObject_Url_handler($class_name)
+    {
+        return call_user_func(array($class_name, 'getInstance'));
+    }
     /**
      *  オブジェクト生成メソッド(backend)
      *
