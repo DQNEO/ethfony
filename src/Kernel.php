@@ -106,11 +106,6 @@ class Ethna_ClassFactory
         return $object;
     }
 
-    function _getObject_Url_handler($class_name)
-    {
-        return call_user_func(array($class_name, 'getInstance'));
-    }
-
     function _getObject_Backend($class_name)
     {
         return new $class_name($this->ctl);
@@ -584,7 +579,8 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
      */
     public function getUrlHandler()
     {
-        return $this->class_factory->getObject('url_handler');
+        $class_name = $this->class['url_handler'];
+        return $class_name::getInstance();
     }
 
     /**
