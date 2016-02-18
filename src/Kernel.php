@@ -246,7 +246,7 @@ class Ethna_ClassFactory
      */
     public function _include($class_name)
     {
-        $file = sprintf("%s.%s", $class_name, $this->controller->getExt('php'));
+        $file = sprintf("%s.%s", $class_name, 'php');
         if (file_exists_ex($file)) {
             include_once $file;
             return true;
@@ -259,7 +259,7 @@ class Ethna_ClassFactory
             $tmp[count($tmp)-1] = $class_name;
             $file = sprintf('%s.%s',
                 implode(DIRECTORY_SEPARATOR, $tmp),
-                $this->controller->getExt('php'));
+                'php');
             if (file_exists_ex($file)) {
                 include_once $file;
                 return true;
@@ -269,7 +269,7 @@ class Ethna_ClassFactory
             // App_Foo_Bar_Baz -> Foo/Bar/Baz.php
             $file = sprintf('%s.%s',
                 str_replace('_', DIRECTORY_SEPARATOR, $match[2]),
-                $this->controller->getExt('php'));
+                'php');
             if (file_exists_ex($file)) {
                 include_once $file;
                 return true;
@@ -281,7 +281,7 @@ class Ethna_ClassFactory
             array_unshift($tmp, 'Ethna', 'class');
             $file = sprintf('%s.%s',
                 implode(DIRECTORY_SEPARATOR, $tmp),
-                $this->controller->getExt('php'));
+                'php');
             if (file_exists_ex($file)) {
                 include_once $file;
                 return true;
@@ -291,7 +291,7 @@ class Ethna_ClassFactory
             // Foo_Bar_Baz -> Foo/Bar/Baz.php
             $file = sprintf('%s.%s',
                 str_replace('_', DIRECTORY_SEPARATOR, $class_name),
-                $this->controller->getExt('php'));
+                'php');
             if (file_exists_ex($file)) {
                 include_once $file;
                 return true;
