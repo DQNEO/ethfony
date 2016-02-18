@@ -109,13 +109,11 @@ class Ethna_ClassFactory
         }
 
         //  以下のルールに従って、キャッシュが利用可能かを判定する
-        //  利用可能と判断した場合、キャッシュされていればそれを返す
         //
         //  1. メソッドに getInstance があればキャッシュを利用可能と判断する
         //     この場合、シングルトンかどうかは getInstance 次第
-        //  2. weak が true であれば、キャッシュは利用不能と判断してオブジェクトを再生成
-        //  3. weak が false であれば、キャッシュは利用可能と判断する(デフォルト)
-        if ($this->_isCacheAvailable($class_name, $this->method_list[$class_name])) {
+        //  3. キャッシュは利用可能と判断する(デフォルト)
+        if (!in_array('getinstance', $this->method_list[$class_name])) {
             if (isset($this->object[$key]) && is_object($this->object[$key])) {
                 return $this->object[$key];
             }
@@ -237,22 +235,7 @@ class Ethna_ClassFactory
         return $_ret_object;
     }
 
-    /**
-     *  指定されたクラスがキャッシュを利用可能かどうかをチェックする
-     *
-     *  @access protected
-     */
-    function _isCacheAvailable($class_name, $method_list)
-    {
-        // if we have getInstance(), use this anyway
-        if (in_array('getinstance', $method_list)) {
-            return false;
-        }
-
-        return true;
-    }
 }
-// }}}
 
 
 /**
