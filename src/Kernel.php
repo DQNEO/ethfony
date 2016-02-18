@@ -107,13 +107,6 @@ class Ethna_ClassFactory
     }
 
 
-
-    function _getObject_Session($class_name)
-    {
-        return new $class_name($this->ctl, $this->ctl->getAppId());
-    }
-
-
 }
 
 
@@ -549,7 +542,12 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
      */
     public function getSession()
     {
-        return $this->class_factory->getObject('session');
+        static $obj = null;
+        if ($obj === null) {
+            $class_name = $this->class['session'];
+            $obj = new $class_name($this, $this->getAppId());
+        }
+        return $obj;
     }
 
     /**
