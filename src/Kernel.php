@@ -87,16 +87,12 @@ class Ethna_ClassFactory
      *  @param  bool    $ext    オブジェクトが未生成の場合の強制生成フラグ(default: false)
      *  @return object  生成されたオブジェクト(エラーならnull)
      */
-    function getObject($key, $ext = false)
+    function getObject($key)
     {
         $object = null;
 
-        $ext = to_array($ext);
-
         // ethna classes
         $class_name = $this->class[$key];
-        $ext = array_pad($ext, 1, null);
-        list($weak) = $ext;
 
         //  すでにincludeされていなければ、includeを試みる
         if (class_exists($class_name) == false) {
