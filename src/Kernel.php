@@ -92,11 +92,6 @@ class Ethna_ClassFactory
         // ethna classes
         $class_name = $this->class[$key];
 
-        //  すでにincludeされていなければ、includeを試みる
-        if (class_exists($class_name, true) == false) {
-            return null;
-        }
-
         //  Ethna_Kernelで定義されたクラスキーの場合
         //  はメソッド情報を集める
         if (isset($this->method_list[$class_name]) == false) {
