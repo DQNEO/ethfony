@@ -426,7 +426,12 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
      */
     public function getActionError()
     {
-        return $this->class_factory->getObject('error');
+        static $obj = null;
+        if ($obj === null) {
+            $class_name = $this->class['error'];
+            $obj = new $class_name();
+        }
+        return $obj;
     }
 
     /**
