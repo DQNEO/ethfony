@@ -1080,9 +1080,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
             return $this->manager[$type];
         }
 
-        $backend = $this->getBackend();
-
-        $obj = new $class_name($backend,$backend->getConfig(), $backend->getI18N(), $backend->getSession(), $this->getActionForm());
+        $obj = new $class_name($this->getBackend(),$this->getConfig(), $this->getI18N(), $this->getSession(), $this->getActionForm());
 
         //  生成したオブジェクトはキャッシュする
         if (isset($this->manager[$type]) == false || is_object($this->manager[$type]) == false) {
