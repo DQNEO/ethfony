@@ -77,52 +77,6 @@ class Ethna_ClassFactory
     }
 
     /**
-     *  typeに対応するアプリケーションマネージャオブジェクトを返す
-     *  注意： typeは大文字小文字を区別しない
-     *         (PHP自体が、クラス名の大文字小文字を区別しないため)
-     *
-     *  マネジャークラスをincludeすることはしないので、
-     *  アプリケーション側でオートロードする必要がある。
-     *
-     *  @access public
-     *  @param  string  $type   アプリケーションマネージャー名
-     *  @return object  Ethna_AppManager    マネージャオブジェクト
-     */
-    public function getManager($type)
-    {
-        //  ここで返されるクラス名は、AppManagerの命名規約によるもの
-        $class_name = $this->controller->getManagerClassName($type);
-
-        //  すでにincludeされていなければ、includeを試みる
-        //  オートロード機構があればそれが優先される
-        if (class_exists($class_name, true) === false
-            && $this->_include($class_name) === false) {
-            return null;  //  include 失敗。戻り値はNULL。
-        }
-
-        //  PHPのクラス名は大文字小文字を区別しないので、
-        //  同じクラス名と見做されるものを指定した場合には
-        //  同じインスタンスが返るようにする
-        $type = strtolower($type);
-
-        //  キャッシュがあればそれを利用
-        if (isset($this->manager[$type]) && is_object($this->manager[$type])) {
-            return $this->manager[$type];
-        }
-
-        $backend = $this->controller->getBackend();
-
-        $obj = new $class_name($backend,$backend->getConfig(), $backend->getI18N(), $backend->getSession(), $backend->controller->getActionForm());
-
-        //  生成したオブジェクトはキャッシュする
-        if (isset($this->manager[$type]) == false || is_object($this->manager[$type]) == false) {
-            $this->manager[$type] = $obj;
-        }
-
-        return $obj;
-    }
-
-    /**
      *  クラスキーに対応するオブジェクトを返す/クラスキーが未定義の場合はAppObjectを探す
      *  クラスキーとは、[Appid]_Controller#class に定められたもの。
      *
@@ -834,6 +788,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
         return $this->manager;
     }
 
+
     /**
      *  実行中のアクション名を返す
      *
@@ -1112,14 +1067,42 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
     }
 
     /**
-     *  マネージャオブジェクトへのアクセサ(R)
+     *  typeに対応するアプリケーションマネージャオブジェクトを返す
+     *  注意： typeは大文字小文字を区別しない
+     *         (PHP自体が、クラス名の大文字小文字を区別しないため)
+     *
+     *  マネジャークラスをincludeすることはしないので、
+     *  アプリケーション側でオートロードする必要がある。
      *
      *  @access public
+     *  @param  string  $type   アプリケーションマネージャー名
      *  @return object  Ethna_AppManager    マネージャオブジェクト
      */
     public function getManager($type)
     {
-        return $this->getClassFactory()->getManager($type);
+        //  ここで返されるクラス名は、AppManagerの命名規約によるもの
+        $class_name = $this->getManagerClassName($type);
+
+        //  PHPのクラス名は大文字小文字を区別しないので、
+        //  同じクラス名と見做されるものを指定した場合には
+        //  同じインスタンスが返るようにする
+        $type = strtolower($type);
+
+        //  キャッシュがあればそれを利用
+        if (isset($this->manager[$type]) && is_object($this->manager[$type])) {
+            return $this->manager[$type];
+        }
+
+        $backend = $this->getBackend();
+
+        $obj = new $class_name($backend,$backend->getConfig(), $backend->getI18N(), $backend->getSession(), $backend->controller->getActionForm());
+
+        //  生成したオブジェクトはキャッシュする
+        if (isset($this->manager[$type]) == false || is_object($this->manager[$type]) == false) {
+            $this->manager[$type] = $obj;
+        }
+
+        return $obj;
     }
 
     /**
