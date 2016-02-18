@@ -106,11 +106,6 @@ class Ethna_ClassFactory
         return $object;
     }
 
-    function _getObject_Config($class_name)
-    {
-        return new $class_name($this->ctl);
-    }
-
     function _getObject_I18n($class_name)
     {
         return new $class_name($this->ctl->getDirectory('locale'), $this->ctl->getAppId());
@@ -524,7 +519,12 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
      */
     public function getConfig()
     {
-        return $this->class_factory->getObject('config');
+        static $obj = null;
+        if ($obj === null) {
+            $class_name = $this->class['config'];
+            $obj = new $class_name($this);
+        }
+        return $obj;
     }
 
     /**
