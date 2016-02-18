@@ -108,16 +108,10 @@ class Ethna_ClassFactory
             }
         }
 
-        //  以下のルールに従って、キャッシュが利用可能かを判定する
-        //
-        //  1. メソッドに getInstance があればキャッシュを利用可能と判断する
-        //     この場合、シングルトンかどうかは getInstance 次第
-        //  3. キャッシュは利用可能と判断する(デフォルト)
-        if (!in_array('getinstance', $this->method_list[$class_name])) {
-            if (isset($this->object[$key]) && is_object($this->object[$key])) {
-                return $this->object[$key];
-            }
+        if (isset($this->object[$key]) && is_object($this->object[$key])) {
+            return $this->object[$key];
         }
+
 
         //  インスタンス化のヘルパがあればそれを使う
         $method = sprintf('_getObject_%s', ucfirst($key));
