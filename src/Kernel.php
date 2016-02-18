@@ -113,85 +113,37 @@ class Ethna_ClassFactory
     {
         return call_user_func(array($class_name, 'getInstance'));
     }
-    /**
-     *  オブジェクト生成メソッド(backend)
-     *
-     *  @access protected
-     *  @param  string  $class_name     クラス名
-     *  @return object  生成されたオブジェクト(エラーならnull)
-     */
+
     function _getObject_Backend($class_name)
     {
         return new $class_name($this->ctl);
     }
 
-    /**
-     *  オブジェクト生成メソッド(config)
-     *
-     *  @access protected
-     *  @param  string  $class_name     クラス名
-     *  @return object  生成されたオブジェクト(エラーならnull)
-     */
     function _getObject_Config($class_name)
     {
         return new $class_name($this->ctl);
     }
 
-    /**
-     *  オブジェクト生成メソッド(i18n)
-     *
-     *  @access protected
-     *  @param  string  $class_name     クラス名
-     *  @return object  生成されたオブジェクト(エラーならnull)
-     */
     function _getObject_I18n($class_name)
     {
         return new $class_name($this->ctl->getDirectory('locale'), $this->ctl->getAppId());
     }
 
-    /**
-     *  オブジェクト生成メソッド(logger)
-     *
-     *  @access protected
-     *  @param  string  $class_name     クラス名
-     *  @return object  生成されたオブジェクト(エラーならnull)
-     */
     function _getObject_Logger($class_name)
     {
         return new $class_name($this->ctl);
     }
 
-    /**
-     *  オブジェクト生成メソッド(plugin)
-     *
-     *  @access protected
-     *  @param  string  $class_name     クラス名
-     *  @return object  生成されたオブジェクト(エラーならnull)
-     */
     function _getObject_Plugin($class_name)
     {
         return new $class_name($this->ctl);
     }
 
-    /**
-     *  オブジェクト生成メソッド(renderer)
-     *
-     *  @access protected
-     *  @param  string  $class_name     クラス名
-     *  @return object  生成されたオブジェクト(エラーならnull)
-     */
     function _getObject_Renderer($class_name)
     {
         return new $class_name($this->ctl);
     }
 
-    /**
-     *  オブジェクト生成メソッド(session)
-     *
-     *  @access protected
-     *  @param  string  $class_name     クラス名
-     *  @return object  生成されたオブジェクト(エラーならnull)
-     */
     function _getObject_Session($class_name)
     {
         return new $class_name($this->ctl, $this->ctl->getAppId());
