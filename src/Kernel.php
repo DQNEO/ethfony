@@ -777,19 +777,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
     }
 
     /**
-     *  マネージャ一覧を返す
-     *
-     *  @access public
-     *  @return array   マネージャ一覧
-     *  @obsolete
-     */
-    public  function getManagerList()
-    {
-        return $this->manager;
-    }
-
-
-    /**
      *  実行中のアクション名を返す
      *
      *  @access public
