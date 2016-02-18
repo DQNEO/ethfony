@@ -106,10 +106,6 @@ class Ethna_ClassFactory
         return $object;
     }
 
-    function _getObject_Logger($class_name)
-    {
-        return new $class_name($this->ctl);
-    }
 
     function _getObject_Plugin($class_name)
     {
@@ -546,7 +542,12 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
      */
     public function getLogger()
     {
-        return $this->class_factory->getObject('logger');
+        static $obj = null;
+        if ($obj === null) {
+            $class_name = $this->class['logger'];
+            $obj = new $class_name($this);
+        }
+        return $obj;
     }
 
     /**
