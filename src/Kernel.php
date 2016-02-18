@@ -1052,21 +1052,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
     }
 
     /**
-     *  マネージャクラス名を取得する
-     *
-     *  @access public
-     *  @param  string  $name   マネージャキー
-     *  @return string  マネージャクラス名
-     */
-    public function getManagerClassName($name)
-    {
-        //   アプリケーションIDと、渡された名前のはじめを大文字にして、
-        //   組み合わせたものが返される
-        $manager_id = preg_replace_callback('/_(.)/', function(array $matches){return strtoupper($matches[1]);}, ucfirst($name));
-        return sprintf('%s_%sManager', $this->getAppId(), ucfirst($manager_id));
-    }
-
-    /**
      *  typeに対応するアプリケーションマネージャオブジェクトを返す
      *  注意： typeは大文字小文字を区別しない
      *         (PHP自体が、クラス名の大文字小文字を区別しないため)
@@ -1080,8 +1065,10 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
      */
     public function getManager($type)
     {
-        //  ここで返されるクラス名は、AppManagerの命名規約によるもの
-        $class_name = $this->getManagerClassName($type);
+        //   アプリケーションIDと、渡された名前のはじめを大文字にして、
+        //   組み合わせたものが返される
+        $manager_id = preg_replace_callback('/_(.)/', function(array $matches){return strtoupper($matches[1]);}, ucfirst($type));
+        $class_name = sprintf('%s_%sManager', $this->getAppId(), ucfirst($manager_id));
 
         //  PHPのクラス名は大文字小文字を区別しないので、
         //  同じクラス名と見做されるものを指定した場合には
@@ -1095,7 +1082,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
 
         $backend = $this->getBackend();
 
-        $obj = new $class_name($backend,$backend->getConfig(), $backend->getI18N(), $backend->getSession(), $backend->controller->getActionForm());
+        $obj = new $class_name($backend,$backend->getConfig(), $backend->getI18N(), $backend->getSession(), $this->getActionForm());
 
         //  生成したオブジェクトはキャッシュする
         if (isset($this->manager[$type]) == false || is_object($this->manager[$type]) == false) {
