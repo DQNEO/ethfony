@@ -143,22 +143,6 @@ class Ethna_ClassFactory
     }
 
     /**
-     *  クラスキーに対応するクラス名を返す
-     *
-     *  @access public
-     *  @param  string  $key    クラスキー
-     *  @return string  クラス名
-     */
-    function getObjectName($key)
-    {
-        if (isset($this->class[$key]) == false) {
-            return null;
-        }
-
-        return $this->class[$key];
-    }
-
-    /**
      *  オブジェクト生成メソッド(backend)
      *
      *  @access protected
@@ -467,7 +451,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
         $i18n = $this->getI18N();
         $i18n->setLanguage($this->locale);
 
-        $form_class_name = $this->class_factory->getObjectName('form');
+        $form_class_name = $this->class['form'];
         $this->action_form = new $form_class_name($this);
 
         $command_class = sprintf("%s_Command_%s", ucfirst(strtolower($this->appid)), ucfirst($action_name));
@@ -881,7 +865,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
         $this->logger->begin();
 
         $actionDir = $this->directory['action'] . "/";
-        $default_form_class = $this->class_factory->getObjectName('form');
+        $default_form_class = $this->class['form'];
         $actionResolverClass = $this->class['action_resolver'];
         /** @var Ethna_ActionResolver $actionResolver */
         $this->actionResolver = $actionResolver = new $actionResolverClass($this->getAppId(), $this->logger, $default_form_class, $actionDir);
@@ -900,7 +884,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
         // フォーム定義、フォーム値設定
         $this->action_form = $actionResolver->newActionForm($action_name, $this);
 
-        $viewResolver = new Ethna_ViewResolver($backend, $this->logger, $this->getViewdir(), $this->getAppId(), $this->class_factory->getObjectName('view'));
+        $viewResolver = new Ethna_ViewResolver($backend, $this->logger, $this->getViewdir(), $this->getAppId(), $this->class['view']);
         $callable = $actionResolver->getController($request, $action_name, $backend, $this->action_form, $viewResolver);
         $arguments = [$request];
         $response = call_user_func_array($callable, $arguments);
