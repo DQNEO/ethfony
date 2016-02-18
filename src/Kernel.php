@@ -108,11 +108,6 @@ class Ethna_ClassFactory
 
 
 
-    function _getObject_Renderer($class_name)
-    {
-        return new $class_name($this->ctl);
-    }
-
     function _getObject_Session($class_name)
     {
         return new $class_name($this->ctl, $this->ctl->getAppId());
@@ -840,10 +835,8 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
             return $this->renderer;
         }
 
-        $this->renderer = $this->class_factory->getObject('renderer');
-        if ($this->renderer === null) {
-            trigger_error("cannot get renderer", E_USER_ERROR);
-        }
+        $class_name = $this->class['renderer'];
+        $this->renderer = new $class_name($this);
         return $this->renderer;
     }
 
