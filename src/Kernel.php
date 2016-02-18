@@ -13,103 +13,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
 
-// vim: foldmethod=marker
-/**
- *  ClassFactory.php
- *
- *  @author     Masaki Fujimoto <fujimoto@php.net>
- *  @license    http://www.opensource.org/licenses/bsd-license.php The BSD License
- *  @package    Ethna
- *  @version    $Id$
- */
-
-// {{{ Ethna_ClassFactory
-/**
- *  Ethnaフレームワークのオブジェクト生成ゲートウェイ
- *
- *  DIコンテナか、ということも考えましたがEthnaではこの程度の単純なものに
- *  留めておきます。アプリケーションレベルDIしたい場合はフィルタチェインを
- *  使って実現することも出来ます。
- *
- *  @author     Masaki Fujimoto <fujimoto@php.net>
- *  @access     public
- *  @package    Ethna
- */
-class Ethna_ClassFactory
-{
-    /**#@+
-     *  @access private
-     */
-
-    /** @protected    object  Ethna_Kernel    controllerオブジェクト */
-    protected $controller;
-
-    /** @protected    object  Ethna_Kernel    controllerオブジェクト(省略形) */
-    protected $ctl;
-
-    /** @protected    array   クラス定義 */
-    protected $class = array();
-
-    /** @FIXME @protected    array   生成済みオブジェクトキャッシュ */
-    public $object = array();
-
-        /**
-     *  Ethna_ClassFactoryクラスのコンストラクタ
-     *
-     *  @access public
-     *  @param  object  Ethna_Kernel    $controller    controllerオブジェクト
-     *  @param  array                       $class          クラス定義
-     */
-    public function __construct($controller, $class)
-    {
-        $this->controller = $controller;
-        $this->ctl = $controller;
-        $this->class = $class;
-    }
-
-    /**
-     *  クラスキーに対応するオブジェクトを返す/クラスキーが未定義の場合はAppObjectを探す
-     *  クラスキーとは、[Appid]_Controller#class に定められたもの。
-     *
-     *  @access public
-     *  @param  string  $key    [Appid]_Controller#class に定められたクラスキー
-     *                          このキーは大文字小文字を区別する
-     *                          (配列のキーとして使われているため)
-     *  @param  bool    $ext    オブジェクトが未生成の場合の強制生成フラグ(default: false)
-     *  @return object  生成されたオブジェクト(エラーならnull)
-     */
-    function getObject($key)
-    {
-        // ethna classes
-        $class_name = $this->class[$key];
-
-        if (isset($this->object[$key]) && is_object($this->object[$key])) {
-            return $this->object[$key];
-        }
-
-        $object = null;
-
-        //  インスタンス化のヘルパがあればそれを使う
-        $method = sprintf('_getObject_%s', ucfirst($key));
-        if (method_exists($this, $method)) {
-            $object = $this->$method($class_name);
-        } else {
-            $object = new $class_name();
-        }
-
-        //  クラスキーに定められたクラスのインスタンスは
-        //  とりあえずキャッシュする
-        if (isset($this->object[$key]) == false || is_object($this->object[$key]) == false) {
-            $this->object[$key] = $object;
-        }
-
-        return $object;
-    }
-
-
-}
-
-
 /**
  *  コントローラクラス
  *
@@ -161,9 +64,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
     /** @protected    object  レンダラー */
     protected $renderer = null;
 
-    /** @protected    object  Ethna_ClassFactory  クラスファクトリオブジェクト */
-    public $class_factory = null;
-
     /** @protected    object  Ethna_ActionForm    フォームオブジェクト */
     protected $action_form = null;
 
@@ -208,8 +108,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
     {
         $GLOBALS['_Ethna_controller'] = $this;
         $this->base = BASE;
-        $class_factory = $this->class['class'];
-        $this->class_factory = new $class_factory($this, $this->class);
 
         Ethna::setErrorCallback(array($this, 'handleError'));
 
@@ -405,17 +303,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
             return null;
         }
         return $this->ext[$key];
-    }
-
-    /**
-     *  クラスファクトリオブジェクトのアクセサ(R)
-     *
-     *  @access public
-     *  @return object  Ethna_ClassFactory  クラスファクトリオブジェクト
-     */
-    public function getClassFactory()
-    {
-        return $this->class_factory;
     }
 
     /**
@@ -659,9 +546,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
         $default_action_name = $this->default_action_name;
         $GLOBALS['_Ethna_controller'] = $this;
         $this->base = BASE;
-        // クラスファクトリオブジェクトの生成
-        $class_factory = $this->class['class'];
-        $this->class_factory = new $class_factory($this, $this->class);
 
         Ethna::setErrorCallback(array($this, 'handleError'));
 
