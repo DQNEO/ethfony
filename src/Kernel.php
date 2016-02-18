@@ -106,11 +106,6 @@ class Ethna_ClassFactory
         return $object;
     }
 
-    function _getObject_Backend($class_name)
-    {
-        return new $class_name($this->ctl);
-    }
-
     function _getObject_Config($class_name)
     {
         return new $class_name($this->ctl);
@@ -513,7 +508,12 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
      */
     public function getBackend()
     {
-        return $this->class_factory->getObject('backend');
+        static $obj = null;
+        if ($obj === null) {
+            $class_name = $this->class['backend'];
+            $obj = new $class_name($this);
+        }
+        return $obj;
     }
 
     /**
