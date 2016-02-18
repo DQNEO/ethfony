@@ -210,18 +210,6 @@ class Ethna_ClassFactory
         return new $class_name($this->ctl, $this->ctl->getAppId());
     }
 
-    /**
-     *  オブジェクト生成メソッド(sql)
-     *
-     *  @access protected
-     *  @param  string  $class_name     クラス名
-     *  @return object  生成されたオブジェクト(エラーならnull)
-     */
-    function _getObject_Sql($class_name)
-    {
-        $_ret_object = new $class_name($this->ctl);
-        return $_ret_object;
-    }
 
 }
 
