@@ -95,10 +95,8 @@ class Ethna_ClassFactory
         $class_name = $this->class[$key];
 
         //  すでにincludeされていなければ、includeを試みる
-        if (class_exists($class_name) == false) {
-            if ($this->_include($class_name) == false) {
-                return null;
-            }
+        if (class_exists($class_name, true) == false) {
+            return null;
         }
 
         //  Ethna_Kernelで定義されたクラスキーの場合
@@ -117,7 +115,7 @@ class Ethna_ClassFactory
         //     この場合、シングルトンかどうかは getInstance 次第
         //  2. weak が true であれば、キャッシュは利用不能と判断してオブジェクトを再生成
         //  3. weak が false であれば、キャッシュは利用可能と判断する(デフォルト)
-        if ($this->_isCacheAvailable($class_name, $this->method_list[$class_name], $weak)) {
+        if ($this->_isCacheAvailable($class_name, $this->method_list[$class_name], false)) {
             if (isset($this->object[$key]) && is_object($this->object[$key])) {
                 return $this->object[$key];
             }
@@ -237,67 +235,6 @@ class Ethna_ClassFactory
     {
         $_ret_object = new $class_name($this->ctl);
         return $_ret_object;
-    }
-
-    /**
-     *  指定されたクラスから想定されるファイルをincludeする
-     *
-     *  @access protected
-     */
-    public function _include($class_name)
-    {
-        $file = sprintf("%s.%s", $class_name, 'php');
-        if (file_exists_ex($file)) {
-            include_once $file;
-            return true;
-        }
-
-        if (preg_match('/^(\w+?)_(.*)/', $class_name, $match)) {
-            // try ethna app style
-            // App_Foo_Bar_Baz -> Foo/Bar/App_Foo_Bar_Baz.php
-            $tmp = explode("_", $match[2]);
-            $tmp[count($tmp)-1] = $class_name;
-            $file = sprintf('%s.%s',
-                implode(DIRECTORY_SEPARATOR, $tmp),
-                'php');
-            if (file_exists_ex($file)) {
-                include_once $file;
-                return true;
-            }
-
-            // try ethna app & pear mixed style
-            // App_Foo_Bar_Baz -> Foo/Bar/Baz.php
-            $file = sprintf('%s.%s',
-                str_replace('_', DIRECTORY_SEPARATOR, $match[2]),
-                'php');
-            if (file_exists_ex($file)) {
-                include_once $file;
-                return true;
-            }
-
-            // try ethna master style
-            // Ethna_Foo_Bar -> src/Ethna/Foo/Bar.php
-            $tmp = explode('_', $match[2]);
-            array_unshift($tmp, 'Ethna', 'class');
-            $file = sprintf('%s.%s',
-                implode(DIRECTORY_SEPARATOR, $tmp),
-                'php');
-            if (file_exists_ex($file)) {
-                include_once $file;
-                return true;
-            }
-
-            // try pear style
-            // Foo_Bar_Baz -> Foo/Bar/Baz.php
-            $file = sprintf('%s.%s',
-                str_replace('_', DIRECTORY_SEPARATOR, $class_name),
-                'php');
-            if (file_exists_ex($file)) {
-                include_once $file;
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
