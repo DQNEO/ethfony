@@ -53,9 +53,6 @@ class Ethna_ClassFactory
     /** @FIXME @protected    array   生成済みオブジェクトキャッシュ */
     public $object = array();
 
-    /** @protected    array   生成済みアプリケーションマネージャオブジェクトキャッシュ */
-    protected $manager = array();
-
         /**
      *  Ethna_ClassFactoryクラスのコンストラクタ
      *
