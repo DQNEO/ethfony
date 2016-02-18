@@ -97,7 +97,7 @@ class Ethna_ClassFactory
         //  すでにincludeされていなければ、includeを試みる
         if (class_exists($class_name) == false) {
             if ($this->_include($class_name) == false) {
-                return $object;  //  include 失敗。返り値はnull
+                return null;
             }
         }
 
