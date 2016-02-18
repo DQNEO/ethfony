@@ -113,8 +113,7 @@ class Ethna_ClassFactory
         $object = null;
 
         //  インスタンス化のヘルパがあればそれを使う
-        $method = sprintf('_getObject_%s', ucfirst($key));
-        if (method_exists($this, $method)) {
+        if (method_exists($this, sprintf('_getObject_%s', ucfirst($key)))) {
             $object = $this->$method($class_name);
         } else if (in_array("getinstance", $this->method_list[$class_name])) {
             $object = call_user_func(array($class_name, 'getInstance'));
