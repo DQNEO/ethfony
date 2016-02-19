@@ -779,24 +779,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
         return $this->getExt('tpl');
     }
 
-    /**
-     *  ログを出力する
-     *
-     *  @access public
-     *  @param  int     $level      ログレベル(LOG_DEBUG, LOG_NOTICE...)
-     *  @param  string  $message    ログメッセージ(printf形式)
-     */
-    public function log($level, $message)
-    {
-        $args = func_get_args();
-        if (count($args) > 2) {
-            array_splice($args, 0, 2);
-            $message = vsprintf($message, $args);
-        }
-        $this->getLogger()->log($level, $message);
-    }
-
-
 }
 
 class_alias('Ethna_Kernel', 'Ethna_Controller');
