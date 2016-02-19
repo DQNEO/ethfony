@@ -33,8 +33,6 @@ class Ethna_ActionClass
      *  @access private
      */
 
-    /** @protected    object  Ethna_Backend       backendオブジェクト */
-    protected $backend;
     protected $controller;
 
     /** @protected    object  Ethna_Config        設定オブジェクト    */
