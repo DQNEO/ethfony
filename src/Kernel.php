@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
+use Ethna_ContainerInterface as ContainerInterface;
 
 /**
  *  コントローラクラス
@@ -20,7 +21,7 @@ use Symfony\Component\HttpKernel\TerminableInterface;
  *  @access     public
  *  @package    Ethna
  */
-class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
+class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, ContainerInterface
 {
     protected $default_action_name;
 
@@ -293,11 +294,8 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
 
     /**
      *  アクションエラーオブジェクトのアクセサ
-     *
-     *  @access public
-     *  @return object  Ethna_ActionError   アクションエラーオブジェクト
      */
-    public function getActionError()
+    public function getActionError(): Ethna_ActionError
     {
         static $obj = null;
         if ($obj === null) {
@@ -350,11 +348,8 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
 
     /**
      *  設定オブジェクトのアクセサ
-     *
-     *  @access public
-     *  @return object  Ethna_Config    設定オブジェクト
      */
-    public function getConfig()
+    public function getConfig(): Ethna_Config
     {
         static $obj = null;
         if ($obj === null) {
@@ -366,11 +361,8 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
 
     /**
      *  i18nオブジェクトのアクセサ(R)
-     *
-     *  @access public
-     *  @return object  Ethna_I18N  i18nオブジェクト
      */
-    public function getI18N()
+    public function getI18N(): Ethna_I18N
     {
         static $obj = null;
         if ($obj === null) {
@@ -382,11 +374,8 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
 
     /**
      *  ログオブジェクトのアクセサ
-     *
-     *  @access public
-     *  @return object  Ethna_Logger        ログオブジェクト
      */
-    public function getLogger()
+    public function getLogger(): Ethna_Logger
     {
         static $obj = null;
         if ($obj === null) {
@@ -398,11 +387,8 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
 
     /**
      *  セッションオブジェクトのアクセサ
-     *
-     *  @access public
-     *  @return object  Ethna_Session       セッションオブジェクト
      */
-    public function getSession()
+    public function getSession(): Ethna_Session
     {
         static $obj = null;
         if ($obj === null) {
@@ -414,11 +400,8 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
 
     /**
      *  プラグインオブジェクトのアクセサ
-     *
-     *  @access public
-     *  @return object  Ethna_Plugin    プラグインオブジェクト
      */
-    public function getPlugin()
+    public function getPlugin(): Ethna_Plugin
     {
         static $obj = null;
         if ($obj === null) {
