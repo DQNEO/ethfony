@@ -39,9 +39,6 @@ class Ethna_ActionForm
     /** @protected    array   アプリケーション設定値(自動エスケープなし) */
     public $app_ne_vars = array();
 
-    /** @protected    object  Ethna_Backend       バックエンドオブジェクト */
-    public $backend;
-
     /** @protected    object  Ethna_ActionError   アクションエラーオブジェクト */
     public $action_error;
 
@@ -75,6 +72,7 @@ class Ethna_ActionForm
     public $max_form_deps = 10;
 
     /**#@-*/
+    protected $controller;
 
     /**
      *  Ethna_ActionFormクラスのコンストラクタ
@@ -84,7 +82,7 @@ class Ethna_ActionForm
      */
     public function __construct($controller)
     {
-        $this->backend = $controller->getBackend();
+        $this->controller = $controller;
         $this->action_error = $controller->getActionError();
         $this->ae = $this->action_error;
         $this->i18n = $controller->getI18N();
