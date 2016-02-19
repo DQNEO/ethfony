@@ -73,10 +73,9 @@ class Ethna_ActionClass
      *  @access public
      *  @param  object  Ethna_Backend   $backend    backendオブジェクト
      */
-    public function __construct($backend, $action_form, $viewResolver)
+    public function __construct($controller, $action_form, $viewResolver)
     {
-        $this->controller = $controller = $backend->getController();
-        $this->backend = $backend;
+        $this->controller = $controller;
         $this->config = $controller->getConfig();
         $this->i18n = $controller->getI18N();
 

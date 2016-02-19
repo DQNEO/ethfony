@@ -596,7 +596,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
         $this->action_form = $actionResolver->newActionForm($action_name, $this);
 
         $viewResolver = new Ethna_ViewResolver($backend, $this->logger, $this->getViewdir(), $this->getAppId(), $this->class['view']);
-        $callable = $actionResolver->getController($request, $action_name, $backend, $this->action_form, $viewResolver);
+        $callable = $actionResolver->getController($request, $action_name, $this, $this->action_form, $viewResolver);
         $arguments = [$request];
         $response = call_user_func_array($callable, $arguments);
         return $response;
