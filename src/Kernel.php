@@ -135,8 +135,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
 
         $this->action_name = $action_name;
 
-        $backend = $this->getBackend();
-
         $i18n = $this->getI18N();
         $i18n->setLanguage($this->locale);
 
@@ -145,7 +143,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
 
         $command_class = sprintf("%s_Command_%s", ucfirst(strtolower($this->appid)), ucfirst($action_name));
         require_once $this->directory['command'] . '/' . ucfirst($action_name) . '.php';
-        $ac = new $command_class($backend);
+        $ac = new $command_class($this);
 
         $ac->runcli();
     }
@@ -363,22 +361,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
     }
 
     /**
-     *  backendオブジェクトのアクセサ
-     *
-     *  @access public
-     *  @return object  Ethna_Backend   backendオブジェクト
-     */
-    public function getBackend()
-    {
-        static $obj = null;
-        if ($obj === null) {
-            $class_name = $this->class['backend'];
-            $obj = new $class_name($this);
-        }
-        return $obj;
-    }
-
-    /**
      *  設定オブジェクトのアクセサ
      *
      *  @access public
@@ -584,8 +566,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
         $action_name = $actionResolver->resolveActionName($request, $default_action_name);
         $this->action_name = $action_name;
 
-        // オブジェクト生成
-        $backend = $this->getBackend();
         $this->getSession()->restore();
 
         $i18n = $this->getI18N();
@@ -595,8 +575,8 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
         // フォーム定義、フォーム値設定
         $this->action_form = $actionResolver->newActionForm($action_name, $this);
 
-        $viewResolver = new Ethna_ViewResolver($backend, $this->logger, $this->getViewdir(), $this->getAppId(), $this->class['view']);
-        $callable = $actionResolver->getController($request, $action_name, $backend, $this->action_form, $viewResolver);
+        $viewResolver = new Ethna_ViewResolver($this, $this->logger, $this->getViewdir(), $this->getAppId(), $this->class['view']);
+        $callable = $actionResolver->getController($request, $action_name, $this, $this->action_form, $viewResolver);
         $arguments = [$request];
         $response = call_user_func_array($callable, $arguments);
         return $response;
@@ -756,7 +736,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
             return $this->manager[$type];
         }
 
-        $obj = new $class_name($this->getBackend(),$this->getConfig(), $this->getI18N(), $this->getSession(), $this->getActionForm());
+        $obj = new $class_name($this,$this->getConfig(), $this->getI18N(), $this->getSession(), $this->getActionForm());
 
         //  生成したオブジェクトはキャッシュする
         if (isset($this->manager[$type]) == false || is_object($this->manager[$type]) == false) {

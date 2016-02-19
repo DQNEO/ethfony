@@ -4,15 +4,15 @@
  */
 class Ethna_ViewResolver
 {
-    private $backend;
+    private $controller;
     private $logger;
     private $viewDir;
     private $appId;
     private $baseViewClassName;
 
-    public function __construct($backend, $logger, $viewDir, $appId, $baseViewClassName)
+    public function __construct($controller, $logger, $viewDir, $appId, $baseViewClassName)
     {
-        $this->backend = $backend;
+        $this->controller = $controller;
         $this->logger = $logger;
         $this->viewDir = $viewDir;
         $this->appId = $appId;
@@ -39,7 +39,7 @@ class Ethna_ViewResolver
 
         }
 
-        return new $class_name($this->backend, $af, $forward_name, $this->getTemplatePath($forward_name));
+        return new $class_name($this->controller, $af, $forward_name, $this->getTemplatePath($forward_name));
     }
 
     /**

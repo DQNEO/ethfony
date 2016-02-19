@@ -90,8 +90,7 @@ class Ethna_Plugin_Validator_Min extends Ethna_Plugin_Validator
                 $params['mbstrmin'] = $params['min'];
                 unset($params['min']);
 
-                $plugin = $this->backend->getPlugin();
-                $vld = $plugin->getPlugin('Validator', 'Mbstrmin');
+                $vld = $this->plugin->getPlugin('Validator', 'Mbstrmin');
                 return $vld->validate($name, $var, $params);
 
                 break;

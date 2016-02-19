@@ -20,8 +20,6 @@
 class Ethna_Plugin_Urlhandler
 {
 
-    protected $backend;
-
     protected $logger;
 
      /**
@@ -32,7 +30,6 @@ class Ethna_Plugin_Urlhandler
      */
     public function __construct($controller)
     {
-        $this->backend = $controller->getBackend();
         $this->logger = $controller->getLogger();
     }
 

@@ -136,7 +136,6 @@ class Ethna_Plugin_Logwriter
             array('ethna_error', null),
             array('ethna_apperror', null),
             array('ethna_actionerror', null),
-            array('ethna_backend', 'log'),
             array(null, 'ethna_error_handler'),
             array(null, 'trigger_error'),
         );

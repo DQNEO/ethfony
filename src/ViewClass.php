@@ -26,8 +26,7 @@ class Ethna_ViewClass
     /** @protected    object  Ethna_Kernel    Controllerオブジェクト */
     protected $ctl;
 
-    /** @public    object  Ethna_Backend       backendオブジェクト */
-    public $backend;
+    protected $controller;
 
     /** @public    object  Ethna_Config        設定オブジェクト    */
     public $config;
@@ -75,15 +74,12 @@ class Ethna_ViewClass
      *  Ethna_ViewClassのコンストラクタ
      *
      *  @access public
-     *  @param  object  Ethna_Backend   $backend    backendオブジェクト
      *  @param  string  $forward_name   ビューに関連付けられている遷移名
      *  @param  string  $forward_path   ビューに関連付けられているテンプレートファイル名
      */
-    public function __construct($backend, Ethna_ActionForm $action_form, $forward_name, $forward_path)
+    public function __construct($controller, Ethna_ActionForm $action_form, $forward_name, $forward_path)
     {
-        $this->backend = $backend;
-
-        $this->ctl = $this->controller = $controller = $backend->getController();
+        $this->ctl = $this->controller = $controller;
         $this->controller->view = $this;
         $this->config = $this->controller->getConfig();
         $this->i18n = $this->controller->getI18N();

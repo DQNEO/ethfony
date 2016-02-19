@@ -28,9 +28,6 @@ class Ethna_Plugin_Validator
      *  @access private
      */
 
-    /** @protected    object  Ethna_Backend   backendオブジェクト */
-    public $backend;
-
     /** @protected    object  Ethna_Logger    ログオブジェクト */
     public $logger;
 
@@ -43,6 +40,10 @@ class Ethna_Plugin_Validator
     /** @protected    bool    配列を受け取るバリデータかどうかのフラグ */
     public $accept_array = false;
 
+    protected $controller;
+
+    /** @var  Ethna_Plugin */
+    protected $plugin;
     /**#@-*/
 
     /**
@@ -53,7 +54,8 @@ class Ethna_Plugin_Validator
      */
     public function __construct($controller)
     {
-        $this->backend = $controller->getBackend();
+        $this->controller = $controller;
+        $this->plugin = $controller->getPlugin();
         $this->logger = $controller->getLogger();
         $this->action_form = $controller->getActionForm();
         $this->af = $this->action_form;
