@@ -5,8 +5,7 @@
  */
 abstract class Ethna_Command
 {
-    /** @protected    object  Ethna_Backend       backendオブジェクト */
-    protected $backend;
+    /** @protected    object  Ethna_Controller       backendオブジェクト */
     protected $controller;
 
     /** @protected    object  Ethna_Config        設定オブジェクト    */
@@ -26,10 +25,9 @@ abstract class Ethna_Command
     /**
      *
      */
-    public function __construct($backend)
+    public function __construct($controller)
     {
-        $this->controller = $controller = $backend->getController();
-        $this->backend = $backend;
+        $this->controller = $controller;
         $this->config = $controller->getConfig();
         $this->i18n = $controller->getI18N();
         $this->plugin = $controller->getPlugin();

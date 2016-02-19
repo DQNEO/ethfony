@@ -145,7 +145,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
 
         $command_class = sprintf("%s_Command_%s", ucfirst(strtolower($this->appid)), ucfirst($action_name));
         require_once $this->directory['command'] . '/' . ucfirst($action_name) . '.php';
-        $ac = new $command_class($backend);
+        $ac = new $command_class($this);
 
         $ac->runcli();
     }
