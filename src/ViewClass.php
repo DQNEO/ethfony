@@ -28,9 +28,6 @@ class Ethna_ViewClass
 
     protected $controller;
 
-    /** @public    object  Ethna_Backend       backendオブジェクト */
-    public $backend;
-
     /** @public    object  Ethna_Config        設定オブジェクト    */
     public $config;
 
@@ -77,7 +74,6 @@ class Ethna_ViewClass
      *  Ethna_ViewClassのコンストラクタ
      *
      *  @access public
-     *  @param  object  Ethna_Backend   $backend    backendオブジェクト
      *  @param  string  $forward_name   ビューに関連付けられている遷移名
      *  @param  string  $forward_path   ビューに関連付けられているテンプレートファイル名
      */
