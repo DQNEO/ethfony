@@ -18,9 +18,15 @@
  */
 class Ethna_Plugin_Cachemanager_Localfile extends Ethna_Plugin_Cachemanager
 {
-    /**#@+  @access private */
+    /** @var  string  */
+    private $tmpDir;
 
     /**#@-*/
+    public function __construct($controller)
+    {
+        parent::__construct($controller);
+        $this->tmpDir = $controller->getTmpdir();
+    }
 
     /**
      *  キャッシュに設定された値を取得する
@@ -247,7 +253,7 @@ class Ethna_Plugin_Cachemanager_Localfile extends Ethna_Plugin_Cachemanager
                 }
             }
         }
-        return sprintf("%s/cache/%s/cache_%s/%s/%s", $this->backend->getTmpdir(), $dir, $this->_escape($namespace), $this->_escape($dir1), $this->_escape($dir2));
+        return sprintf("%s/cache/%s/cache_%s/%s/%s", $this->tmpDir, $dir, $this->_escape($namespace), $this->_escape($dir1), $this->_escape($dir2));
     }
 
     /**
