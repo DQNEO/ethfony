@@ -77,8 +77,6 @@ class Ethna_ActionForm
     /**
      *  Ethna_ActionFormクラスのコンストラクタ
      *
-     *  @access public
-     *  @param  object  Ethna_Kernel    $controller    controllerオブジェクト
      */
     public function __construct(ContainerInterface $controller)
     {

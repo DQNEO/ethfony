@@ -37,7 +37,6 @@ class Ethna_ActionError
     /**
      *  Ethna_ActionErrorクラスのコンストラクタ
      *
-     *  @access public
      */
     public function __construct(Ethna_Logger $logger)
     {
