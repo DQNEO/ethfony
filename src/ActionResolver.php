@@ -55,10 +55,10 @@ class Ethna_ActionResolver
         return [$ac, $method];
     }
 
-    public function newActionForm($action_name, $ctl)
+    public function newActionForm($action_name, $controller)
     {
         $form_class_name = $this->getActionFormName($action_name);
-        return new $form_class_name($ctl);
+        return new $form_class_name($controller);
 
     }
 

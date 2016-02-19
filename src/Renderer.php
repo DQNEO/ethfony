@@ -26,9 +26,6 @@ class Ethna_Renderer
     /** @protected    object  Ethna_Kernel    controllerオブジェクト */
     protected $controller;
 
-    /** @protected    object  Ethna_Kernel    controllerオブジェクト($controllerの省略形) */
-    protected $ctl;
-
     /** @protected    array   config.phpのレンダラ設定 */
     protected $config;
 
@@ -59,7 +56,7 @@ class Ethna_Renderer
     public function __construct($controller)
     {
         $this->controller = $controller;
-        $this->ctl = $this->controller;
+        $this->controller = $this->controller;
         $this->engine = null;
         $this->template = null;
         $this->prop = array();

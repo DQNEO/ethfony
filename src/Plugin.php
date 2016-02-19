@@ -31,9 +31,6 @@ class Ethna_Plugin
     /** @protected    object  Ethna_Kernel    コントローラオブジェクト */
     protected $controller;
 
-    /** @protected    object  Ethna_Kernel    コントローラオブジェクト($controllerの省略形) */
-    protected $ctl;
-
     /** @protected    object  Ethna_Logger        ログオブジェクト */
     protected $logger;
 
@@ -55,7 +52,7 @@ class Ethna_Plugin
     public function __construct($controller)
     {
         $this->controller = $controller;
-        $this->ctl = $this->controller;
+        $this->controller = $this->controller;
         $this->logger = null;
 
         $this->appid_list = array($controller->getAppId(), 'Ethna');
@@ -250,7 +247,7 @@ class Ethna_Plugin
      */
     public function getPluginNaming($type, $name, $appid = 'Ethna')
     {
-        $ext = $this->ctl->getExt('php');
+        $ext = $this->controller->getExt('php');
 
         $plugin_class_name = array(
             $appid,
@@ -451,8 +448,8 @@ class Ethna_Plugin
      */
     public static function import($type, $name = null)
     {
-        $ctl = Ethna_Kernel::getInstance();
-        $plugin = $ctl->getPlugin();
+        $controller = Ethna_Kernel::getInstance();
+        $plugin = $controller->getPlugin();
 
         $plugin->includePlugin($type, $name);
     }

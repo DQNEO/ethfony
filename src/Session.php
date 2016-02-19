@@ -55,17 +55,17 @@ class Ethna_Session
      *  @access public
      *  @param  string  $appid      アプリケーションID(セッション名として使用)
      */
-    public function __construct($ctl, $appid)
+    public function __construct($controller, $appid)
     {
-        $this->logger = $ctl->getLogger();
+        $this->logger = $controller->getLogger();
 
-        $config = $ctl->getConfig()->get('session');
+        $config = $controller->getConfig()->get('session');
         if ($config) {
             $this->config = array_merge($this->config, $config);
         }
 
         $this->session_save_dir = $this->config['path'];
-        if (($dir = $ctl->getDirectory($this->config['path'])) !== null) {
+        if (($dir = $controller->getDirectory($this->config['path'])) !== null) {
             $this->session_save_dir = $dir;
         }
         $this->session_name = $appid . $this->config['suffix'];

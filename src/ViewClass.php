@@ -24,8 +24,6 @@ class Ethna_ViewClass
      */
 
     /** @protected    object  Ethna_Kernel    Controllerオブジェクト */
-    protected $ctl;
-
     protected $controller;
 
     /** @public    object  Ethna_Config        設定オブジェクト    */
@@ -79,7 +77,7 @@ class Ethna_ViewClass
      */
     public function __construct($controller, Ethna_ActionForm $action_form, $forward_name, $forward_path)
     {
-        $this->ctl = $this->controller = $controller;
+        $this->controller = $this->controller = $controller;
         $this->controller->view = $this;
         $this->config = $this->controller->getConfig();
         $this->i18n = $this->controller->getI18N();
@@ -105,7 +103,7 @@ class Ethna_ViewClass
 
     protected function getCurrentActionName()
     {
-        return $this->ctl->getCurrentActionName();
+        return $this->controller->getCurrentActionName();
     }
 
     // {{{ preforward
@@ -198,18 +196,18 @@ class Ethna_ViewClass
 
         //    現在のアクションと等しければ、対応する
         //    アクションフォームを設定
-        $ctl = Ethna_Kernel::getInstance();
-        if ($action === $ctl->getCurrentActionName()) {
+        $controller = Ethna_Kernel::getInstance();
+        if ($action === $controller->getCurrentActionName()) {
             $this->helper_action_form[$action] = $this->af;
         } else {
             //    アクションが異なる場合
-            $form_name = $ctl->getActionFormName($action);
+            $form_name = $controller->getActionFormName($action);
             if ($form_name === null) {
                 $this->logger->log(LOG_WARNING,
                     'action form for the action [%s] not found.', $action);
                 return;
             }
-            $this->helper_action_form[$action] = new $form_name($ctl);
+            $this->helper_action_form[$action] = new $form_name($controller);
         }
 
         //   動的フォームを設定するためのヘルパメソッドを呼ぶ

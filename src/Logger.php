@@ -55,9 +55,6 @@ class Ethna_Logger
     /** @protected    object  Ethna_Kernel    controllerオブジェクト */
     public $controller;
 
-    /** @protected    object  Ethna_Kernel    controllerオブジェクト($controllerの省略形) */
-    public $ctl;
-
     /** @protected    array   ログファシリティ */
     public $facility = array();
 
@@ -101,7 +98,7 @@ class Ethna_Logger
     public function __construct($controller)
     {
         $this->controller = $controller;
-        $this->ctl = $this->controller;
+        $this->controller = $this->controller;
         $config = $controller->getConfig();
 
         // ログファシリティテーブル補完(LOCAL0〜LOCAL8)
