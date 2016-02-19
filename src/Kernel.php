@@ -300,7 +300,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
         static $obj = null;
         if ($obj === null) {
             $class_name = $this->class['error'];
-            $obj = new $class_name();
+            $obj = new $class_name($this->getLogger());
         }
         return $obj;
     }

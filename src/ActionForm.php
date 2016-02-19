@@ -85,6 +85,7 @@ class Ethna_ActionForm
         $this->controller = $controller;
         $this->action_error = $controller->getActionError();
         $this->ae = $this->action_error;
+        $this->action_error->action_form = $this;
         $this->i18n = $controller->getI18N();
         $this->logger = $controller->getLogger();
         $this->plugin = $controller->getPlugin();

@@ -27,11 +27,11 @@ class Ethna_ActionError
     /** @protected    array   エラーオブジェクトの一覧 */
     protected $error_list = array();
 
-    /** @protected    object  Ethna_ActionForm    アクションフォームオブジェクト */
-    protected $action_form = null;
+    /** @protected   Ethna_ActionForm    アクションフォームオブジェクト */
+    public $action_form;
 
-    /** @protected    object  Ethna_Logger        ログオブジェクト */
-    protected $logger = null;
+    /** @protected   Ethna_Logger        ログオブジェクト */
+    protected $logger;
     /**#@-*/
 
     /**
@@ -39,8 +39,9 @@ class Ethna_ActionError
      *
      *  @access public
      */
-    public function __construct()
+    public function __construct(Ethna_Logger $logger)
     {
+        $this->logger = $logger;
     }
 
     /**
@@ -79,9 +80,7 @@ class Ethna_ActionError
         $this->error_list[] = $elt;
 
         // ログ出力(補足)
-        $af = $this->_getActionForm();
-        $logger = $this->_getLogger();
-        $logger->log(LOG_INFO, '{form} -> [%s]', $this->action_form->getName($name));
+        $this->logger->log(LOG_INFO, '{form} -> [%s]', $this->action_form->getName($name));
     }
 
     /**
@@ -185,49 +184,10 @@ class Ethna_ActionError
      */
     protected function getMessageByEntry(&$error)
     {
-        $af = $this->_getActionForm();
-        $form_name = $af->getName($error['name']);
+        $form_name = $this->action_form->getName($error['name']);
         return str_replace("{form}", _et($form_name), $error['object']->getMessage());
     }
 
-    /**
-     * UnitTestCase から ActionForm を削除させるための一時的なメソッド
-     *
-     * @access public
-     */
-    public function clearActionForm()
-    {
-        unset($this->action_form);
-    }
 
-    /**
-     *  Ethna_ActionFormオブジェクトを取得する
-     *
-     *  @access private
-     *  @return object  Ethna_ActionForm
-     */
-    private function _getActionForm()
-    {
-        if (isset($this->action_form) == false) {
-            $controller = Ethna_Kernel::getInstance();
-            $this->action_form = $controller->getActionForm();
-        }
-        return $this->action_form;
-    }
-
-    /**
-     *  Ethna_Loggerオブジェクトを取得する
-     *
-     *  @access private
-     *  @return object  Ethna_Logger
-     */
-    private function _getLogger()
-    {
-        if (is_null($this->logger)) {
-            $controller = Ethna_Kernel::getInstance();
-            $this->logger = $controller->getLogger();
-        }
-        return $this->logger;
-    }
 }
 // }}}
