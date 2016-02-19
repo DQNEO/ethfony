@@ -622,31 +622,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
 
 
     /**
-     *  getDefaultFormClass()で取得したクラス名からアクション名を取得する
-     *
-     *  getDefaultFormClass()をオーバーライドした場合、こちらも合わせてオーバーライド
-     *  することを推奨(必須ではない)
-     *
-     *  @access public
-     *  @param  string  $class_name     フォームクラス名
-     *  @return string  アクション名
-     */
-    public function actionFormToName($class_name)
-    {
-        $prefix = sprintf("%s_Form_", $this->getAppId());
-        if (preg_match("/$prefix(.*)/", $class_name, $match) == 0) {
-            // 不明なクラス名
-            return null;
-        }
-        $target = $match[1];
-
-        $action_name = substr(preg_replace('/([A-Z])/e', "'_' . strtolower('\$1')", $target), 1);
-
-        return $action_name;
-    }
-
-
-    /**
      *  テンプレートパス名から遷移名を取得する
      *
      *  getDefaultForwardPath()をオーバーライドした場合、こちらも合わせてオーバーライド
