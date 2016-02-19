@@ -43,6 +43,8 @@ class Ethna_Plugin_Validator
     /** @protected    bool    配列を受け取るバリデータかどうかのフラグ */
     public $accept_array = false;
 
+    /** @var  Ethna_Plugin */
+    protected $plugin;
     /**#@-*/
 
     /**
@@ -53,6 +55,7 @@ class Ethna_Plugin_Validator
      */
     public function __construct($controller)
     {
+        $this->plugin = $controller->getPlugin();
         $this->backend = $controller->getBackend();
         $this->logger = $controller->getLogger();
         $this->action_form = $controller->getActionForm();

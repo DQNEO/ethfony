@@ -90,8 +90,7 @@ class Ethna_Plugin_Validator_Max extends Ethna_Plugin_Validator
                 $params['mbstrmax'] = $params['max'];
                 unset($params['max']);
 
-                $plugin = $this->backend->getPlugin();
-                $vld = $plugin->getPlugin('Validator', 'Mbstrmax');
+                $vld = $this->plugin->getPlugin('Validator', 'Mbstrmax');
                 return $vld->validate($name, $var, $params);
 
                 break;
