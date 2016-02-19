@@ -28,9 +28,6 @@ class Ethna_Plugin_Validator
      *  @access private
      */
 
-    /** @protected    object  Ethna_Backend   backendオブジェクト */
-    public $backend;
-
     /** @protected    object  Ethna_Logger    ログオブジェクト */
     public $logger;
 
@@ -56,7 +53,6 @@ class Ethna_Plugin_Validator
     public function __construct($controller)
     {
         $this->plugin = $controller->getPlugin();
-        $this->backend = $controller->getBackend();
         $this->logger = $controller->getLogger();
         $this->action_form = $controller->getActionForm();
         $this->af = $this->action_form;
