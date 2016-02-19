@@ -5,7 +5,7 @@
  */
 abstract class Ethna_Command
 {
-    /** @protected    object  Ethna_Controller       backendオブジェクト */
+    /** @protected    object  Ethna_Controller        */
     protected $controller;
 
     /** @protected    object  Ethna_Config        設定オブジェクト    */
