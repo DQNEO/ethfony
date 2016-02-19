@@ -275,18 +275,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
         }
         return $this->directory[$key];
     }
-    /**
-     *  アプリケーションディレクトリ設定を返す
-     *
-     *  @access public
-     *  @param  string  $key    type
-     *  @return string  $key    directory
-     */
-    public function setDirectory($key, $value)
-    {
-        $this->directory[$key] = $value;
-    }
-
 
     /**
      *  アプリケーション拡張子設定を返す
