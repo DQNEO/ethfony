@@ -50,10 +50,10 @@ class Ethna_MailSender
      *  @access public
      *  @param  object  Ethna_Backend   $backend       backendオブジェクト
      */
-    public function __construct($backend)
+    public function __construct($controller)
     {
-        $this->controller = $this->backend->getController();
-        $this->config = $this->controller()->getConfig();
+        $this->controller = $controller;
+        $this->config = $controller->getConfig();
     }
 
     /**
