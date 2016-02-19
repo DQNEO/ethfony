@@ -48,7 +48,7 @@ class Ethna_MailSender
      *  Ethna_MailSenderクラスのコンストラクタ
      *
      *  @access public
-     *  @param  object  Ethna_Backend   $backend       backendオブジェクト
+     *  @param  object  Ethna_Controller
      */
     public function __construct($controller)
     {
