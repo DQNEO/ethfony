@@ -68,8 +68,6 @@ class Ethna_ActionClass
     /**
      *  Ethna_ActionClassのコンストラクタ
      *
-     *  @access public
-     *  @param  object  Ethna_Backend   $backend    backendオブジェクト
      */
     public function __construct($controller, $action_form, $viewResolver)
     {
