@@ -477,19 +477,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
         return $this->locale;
     }
 
-    /**
-     *  ロケール名へのアクセサ(W)
-     *
-     *  @access public
-     *  @param $locale ロケール名(e.x ja_JP, en_US 等),
-     *                 (ロケール名は、ll_cc の形式。ll = 言語コード cc = 国コード)
-     */
-    public function setLocale($locale)
-    {
-        $this->locale = $locale;
-        $i18n = $this->getI18N();
-        $i18n->setLanguage($this->locale);
-    }
 
     /**
      *  エンコーディング名へのアクセサ(R)
