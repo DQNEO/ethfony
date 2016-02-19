@@ -620,26 +620,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
     }
 
 
-
-    /**
-     *  テンプレートパス名から遷移名を取得する
-     *
-     *  getDefaultForwardPath()をオーバーライドした場合、こちらも合わせてオーバーライド
-     *  することを推奨(必須ではない)
-     *
-     *  @access public
-     *  @param  string  $forward_path   テンプレートパス名
-     *  @return string  遷移名
-     */
-    public function forwardPathToName($forward_path)
-    {
-        $forward_path = preg_replace('/^\/+/', '', $forward_path);
-        $forward_path = preg_replace(sprintf('/\.%s$/', $this->getExt('tpl')), '', $forward_path);
-
-        return str_replace('/', '_', $forward_path);
-    }
-
-
     /**
      *  レンダラを取得する
      *
