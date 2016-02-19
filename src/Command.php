@@ -1,4 +1,6 @@
 <?php
+use Ethna_ContainerInterface as ContainerInterface;
+
 /**
  *  command
  *
@@ -25,7 +27,7 @@ abstract class Ethna_Command
     /**
      *
      */
-    public function __construct($controller)
+    public function __construct(ContainerInterface $controller)
     {
         $this->controller = $controller;
         $this->config = $controller->getConfig();
