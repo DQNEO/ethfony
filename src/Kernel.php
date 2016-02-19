@@ -564,11 +564,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
     /**
      *  エラーハンドラ
      *
-     *  エラー発生時の追加処理を行いたい場合はこのメソッドをオーバーライドする
-     *  (アラートメール送信等−デフォルトではログ出力時にアラートメール
-     *  が送信されるが、エラー発生時に別にアラートメールをここで送信
-     *  させることも可能)
-     *
      *  @access public
      *  @param  object  Ethna_Error     エラーオブジェクト
      */
