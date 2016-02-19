@@ -26,9 +26,6 @@ class Ethna_Plugin_Cachemanager
     /** @protected    array  plugin options */
     protected $opt;
 
-    /** @protected    object  Ethna_Backend       backendオブジェクト */
-    protected $backend;
-
     /** @protected    object  Ethna_Config        設定オブジェクト    */
     protected $config;
 
@@ -41,7 +38,6 @@ class Ethna_Plugin_Cachemanager
     public function __construct($controller)
     {
         $this->controller = $controller;
-        $this->backend = $this->controller->getBackend();
         $this->config = $this->controller->getConfig();
 
 	// load config
