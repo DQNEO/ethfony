@@ -135,8 +135,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
 
         $this->action_name = $action_name;
 
-        $backend = $this->getBackend();
-
         $i18n = $this->getI18N();
         $i18n->setLanguage($this->locale);
 
@@ -363,22 +361,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
     }
 
     /**
-     *  backendオブジェクトのアクセサ
-     *
-     *  @access public
-     *  @return object  Ethna_Backend   backendオブジェクト
-     */
-    public function getBackend()
-    {
-        static $obj = null;
-        if ($obj === null) {
-            $class_name = $this->class['backend'];
-            $obj = new $class_name($this);
-        }
-        return $obj;
-    }
-
-    /**
      *  設定オブジェクトのアクセサ
      *
      *  @access public
@@ -584,8 +566,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
         $action_name = $actionResolver->resolveActionName($request, $default_action_name);
         $this->action_name = $action_name;
 
-        // オブジェクト生成
-        $backend = $this->getBackend();
         $this->getSession()->restore();
 
         $i18n = $this->getI18N();
@@ -756,7 +736,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
             return $this->manager[$type];
         }
 
-        $obj = new $class_name($this->getBackend(),$this->getConfig(), $this->getI18N(), $this->getSession(), $this->getActionForm());
+        $obj = new $class_name($this,$this->getConfig(), $this->getI18N(), $this->getSession(), $this->getActionForm());
 
         //  生成したオブジェクトはキャッシュする
         if (isset($this->manager[$type]) == false || is_object($this->manager[$type]) == false) {
