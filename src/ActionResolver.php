@@ -1,6 +1,6 @@
 <?php
 use Symfony\Component\HttpFoundation\Request;
-
+use Ethna_ContainerInterface as ContainerInterface;
 /**
  * Created by PhpStorm.
  * User: DQNEO
@@ -17,7 +17,7 @@ class Ethna_ActionResolver
     /**
      * Ethna_ActionResolver constructor.
      */
-    public function __construct($appId, $logger, $default_form_class, $actionDir)
+    public function __construct(string $appId, Ethna_Logger $logger, string $default_form_class, string  $actionDir)
     {
         $this->appId = $appId;
         $this->logger = $logger;
@@ -55,7 +55,7 @@ class Ethna_ActionResolver
         return [$ac, $method];
     }
 
-    public function newActionForm($action_name, $controller)
+    public function newActionForm($action_name, ContainerInterface $controller)
     {
         $form_class_name = $this->getActionFormName($action_name);
         return new $form_class_name($controller);
