@@ -26,6 +26,8 @@ class Ethna_ViewClass
     /** @protected    object  Ethna_Kernel    Controllerオブジェクト */
     protected $ctl;
 
+    protected $controller;
+
     /** @public    object  Ethna_Backend       backendオブジェクト */
     public $backend;
 
