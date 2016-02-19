@@ -623,7 +623,6 @@ class Ethna_ActionForm
             return null;
         }
 
-        // Ethna_Backendの設定
         $c = Ethna_Kernel::getInstance();
         $this->controller = $c;
 
@@ -1090,7 +1089,7 @@ class Ethna_ActionForm
      *  ユーザが動的にフォーム定義を変更したい場合に
      *  このメソッドをオーバーライドします。
      *
-     *  $this->backend も初期化済みのため、DBやセッション
+     *  $this->controller も初期化済みのため、DBやセッション
      *  の値に基づいてフォーム定義を変更することができます。
      *
      *  @access public 
