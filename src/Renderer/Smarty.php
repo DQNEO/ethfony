@@ -32,14 +32,14 @@ class Ethna_Renderer_Smarty extends Ethna_Renderer
      *
      *  @access public
      */
-    public function __construct($controller)
+    public function __construct(string $template_dir, array $option)
     {
-        parent::__construct($controller);
+        parent::__construct($template_dir, $option);
 
         $this->engine = new Smarty;
 
         // ディレクトリ関連は Controllerによって実行時に設定
-        $compile_dir = $controller->getDirectory('template_c');
+        $compile_dir = $option['template_c'];
 
         $this->compile_dir = $compile_dir;
         $this->engine->template_dir = $this->template_dir;
@@ -56,7 +56,7 @@ class Ethna_Renderer_Smarty extends Ethna_Renderer
         }
 
         $this->engine->plugins_dir = array_merge(
-            $controller->getDirectory('plugins'),
+            $option['plugins'],
             array(ETHNA_BASE . '/src/Plugin/Smarty', SMARTY_DIR . 'plugins')
         );
     }

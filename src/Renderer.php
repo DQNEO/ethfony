@@ -23,9 +23,6 @@ class Ethna_Renderer
      *  @access private
      */
 
-    /** @protected    object  Ethna_Kernel    controllerオブジェクト */
-    protected $controller;
-
     /** @protected    array   config.phpのレンダラ設定 */
     protected $config;
 
@@ -41,23 +38,16 @@ class Ethna_Renderer
     /** @protected    string  テンプレート変数 */
     protected $prop;
 
-    /** @protected    string  レンダラプラグイン(Ethna_Pluginとは関係なし) */
-    protected $plugin_registry;
+    /** @protected    array  レンダラプラグイン(Ethna_Pluginとは関係なし) */
+    protected $plugin_registry = [];
 
     /**
      *  Ethna_Rendererクラスのコンストラクタ
      *
      *  @access public
      */
-    public function __construct($controller)
+    public function __construct(string $template_dir, array $option)
     {
-        $this->controller = $controller;
-        $this->engine = null;
-        $this->template = null;
-        $this->prop = array();
-        $this->plugin_registry = array();
-
-        $template_dir = $controller->getTemplatedir();
         $this->setTemplateDir($template_dir);
 
     }

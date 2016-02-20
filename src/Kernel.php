@@ -611,7 +611,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
         }
 
         $class_name = $this->class['renderer'];
-        $this->renderer = new $class_name($this);
+        $this->renderer = new $class_name($this->getTemplatedir(), $this->directory);
         return $this->renderer;
     }
 
