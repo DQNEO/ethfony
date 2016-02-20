@@ -38,10 +38,8 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
     /** @protected    array       アプリケーションディレクトリ */
     protected $directory = array();
 
-
     /** @protected    array       クラス設定 */
     public $class = array();
-
 
     /**
      * @protected    string ロケール名(e.x ja_JP, en_US 等),
@@ -51,18 +49,8 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
 
     protected $encoding = 'UTF-8';
 
-    /** @protected    array   アプリケーションマネージャ定義 */
-    protected $manager = array();
-
-
-    /** @protected    object  Ethna_ActionForm    フォームオブジェクト */
-    protected $action_form = null;
-
     /** @protected    object  Ethna_Logger        ログオブジェクト */
     protected $logger = null;
-
-    /** @protected    object  Ethna_Plugin        プラグインオブジェクト */
-    protected $plugin = null;
 
     protected $actionResolver;
 
@@ -344,10 +332,9 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
         $config = $this->container->getConfig();
         $this->url = $config->get('url');
 
-        $this->plugin = $this->container->getPlugin();
-
+        $plugin = $this->container->getPlugin();
         $this->logger = $this->container->getLogger();
-        $this->plugin->setLogger($this->logger);
+        $plugin->setLogger($this->logger);
         $this->logger->begin();
 
         $this->container->setCurrentActionName($action_name);
@@ -391,10 +378,10 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
             $config->set('url', $this->url);
         }
 
-        $this->plugin = $this->getPlugin();
+        $plugin = $this->getPlugin();
 
         $this->logger = $this->getLogger();
-        $this->plugin->setLogger($this->logger);
+        $plugin->setLogger($this->logger);
         $this->logger->begin();
 
         $actionDir = $this->directory['action'] . "/";
