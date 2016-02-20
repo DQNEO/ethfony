@@ -21,4 +21,5 @@ interface Ethna_ContainerInterface
 
     public function getDirectory(string $key);
 
+    public function getExt(string $key): string;
 }

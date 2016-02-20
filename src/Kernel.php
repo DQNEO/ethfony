@@ -14,7 +14,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
 use Ethna_ContainerInterface as ContainerInterface;
 
-class Ethna_Container
+class Ethna_Container implements ContainerInterface
 {
     /**
      * @var array
@@ -27,12 +27,32 @@ class Ethna_Container
     private $base;
 
     /**
+     * @var array
+     */
+    private $class;
+
+    /**
+     * @var string
+     */
+    private $appid;
+
+    /** @protected    array       拡張子設定 */
+    protected $ext = array(
+        'php'           => 'php',
+        'tpl'           => 'tpl',
+    );
+
+    protected $action_form;
+
+    /**
      * Ethna_Container constructor.
      * @param $directory (absolute)
      */
-    public function __construct(string $base, array $directory)
+    public function __construct(string $base, array $directory, array $class, string $appid)
     {
         $this->base = $base;
+        $this->class = $class;
+        $this->appid = $appid;
 
         /**
          * ディレクトリ設定を絶対パスに変換
@@ -74,6 +94,176 @@ class Ethna_Container
         }
         return $this->directory[$key];
     }
+
+    /**
+     *  設定オブジェクトのアクセサ
+     */
+    public function getConfig(): Ethna_Config
+    {
+        static $obj = null;
+        if ($obj === null) {
+            $class_name = $this->class['config'];
+            $obj = new $class_name($this->getDirectory('etc'));
+        }
+        return $obj;
+    }
+
+    /**
+     *  i18nオブジェクトのアクセサ(R)
+     */
+    public function getI18N(): Ethna_I18N
+    {
+        static $obj = null;
+        if ($obj === null) {
+            $class_name = $this->class['i18n'];
+            $obj = new $class_name($this->getDirectory('locale'), $this->getAppId());
+        }
+        return $obj;
+    }
+
+    /**
+     *  ログオブジェクトのアクセサ
+     */
+    public function getLogger(): Ethna_Logger
+    {
+        static $obj = null;
+        if ($obj === null) {
+            $class_name = $this->class['logger'];
+            $obj = new $class_name($this);
+        }
+        return $obj;
+    }
+
+    /**
+     *  セッションオブジェクトのアクセサ
+     */
+    public function getSession(): Ethna_Session
+    {
+        static $obj = null;
+        if ($obj === null) {
+            $class_name = $this->class['session'];
+            $obj = new $class_name($this);
+        }
+        return $obj;
+    }
+
+    /**
+     *  URLハンドラオブジェクトのアクセサ
+     *
+     *  @access public
+     *  @return object  Ethna_UrlHandler    URLハンドラオブジェクト
+     */
+    public function getUrlHandler()
+    {
+        $class_name = $this->class['url_handler'];
+        return $class_name::getInstance();
+    }
+
+    /**
+     *  アクションエラーオブジェクトのアクセサ
+     */
+    public function getActionError(): Ethna_ActionError
+    {
+        static $obj = null;
+        if ($obj === null) {
+            $class_name = $this->class['error'];
+            $obj = new $class_name($this->getLogger());
+        }
+        return $obj;
+    }
+
+    /**
+     *  プラグインオブジェクトのアクセサ
+     */
+    public function getPlugin(): Ethna_Plugin
+    {
+        static $obj = null;
+        if ($obj === null) {
+            $class_name = $this->class['plugin'];
+            $obj = new $class_name($this);
+        }
+        return $obj;
+    }
+
+    /**
+     *  アプリケーションIDを返す
+     *
+     *  @access public
+     *  @return string  アプリケーションID
+     */
+    public function getAppId(): string
+    {
+        return ucfirst(strtolower($this->appid));
+    }
+
+    /**
+     *  アプリケーション拡張子設定を返す
+     *
+     *  @access public
+     *  @param  string  $key    拡張子タイプ("php", "tpl"...)
+     *  @return string  $keyに対応した拡張子(設定が無い場合はnull)
+     */
+    public function getExt(string $key):string
+    {
+        if (isset($this->ext[$key]) == false) {
+            return null;
+        }
+        return $this->ext[$key];
+    }
+
+    /**
+     */
+    public function getActionForm(): Ethna_ActionForm
+    {
+        return $this->action_form;
+    }
+
+    /**
+     */
+    public function setActionForm(Ethna_ActionForm $action_form)
+    {
+        $this->action_form = $action_form;
+    }
+
+    /**
+     *  typeに対応するアプリケーションマネージャオブジェクトを返す
+     *  注意： typeは大文字小文字を区別しない
+     *         (PHP自体が、クラス名の大文字小文字を区別しないため)
+     *
+     *  マネジャークラスをincludeすることはしないので、
+     *  アプリケーション側でオートロードする必要がある。
+     *
+     *  @access public
+     *  @param  string  $type   アプリケーションマネージャー名
+     *  @return object  Ethna_AppManager    マネージャオブジェクト
+     */
+    public function getManager($type)
+    {
+        //   アプリケーションIDと、渡された名前のはじめを大文字にして、
+        //   組み合わせたものが返される
+        $manager_id = preg_replace_callback('/_(.)/', function(array $matches){return strtoupper($matches[1]);}, ucfirst($type));
+        $class_name = sprintf('%s_%sManager', $this->getAppId(), ucfirst($manager_id));
+
+        //  PHPのクラス名は大文字小文字を区別しないので、
+        //  同じクラス名と見做されるものを指定した場合には
+        //  同じインスタンスが返るようにする
+        $type = strtolower($type);
+
+        //  キャッシュがあればそれを利用
+        if (isset($this->manager[$type]) && is_object($this->manager[$type])) {
+            return $this->manager[$type];
+        }
+
+        $obj = new $class_name($this,$this->getConfig(), $this->getI18N(), $this->getSession(), $this->getActionForm());
+
+        //  生成したオブジェクトはキャッシュする
+        if (isset($this->manager[$type]) == false || is_object($this->manager[$type]) == false) {
+            $this->manager[$type] = $obj;
+        }
+
+        return $obj;
+    }
+
 }
 /**
  *  コントローラクラス
@@ -98,11 +288,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
     /** @protected    array       アプリケーションディレクトリ */
     protected $directory = array();
 
-    /** @protected    array       拡張子設定 */
-    protected $ext = array(
-        'php'           => 'php',
-        'tpl'           => 'tpl',
-    );
 
     /** @protected    array       クラス設定 */
     public $class = array();
@@ -283,32 +468,14 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
         return $this->container->getDirectory($key);
     }
 
-    /**
-     *  アプリケーション拡張子設定を返す
-     *
-     *  @access public
-     *  @param  string  $key    拡張子タイプ("php", "tpl"...)
-     *  @return string  $keyに対応した拡張子(設定が無い場合はnull)
-     */
-    public function getExt($key)
+    public function getExt(string $key):string
     {
-        if (isset($this->ext[$key]) == false) {
-            return null;
-        }
-        return $this->ext[$key];
+        return $this->container->getExt($key);
     }
 
-    /**
-     *  アクションエラーオブジェクトのアクセサ
-     */
     public function getActionError(): Ethna_ActionError
     {
-        static $obj = null;
-        if ($obj === null) {
-            $class_name = $this->class['error'];
-            $obj = new $class_name($this->getLogger());
-        }
-        return $obj;
+        return $this->container->getActionError();
     }
 
     /**
@@ -319,8 +486,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
      */
     public function getActionForm()
     {
-        // 明示的にクラスファクトリを利用していない
-        return $this->action_form;
+        return $this->container->getActionForm();
     }
 
     /**
@@ -332,11 +498,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
      */
     public function setActionForm($af)
     {
-        if ($this->action_form !== null) {
-            return false;
-        }
-        $this->action_form = $af;
-        return true;
+        $this->container->setActionForm($af);
     }
 
 
@@ -352,30 +514,14 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
         return $this->view;
     }
 
-    /**
-     *  設定オブジェクトのアクセサ
-     */
     public function getConfig(): Ethna_Config
     {
-        static $obj = null;
-        if ($obj === null) {
-            $class_name = $this->class['config'];
-            $obj = new $class_name($this->getDirectory('etc'));
-        }
-        return $obj;
+        return $this->container->getConfig();
     }
 
-    /**
-     *  i18nオブジェクトのアクセサ(R)
-     */
     public function getI18N(): Ethna_I18N
     {
-        static $obj = null;
-        if ($obj === null) {
-            $class_name = $this->class['i18n'];
-            $obj = new $class_name($this->getDirectory('locale'), $this->getAppId());
-        }
-        return $obj;
+        return $this->container->getI18N();
     }
 
     /**
@@ -383,12 +529,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
      */
     public function getLogger(): Ethna_Logger
     {
-        static $obj = null;
-        if ($obj === null) {
-            $class_name = $this->class['logger'];
-            $obj = new $class_name($this);
-        }
-        return $obj;
+        return $this->container->getLogger();
     }
 
     /**
@@ -396,12 +537,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
      */
     public function getSession(): Ethna_Session
     {
-        static $obj = null;
-        if ($obj === null) {
-            $class_name = $this->class['session'];
-            $obj = new $class_name($this);
-        }
-        return $obj;
+        return $this->container->getSession();
     }
 
     /**
@@ -409,12 +545,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
      */
     public function getPlugin(): Ethna_Plugin
     {
-        static $obj = null;
-        if ($obj === null) {
-            $class_name = $this->class['plugin'];
-            $obj = new $class_name($this);
-        }
-        return $obj;
+        return $this->container->getPlugin();
     }
 
     /**
@@ -425,8 +556,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
      */
     public function getUrlHandler()
     {
-        $class_name = $this->class['url_handler'];
-        return $class_name::getInstance();
+        return $this->container->getUrlHandler();
     }
 
     /**
@@ -491,7 +621,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
 
         Ethna::setErrorCallback(array($this, 'handleError'));
 
-        $this->container = new Ethna_Container(BASE, $this->directory);
+        $this->container = new Ethna_Container(BASE, $this->directory, $this->class, $this->appid);
         $this->directory = $this->container->getDirectories();
         $config = $this->getConfig();
         $this->url = $config->get('url');
@@ -508,8 +638,8 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
         $i18n->setLanguage($this->locale);
 
         $form_class_name = $this->class['form'];
-        $this->action_form = new $form_class_name($this);
-
+        $action_form = new $form_class_name($this);
+        $this->container->setActionForm($action_form);
         $command_class = sprintf("%s_Command_%s", ucfirst(strtolower($this->appid)), ucfirst($action_name));
         require_once $this->directory['command'] . '/' . ucfirst($action_name) . '.php';
         $ac = new $command_class($this);
@@ -533,7 +663,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
 
         Ethna::setErrorCallback(array($this, 'handleError'));
 
-        $this->container = new Ethna_Container(BASE, $this->directory);
+        $this->container = new Ethna_Container(BASE, $this->directory, $this->class, $this->appid);
         $this->directory = $this->container->getDirectories();
 
         $config = $this->getConfig();
@@ -565,10 +695,11 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
 
         // アクションフォーム初期化
         // フォーム定義、フォーム値設定
-        $this->action_form = $actionResolver->newActionForm($action_name, $this);
+        $action_form = $actionResolver->newActionForm($action_name, $this);
+        $this->container->setActionForm($action_form);
 
         $viewResolver = new Ethna_ViewResolver($this, $this->logger, $this->getViewdir(), $this->getAppId(), $this->class['view']);
-        $callable = $actionResolver->getController($request, $action_name, $this, $this->action_form, $viewResolver);
+        $callable = $actionResolver->getController($request, $action_name, $this->container, $action_form, $viewResolver);
         $arguments = [$request];
         $response = call_user_func_array($callable, $arguments);
         return $response;
@@ -649,43 +780,9 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
         return $this->renderer;
     }
 
-    /**
-     *  typeに対応するアプリケーションマネージャオブジェクトを返す
-     *  注意： typeは大文字小文字を区別しない
-     *         (PHP自体が、クラス名の大文字小文字を区別しないため)
-     *
-     *  マネジャークラスをincludeすることはしないので、
-     *  アプリケーション側でオートロードする必要がある。
-     *
-     *  @access public
-     *  @param  string  $type   アプリケーションマネージャー名
-     *  @return object  Ethna_AppManager    マネージャオブジェクト
-     */
-    public function getManager($type)
+    public function getManager($key)
     {
-        //   アプリケーションIDと、渡された名前のはじめを大文字にして、
-        //   組み合わせたものが返される
-        $manager_id = preg_replace_callback('/_(.)/', function(array $matches){return strtoupper($matches[1]);}, ucfirst($type));
-        $class_name = sprintf('%s_%sManager', $this->getAppId(), ucfirst($manager_id));
-
-        //  PHPのクラス名は大文字小文字を区別しないので、
-        //  同じクラス名と見做されるものを指定した場合には
-        //  同じインスタンスが返るようにする
-        $type = strtolower($type);
-
-        //  キャッシュがあればそれを利用
-        if (isset($this->manager[$type]) && is_object($this->manager[$type])) {
-            return $this->manager[$type];
-        }
-
-        $obj = new $class_name($this,$this->getConfig(), $this->getI18N(), $this->getSession(), $this->getActionForm());
-
-        //  生成したオブジェクトはキャッシュする
-        if (isset($this->manager[$type]) == false || is_object($this->manager[$type]) == false) {
-            $this->manager[$type] = $obj;
-        }
-
-        return $obj;
+        return $this->container->getManager($key);
     }
 
     /**
