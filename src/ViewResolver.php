@@ -1,4 +1,6 @@
 <?php
+
+use Ethna_ContainerInterface as ContainerInterface;
 /**
  * ViewResolver
  */
@@ -10,7 +12,7 @@ class Ethna_ViewResolver
     private $appId;
     private $baseViewClassName;
 
-    public function __construct($controller, $logger, $viewDir, $appId, $baseViewClassName)
+    public function __construct(ContainerInterface $controller, $logger, $viewDir, $appId, $baseViewClassName)
     {
         $this->controller = $controller;
         $this->logger = $logger;
