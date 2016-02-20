@@ -500,7 +500,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
 
         $config = $this->getConfig();
         $this->url = $config->get('url');
-        if (empty($this->url) && PHP_SAPI != 'cli') {
+        if (empty($this->url)) {
             $this->url = Ethna_Util::getUrlFromRequestUri();
             $config->set('url', $this->url);
         }
