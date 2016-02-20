@@ -8,7 +8,7 @@
  *  @package    Ethna
  *  @version    $Id$
  */
-
+use Ethna_ContainerInterface as ContainerInterface;
 // {{{ Ethna_ViewClass
 /**
  *  viewクラス
@@ -75,7 +75,7 @@ class Ethna_ViewClass
      *  @param  string  $forward_name   ビューに関連付けられている遷移名
      *  @param  string  $forward_path   ビューに関連付けられているテンプレートファイル名
      */
-    public function __construct(Ethna_Kernel $controller, Ethna_ActionForm $action_form, $forward_name, $forward_path)
+    public function __construct(ContainerInterface $controller, Ethna_ActionForm $action_form, $forward_name, $forward_path)
     {
         $this->controller = $this->controller = $controller;
         $this->controller->view = $this;

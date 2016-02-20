@@ -51,10 +51,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
 
     protected $encoding = 'UTF-8';
 
-    /** FIXME: UnitTestCase から動的に変更されるため、public */
-    /** @protected    string  現在実行中のアクション名 */
-    public $action_name;
-
     /** @protected    array   アプリケーションマネージャ定義 */
     protected $manager = array();
 
@@ -63,9 +59,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
 
     /** @protected    object  Ethna_ActionForm    フォームオブジェクト */
     protected $action_form = null;
-
-    /** @protected    object  Ethna_View          ビューオブジェクト */
-    public $view = null;
 
     /** @protected    object  Ethna_Logger        ログオブジェクト */
     protected $logger = null;
@@ -317,7 +310,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
      */
     public function getCurrentActionName()
     {
-        return $this->action_name;
+        return $this->container->getCurrentActionName();
     }
 
     /**
@@ -382,7 +375,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
         $this->plugin->setLogger($this->logger);
         $this->logger->begin();
 
-        $this->action_name = $action_name;
+        $this->container->setCurrentActionName($action_name);
 
         $i18n = $this->container->getI18N();
         $i18n->setLanguage($this->locale);
@@ -436,7 +429,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
         $this->actionResolver = $actionResolver = new $actionResolverClass($this->getAppId(), $this->logger, $default_form_class, $actionDir);
         // アクション名の取得
         $action_name = $actionResolver->resolveActionName($request, $default_action_name);
-        $this->action_name = $action_name;
+        $this->container->setCurrentActionName($action_name);
 
         $this->getSession()->restore();
 

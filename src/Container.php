@@ -33,6 +33,10 @@ class Ethna_Container implements ContainerInterface
 
     protected $action_form;
 
+    protected $currentActionName;
+
+    public $view;
+
     /**
      * Ethna_Container constructor.
      * @param $directory (absolute)
@@ -252,6 +256,26 @@ class Ethna_Container implements ContainerInterface
 
         return $obj;
     }
+
+    /**
+     *  実行中のアクション名を返す
+     *
+     *  @access public
+     *  @return string  実行中のアクション名
+     */
+    public function getCurrentActionName()
+    {
+        return $this->currentActionName;
+    }
+
+    /**
+     * @param mixed $currentActionName
+     */
+    public function setCurrentActionName($currentActionName)
+    {
+        $this->currentActionName = $currentActionName;
+    }
+
 
 
 }
