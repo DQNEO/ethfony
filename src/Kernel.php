@@ -213,6 +213,25 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
     }
 
     /**
+     * ディレクトリ設定を絶対パスに変換
+     */
+    private function resolveDirectory()
+    {
+        // ディレクトリ名の設定(相対パス->絶対パス)
+        foreach ($this->directory as $key => $value) {
+            if ($key == 'plugins') {
+                // Smartyプラグインディレクトリは配列で指定する
+                $tmp = array();
+                foreach (to_array($value) as $elt) {
+                    $tmp[] = $this->base . '/' . $elt;
+                }
+                $this->directory[$key] = $tmp;
+            } else {
+                $this->directory[$key] = $this->base . '/' . $value;
+            }
+        }
+    }
+    /**
      *  アプリケーションディレクトリ設定を返す
      *
      *  @access public
@@ -435,19 +454,8 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
 
         Ethna::setErrorCallback(array($this, 'handleError'));
 
-        // ディレクトリ名の設定(相対パス->絶対パス)
-        foreach ($this->directory as $key => $value) {
-            if ($key == 'plugins') {
-                // Smartyプラグインディレクトリは配列で指定する
-                $tmp = array();
-                foreach (to_array($value) as $elt) {
-                    $tmp[] = $this->base . '/' . $elt;
-                }
-                $this->directory[$key] = $tmp;
-            } else {
-                $this->directory[$key] = $this->base . '/' . $value;
-            }
-        }
+        $this->resolveDirectory();
+
         $config = $this->getConfig();
         $this->url = $config->get('url');
 
@@ -488,19 +496,8 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
 
         Ethna::setErrorCallback(array($this, 'handleError'));
 
-        // ディレクトリ名の設定(相対パス->絶対パス)
-        foreach ($this->directory as $key => $value) {
-            if ($key == 'plugins') {
-                // Smartyプラグインディレクトリは配列で指定する
-                $tmp = array();
-                foreach (to_array($value) as $elt) {
-                    $tmp[] = $this->base . '/' . $elt;
-                }
-                $this->directory[$key] = $tmp;
-            } else {
-                $this->directory[$key] = $this->base . '/' . $value;
-            }
-        }
+        $this->resolveDirectory();
+
         $config = $this->getConfig();
         $this->url = $config->get('url');
         if (empty($this->url) && PHP_SAPI != 'cli') {
