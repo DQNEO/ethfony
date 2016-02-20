@@ -27,8 +27,8 @@ class Ethna_CacheManager
      */
     public static function getInstance($type)
     {
-        $controller = Ethna_Kernel::getInstance();
-        $plugin = $controller->getPlugin();
+        $container = Ethna_Container::getInstance();
+        $plugin = $container->getPlugin();
 
         $cache_manager = $plugin->getPlugin('Cachemanager', ucfirst($type));
 

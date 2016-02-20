@@ -622,7 +622,8 @@ class Ethna_ActionForm
             return null;
         }
 
-        $c = Ethna_Kernel::getInstance();
+        //ここは意味不明
+        $c = Ethna_Container::getInstance();
         $this->controller = $c;
 
         return to_array($this->get($name));
