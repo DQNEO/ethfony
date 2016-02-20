@@ -8,6 +8,7 @@
  *  @package    Ethna
  *  @version    $Id$
  */
+use Ethna_ContainerInterface as ContainerInterface;
 
 // {{{ Ethna_Logger
 /**
@@ -95,7 +96,7 @@ class Ethna_Logger
      *  @access public
      *  @param  object  Ethna_Kernel    $controller controllerオブジェクト
      */
-    public function __construct($controller)
+    public function __construct(ContainerInterface $controller)
     {
         $this->controller = $controller;
         $this->controller = $this->controller;
