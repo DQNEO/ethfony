@@ -61,8 +61,7 @@ class Ethna_Renderer
         $this->prop = array();
         $this->plugin_registry = array();
 
-        $template_dir = $controller->getTemplatedir();
-        $this->template_dir = $template_dir;
+        $this->template_dir = $controller->getTemplatedir();
 
         $this->logger = $this->controller->getLogger();
     }
