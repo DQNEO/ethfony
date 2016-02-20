@@ -39,6 +39,14 @@ class Ethna_Container implements ContainerInterface
 
     public $view;
 
+    /** @var  Ethna_Container */
+    private static $instance;
+
+    public static function getInstance(): Ethna_ContainerInterface
+    {
+        return static::$instance;
+    }
+
     /**
      * Ethna_Container constructor.
      * @param $directory (absolute)
@@ -68,6 +76,7 @@ class Ethna_Container implements ContainerInterface
         }
 
         $this->directory = $directory;
+        static::$instance = $this;
     }
 
     public function getDirectories(): array
