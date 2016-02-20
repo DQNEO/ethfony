@@ -54,8 +54,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
     /** @protected    array   アプリケーションマネージャ定義 */
     protected $manager = array();
 
-    /** @protected    object  レンダラー */
-    protected $renderer = null;
 
     /** @protected    object  Ethna_ActionForm    フォームオブジェクト */
     protected $action_form = null;
@@ -160,29 +158,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
     }
 
     /**
-     *  クライアントタイプ/言語からテンプレートディレクトリ名を決定する
-     *  デフォルトでは [appid]/template/ja_JP/ (ja_JPはロケール名)
-     *  ロケール名は _getDefaultLanguage で決定される。
-     *
-     *  @access public
-     *  @return string  テンプレートディレクトリ
-     *  @see    Ethna_Kernel#_getDefaultLanguage
-     */
-    public function getTemplatedir()
-    {
-        $template = $this->getDirectory('template');
-
-        // 言語別ディレクトリ
-        // _getDerfaultLanguageメソッドでロケールが指定されていた場合は、
-        // テンプレートディレクトリにも自動的にそれを付加する。
-        if (!empty($this->locale)) {
-            $template .= '/' . $this->locale;
-        }
-
-        return $template;
-    }
-
-    /**
      *  ビューディレクトリ名を決定する
      *
      *  @access public
@@ -254,7 +229,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
     public function getView()
     {
         // 明示的にクラスファクトリを利用していない
-        return $this->view;
+        return $this->container->view;
     }
 
     public function getConfig(): Ethna_Config
@@ -364,7 +339,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
 
         Ethna::setErrorCallback(array($this, 'handleError'));
 
-        $this->container = new Ethna_Container(BASE, $this->directory, $this->class, $this->appid);
+        $this->container = new Ethna_Container(BASE, $this->directory, $this->class, $this->appid, $this->locale);
         $this->directory = $this->container->getDirectories();
         $config = $this->container->getConfig();
         $this->url = $config->get('url');
@@ -406,7 +381,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
 
         Ethna::setErrorCallback(array($this, 'handleError'));
 
-        $this->container = new Ethna_Container(BASE, $this->directory, $this->class, $this->appid);
+        $this->container = new Ethna_Container(BASE, $this->directory, $this->class, $this->appid, $this->locale);
         $this->directory = $this->container->getDirectories();
 
         $config = $this->getConfig();
@@ -505,23 +480,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
         return $s;
     }
 
-
-    /**
-     *  レンダラを取得する
-     *
-     *  @access public
-     *  @return object  Ethna_Renderer  レンダラオブジェクト
-     */
-    public function getRenderer()
-    {
-        if ($this->renderer instanceof Ethna_Renderer) {
-            return $this->renderer;
-        }
-
-        $class_name = $this->class['renderer'];
-        $this->renderer = new $class_name($this->getTemplatedir(), $this->container->getDirectories());
-        return $this->renderer;
-    }
 
     public function getManager($key)
     {

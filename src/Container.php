@@ -5,6 +5,8 @@ use Ethna_ContainerInterface as ContainerInterface;
  */
 class Ethna_Container implements ContainerInterface
 {
+    protected $locale;
+
     /**
      * @var array
      */
@@ -41,11 +43,12 @@ class Ethna_Container implements ContainerInterface
      * Ethna_Container constructor.
      * @param $directory (absolute)
      */
-    public function __construct(string $base, array $directory, array $class, string $appid)
+    public function __construct(string $base, array $directory, array $class, string $appid, $locale)
     {
         $this->base = $base;
         $this->class = $class;
         $this->appid = $appid;
+        $this->locale = $locale;
 
         /**
          * ディレクトリ設定を絶対パスに変換
@@ -256,6 +259,44 @@ class Ethna_Container implements ContainerInterface
 
         return $obj;
     }
+
+    /** @protected    object  レンダラー */
+    protected $renderer;
+
+    /**
+     *  レンダラを取得する
+     *
+     *  @access public
+     *  @return object  Ethna_Renderer  レンダラオブジェクト
+     */
+    public function getRenderer()
+    {
+        if ($this->renderer instanceof Ethna_Renderer) {
+            return $this->renderer;
+        }
+
+        $class_name = $this->class['renderer'];
+        $this->renderer = new $class_name($this->getTemplatedir($this->locale), $this->getDirectories());
+        return $this->renderer;
+    }
+
+    /**
+     *  クライアントタイプ/言語からテンプレートディレクトリ名を決定する
+     *  デフォルトでは [appid]/template/ja_JP/ (ja_JPはロケール名)
+     *  ロケール名は _getDefaultLanguage で決定される。
+     *
+     *  @access public
+     *  @return string  テンプレートディレクトリ
+     *  @see    Ethna_Kernel#_getDefaultLanguage
+     */
+    public function getTemplatedir(string $locale)
+    {
+        $template = $this->getDirectory('template');
+
+        // 言語別ディレクトリ
+        return  $template . '/' . $locale;
+    }
+
 
     /**
      *  実行中のアクション名を返す
