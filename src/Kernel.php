@@ -88,12 +88,12 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
      */
     public static function main(string $class_name, string $default_action_name = "")
     {
-        /** @var Ethna_Kernel $c */
-        $c = new $class_name($default_action_name);
+        /** @var Ethna_Kernel $kernel */
+        $kernel = new $class_name($default_action_name);
         $request = Request::createFromGlobals();
-        $response = $c->handle($request);
+        $response = $kernel->handle($request);
         $response->send();
-        $c->terminate($request, $response);
+        $kernel->terminate($request, $response);
 
     }
 
