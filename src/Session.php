@@ -53,9 +53,8 @@ class Ethna_Session
      *  Ethna_Sessionクラスのコンストラクタ
      *
      *  @access public
-     *  @param  string  $appid      アプリケーションID(セッション名として使用)
      */
-    public function __construct($controller, $appid)
+    public function __construct($controller)
     {
         $this->logger = $controller->getLogger();
 
@@ -68,7 +67,7 @@ class Ethna_Session
         if (($dir = $controller->getDirectory($this->config['path'])) !== null) {
             $this->session_save_dir = $dir;
         }
-        $this->session_name = $appid . $this->config['suffix'];
+        $this->session_name = $controller->getAppId() . $this->config['suffix'];
 
         // set session handler
         ini_set('session.save_handler', $this->config['handler']);
