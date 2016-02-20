@@ -56,7 +56,6 @@ class Ethna_Renderer
     public function __construct($controller)
     {
         $this->controller = $controller;
-        $this->controller = $this->controller;
         $this->engine = null;
         $this->template = null;
         $this->prop = array();
