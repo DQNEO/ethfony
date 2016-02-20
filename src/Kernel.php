@@ -100,56 +100,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
 
 
     /**
-     *  フレームワークの処理を実行する(CLI)
-     *
-     *  @access private
-     *  @param  mixed   $default_action_name    指定のアクション名
-     */
-    public function console($action_name)
-    {
-        $GLOBALS['_Ethna_controller'] = $this;
-        $this->base = BASE;
-
-        Ethna::setErrorCallback(array($this, 'handleError'));
-
-        // ディレクトリ名の設定(相対パス->絶対パス)
-        foreach ($this->directory as $key => $value) {
-            if ($key == 'plugins') {
-                // Smartyプラグインディレクトリは配列で指定する
-                $tmp = array();
-                foreach (to_array($value) as $elt) {
-                    $tmp[] = $this->base . '/' . $elt;
-                }
-                $this->directory[$key] = $tmp;
-            } else {
-                $this->directory[$key] = $this->base . '/' . $value;
-            }
-        }
-        $config = $this->getConfig();
-        $this->url = $config->get('url');
-
-        $this->plugin = $this->getPlugin();
-
-        $this->logger = $this->getLogger();
-        $this->plugin->setLogger($this->logger);
-        $this->logger->begin();
-
-        $this->action_name = $action_name;
-
-        $i18n = $this->getI18N();
-        $i18n->setLanguage($this->locale);
-
-        $form_class_name = $this->class['form'];
-        $this->action_form = new $form_class_name($this);
-
-        $command_class = sprintf("%s_Command_%s", ucfirst(strtolower($this->appid)), ucfirst($action_name));
-        require_once $this->directory['command'] . '/' . ucfirst($action_name) . '.php';
-        $ac = new $command_class($this);
-
-        $ac->runcli();
-    }
-
-    /**
      *  Ethna_Kernelクラスのコンストラクタ
      *
      *  @access     public
@@ -472,6 +422,55 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
         return $this->encoding;
     }
 
+    /**
+     *  フレームワークの処理を実行する(CLI)
+     *
+     *  @access private
+     *  @param  mixed   $default_action_name    指定のアクション名
+     */
+    public function console($action_name)
+    {
+        $GLOBALS['_Ethna_controller'] = $this;
+        $this->base = BASE;
+
+        Ethna::setErrorCallback(array($this, 'handleError'));
+
+        // ディレクトリ名の設定(相対パス->絶対パス)
+        foreach ($this->directory as $key => $value) {
+            if ($key == 'plugins') {
+                // Smartyプラグインディレクトリは配列で指定する
+                $tmp = array();
+                foreach (to_array($value) as $elt) {
+                    $tmp[] = $this->base . '/' . $elt;
+                }
+                $this->directory[$key] = $tmp;
+            } else {
+                $this->directory[$key] = $this->base . '/' . $value;
+            }
+        }
+        $config = $this->getConfig();
+        $this->url = $config->get('url');
+
+        $this->plugin = $this->getPlugin();
+
+        $this->logger = $this->getLogger();
+        $this->plugin->setLogger($this->logger);
+        $this->logger->begin();
+
+        $this->action_name = $action_name;
+
+        $i18n = $this->getI18N();
+        $i18n->setLanguage($this->locale);
+
+        $form_class_name = $this->class['form'];
+        $this->action_form = new $form_class_name($this);
+
+        $command_class = sprintf("%s_Command_%s", ucfirst(strtolower($this->appid)), ucfirst($action_name));
+        require_once $this->directory['command'] . '/' . ucfirst($action_name) . '.php';
+        $ac = new $command_class($this);
+
+        $ac->runcli();
+    }
 
     /**
      *  フレームワークの処理を実行する(WWW)
