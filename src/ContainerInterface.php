@@ -17,4 +17,8 @@ interface Ethna_ContainerInterface
 
     public function getLogger(): Ethna_Logger;
 
+    public function getAppId(): string;
+
+    public function getDirectory(string $key);
+
 }

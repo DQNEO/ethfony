@@ -8,7 +8,7 @@
  *  @package    Ethna
  *  @version    $Id$
  */
-
+use Ethna_ContainerInterface as ContainerInterface;
 // {{{ Ethna_Session
 /**
  *  セッションクラス
@@ -54,7 +54,7 @@ class Ethna_Session
      *
      *  @access public
      */
-    public function __construct($controller)
+    public function __construct(ContainerInterface $controller)
     {
         $this->logger = $controller->getLogger();
 

@@ -190,7 +190,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
      *  @access public
      *  @return string  アプリケーションID
      */
-    public function getAppId()
+    public function getAppId(): string
     {
         return ucfirst(strtolower($this->appid));
     }
@@ -269,7 +269,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
      *  @param  string  $key    ディレクトリタイプ("tmp", "template"...)
      *  @return string  $keyに対応したアプリケーションディレクトリ(設定が無い場合はnull)
      */
-    public function getDirectory($key)
+    public function getDirectory(string $key)
     {
         if (isset($this->directory[$key]) == false) {
             return null;
