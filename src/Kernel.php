@@ -388,7 +388,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
         $i18n->setLanguage($this->locale);
 
         $form_class_name = $this->class['form'];
-        $action_form = new $form_class_name($this);
+        $action_form = new $form_class_name($this->container);
         $this->container->setActionForm($action_form);
         $command_class = sprintf("%s_Command_%s", ucfirst(strtolower($this->appid)), ucfirst($action_name));
         require_once $this->container->getDirectory('command') . '/' . ucfirst($action_name) . '.php';
@@ -445,7 +445,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
 
         // アクションフォーム初期化
         // フォーム定義、フォーム値設定
-        $action_form = $actionResolver->newActionForm($action_name, $this);
+        $action_form = $actionResolver->newActionForm($action_name, $this->container);
         $this->container->setActionForm($action_form);
 
         $viewResolver = new Ethna_ViewResolver($this, $this->logger, $this->getViewdir(), $this->getAppId(), $this->class['view']);
