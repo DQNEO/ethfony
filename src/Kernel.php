@@ -14,6 +14,67 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
 use Ethna_ContainerInterface as ContainerInterface;
 
+class Ethna_Container
+{
+    /**
+     * @var array
+     */
+    protected $directory;
+
+    /**
+     * @var string
+     */
+    private $base;
+
+    /**
+     * Ethna_Container constructor.
+     * @param $directory (absolute)
+     */
+    public function __construct(string $base, array $directory)
+    {
+        $this->base = $base;
+
+        /**
+         * ディレクトリ設定を絶対パスに変換
+         */
+        // ディレクトリ名の設定(相対パス->絶対パス)
+        foreach ($directory as $key => $value) {
+            if ($key == 'plugins') {
+                // Smartyプラグインディレクトリは配列で指定する
+                $tmp = array();
+                foreach (to_array($value) as $elt) {
+                    $tmp[] = $this->base . '/' . $elt;
+                }
+                $directory[$key] = $tmp;
+            } else {
+                $directory[$key] = $this->base . '/' . $value;
+            }
+        }
+
+        $this->directory = $directory;
+    }
+
+    public function getDirectories(): array
+    {
+        return $this->directory;
+    }
+
+
+    /**
+     *  アプリケーションディレクトリ設定を返す
+     *
+     *  @access public
+     *  @param  string  $key    ディレクトリタイプ("tmp", "template"...)
+     *  @return string  $keyに対応したアプリケーションディレクトリ(設定が無い場合はnull)
+     */
+    public function getDirectory(string $key)
+    {
+        if (isset($this->directory[$key]) == false) {
+            return null;
+        }
+        return $this->directory[$key];
+    }
+}
 /**
  *  コントローラクラス
  *
@@ -78,6 +139,9 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
     protected $plugin = null;
 
     protected $actionResolver;
+
+    /** @var  Ethna_Container */
+    protected $container;
 
     /**
      *  アプリケーションのエントリポイント
@@ -213,37 +277,10 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
     }
 
     /**
-     * ディレクトリ設定を絶対パスに変換
-     */
-    private function resolveDirectory()
-    {
-        // ディレクトリ名の設定(相対パス->絶対パス)
-        foreach ($this->directory as $key => $value) {
-            if ($key == 'plugins') {
-                // Smartyプラグインディレクトリは配列で指定する
-                $tmp = array();
-                foreach (to_array($value) as $elt) {
-                    $tmp[] = $this->base . '/' . $elt;
-                }
-                $this->directory[$key] = $tmp;
-            } else {
-                $this->directory[$key] = $this->base . '/' . $value;
-            }
-        }
-    }
-    /**
-     *  アプリケーションディレクトリ設定を返す
-     *
-     *  @access public
-     *  @param  string  $key    ディレクトリタイプ("tmp", "template"...)
-     *  @return string  $keyに対応したアプリケーションディレクトリ(設定が無い場合はnull)
      */
     public function getDirectory(string $key)
     {
-        if (isset($this->directory[$key]) == false) {
-            return null;
-        }
-        return $this->directory[$key];
+        return $this->container->getDirectory($key);
     }
 
     /**
@@ -454,8 +491,8 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
 
         Ethna::setErrorCallback(array($this, 'handleError'));
 
-        $this->resolveDirectory();
-
+        $this->container = new Ethna_Container(BASE, $this->directory);
+        $this->directory = $this->container->getDirectories();
         $config = $this->getConfig();
         $this->url = $config->get('url');
 
@@ -496,7 +533,8 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
 
         Ethna::setErrorCallback(array($this, 'handleError'));
 
-        $this->resolveDirectory();
+        $this->container = new Ethna_Container(BASE, $this->directory);
+        $this->directory = $this->container->getDirectories();
 
         $config = $this->getConfig();
         $this->url = $config->get('url');
@@ -607,7 +645,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
         }
 
         $class_name = $this->class['renderer'];
-        $this->renderer = new $class_name($this->getTemplatedir(), $this->directory);
+        $this->renderer = new $class_name($this->getTemplatedir(), $this->container->getDirectories());
         return $this->renderer;
     }
 
