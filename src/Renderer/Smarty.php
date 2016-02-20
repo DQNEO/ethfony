@@ -39,10 +39,8 @@ class Ethna_Renderer_Smarty extends Ethna_Renderer
         $this->engine = new Smarty;
 
         // ディレクトリ関連は Controllerによって実行時に設定
-        $template_dir = $controller->getTemplatedir();
         $compile_dir = $controller->getDirectory('template_c');
 
-        $this->setTemplateDir($template_dir);
         $this->compile_dir = $compile_dir;
         $this->engine->template_dir = $this->template_dir;
         $this->engine->compile_dir = $this->compile_dir;
