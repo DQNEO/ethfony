@@ -44,10 +44,6 @@ class Ethna_Renderer
     /** @protected    string  レンダラプラグイン(Ethna_Pluginとは関係なし) */
     protected $plugin_registry;
 
-    /** @protected    object  Ethna_Logger    ログオブジェクト */
-    protected $logger;
-
-
     /**
      *  Ethna_Rendererクラスのコンストラクタ
      *
@@ -64,7 +60,6 @@ class Ethna_Renderer
         $template_dir = $controller->getTemplatedir();
         $this->setTemplateDir($template_dir);
 
-        $this->logger = $this->controller->getLogger();
     }
 
     /**
