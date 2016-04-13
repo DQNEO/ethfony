@@ -73,8 +73,8 @@ define('OBJECT_IMPORT_CONVERT_NULL', 2);
  */
 function _et($message)
 {
-    $controller = Ethna_Container::getInstance();
-    $i18n = $controller->getI18N();
+    $container = Ethna_Container::getInstance();
+    $i18n = $container->getI18N();
     return $i18n->get($message);
 }
 // }}}
