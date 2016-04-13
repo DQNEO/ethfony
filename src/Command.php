@@ -7,8 +7,8 @@ use Ethna_ContainerInterface as ContainerInterface;
  */
 abstract class Ethna_Command
 {
-    /** @protected    object  Ethna_Controller        */
-    protected $controller;
+    /** @protected    object  Ethna_Container       */
+    protected $container;
 
     /** @protected    object  Ethna_Config        設定オブジェクト    */
     protected $config;
@@ -27,13 +27,13 @@ abstract class Ethna_Command
     /**
      *
      */
-    public function __construct(ContainerInterface $controller)
+    public function __construct(ContainerInterface $container)
     {
-        $this->controller = $controller;
-        $this->config = $controller->getConfig();
-        $this->i18n = $controller->getI18N();
-        $this->plugin = $controller->getPlugin();
-        $this->logger = $controller->getLogger();
+        $this->container = $container;
+        $this->config = $container->getConfig();
+        $this->i18n = $container->getI18N();
+        $this->plugin = $container->getPlugin();
+        $this->logger = $container->getLogger();
     }
 
     /**
