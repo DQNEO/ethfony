@@ -85,7 +85,7 @@ class Ethna_Error
         // メッセージ補正処理 ($message)
         if (is_null($message)) {
             // $codeからメッセージを取得する
-            $message = $controller->getErrorMessage($code);
+            $message = $this->getErrorMessage($code);
             if (is_null($message)) {
                 $message = 'unknown error';
             }
@@ -101,6 +101,27 @@ class Ethna_Error
         //  Ethnaフレームワークのエラーハンドラ(callback)
         Ethna::handleError($this);
     }
+
+    /**
+     *  エラーメッセージを取得する
+     *
+     *  @access public
+     *  @param  int     $code       エラーコード
+     *  @return string  エラーメッセージ
+     */
+    private function getErrorMessage($code)
+    {
+        $message_list = $GLOBALS['_Ethna_error_message_list'];
+        for ($i = count($message_list)-1; $i >= 0; $i--) {
+            if (array_key_exists($code, $message_list[$i])) {
+                return $message_list[$i][$code];
+            }
+        }
+        return null;
+    }
+
+
+
 
 
     /**
