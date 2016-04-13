@@ -54,7 +54,7 @@ class Ethna_Session
      *
      *  @access public
      */
-    public function __construct(ContainerInterface $controller)
+    public function __construct(ContainerInterface $controller, string $sessionName)
     {
         $this->logger = $controller->getLogger();
 
@@ -67,7 +67,7 @@ class Ethna_Session
         if (($dir = $controller->getDirectory($this->config['path'])) !== null) {
             $this->session_save_dir = $dir;
         }
-        $this->session_name = $controller->getAppId() . $this->config['suffix'];
+        $this->session_name = $sessionName;
 
         // set session handler
         ini_set('session.save_handler', $this->config['handler']);
