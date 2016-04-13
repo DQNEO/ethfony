@@ -148,7 +148,7 @@ class Ethna_I18N
         //    このメソッドを呼び出すと、ロケール名が空になる
         //    その場合は Ethna_Kernel の設定を補う
         if (empty($this->locale)) {
-            list($this->locale, $cli_enc) = [$this->controller->getLocale(), $this->controller->getEncoding()];
+            list($this->locale) = [$this->controller->getLocale()];
         }
 
         //    ロケールディレクトリが存在しない場合は、E_NOTICEを出し、
