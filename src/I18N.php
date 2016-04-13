@@ -22,9 +22,6 @@ class Ethna_I18N
      *  @access private
      */
 
-    /** @protected    Ethna_Kernel  コントローラーオブジェクト  */
-    protected $controller;
-
     /** @protected    string  ロケール */
     protected $locale;
 
@@ -57,9 +54,9 @@ class Ethna_I18N
         $this->locale_dir = $locale_dir;
         $this->appid = $appid;
 
-        $this->controller = Ethna_Kernel::getInstance();
-        $this->encoding = $this->controller->getEncoding();
-        $this->logger = $this->controller->getLogger();
+        $kernel = Ethna_Kernel::getInstance();
+        $this->encoding = $kernel->getEncoding();
+        $this->logger = $kernel->getLogger();
 
         $this->messages = false;  //  not initialized yet.
     }
@@ -148,7 +145,7 @@ class Ethna_I18N
         //    このメソッドを呼び出すと、ロケール名が空になる
         //    その場合は Ethna_Kernel の設定を補う
         if (empty($this->locale)) {
-            $this->locale = $this->controller->getLocale();
+            $this->locale = Ethna_Kernel::getInstance()->getLocale();
         }
 
         //    ロケールディレクトリが存在しない場合は、E_NOTICEを出し、
