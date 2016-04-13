@@ -54,17 +54,17 @@ class Ethna_Session
      *
      *  @access public
      */
-    public function __construct(ContainerInterface $controller, string $sessionName)
+    public function __construct(ContainerInterface $container, string $sessionName)
     {
-        $this->logger = $controller->getLogger();
+        $this->logger = $container->getLogger();
 
-        $config = $controller->getConfig()->get('session');
+        $config = $container->getConfig()->get('session');
         if ($config) {
             $this->config = array_merge($this->config, $config);
         }
 
         $this->session_save_dir = $this->config['path'];
-        if (($dir = $controller->getDirectory($this->config['path'])) !== null) {
+        if (($dir = $container->getDirectory($this->config['path'])) !== null) {
             $this->session_save_dir = $dir;
         }
         $this->session_name = $sessionName;
