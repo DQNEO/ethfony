@@ -277,25 +277,12 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
     }
 
     /**
-     *  ロケール設定、使用言語を取得する
-     *
-     *  @access public
-     *  @return array   ロケール名(e.x ja_JP, en_US 等),
-     *                  クライアントエンコーディング名 の配列
-     *                  (ロケール名は、ll_cc の形式。ll = 言語コード cc = 国コード)
-     *  @see http://www.gnu.org/software/gettext/manual/html_node/Locale-Names.html
-     */
-    public function getLanguage()
-    {
-        return array($this->locale, $this->encoding);
-    }
-
-    /**
      *  ロケール名へのアクセサ(R)
      *
      *  @access public
      *  @return string  ロケール名(e.x ja_JP, en_US 等),
      *                  (ロケール名は、ll_cc の形式。ll = 言語コード cc = 国コード)
+     *  @see http://www.gnu.org/software/gettext/manual/html_node/Locale-Names.html
      */
     public function getLocale()
     {
