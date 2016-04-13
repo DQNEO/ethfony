@@ -52,8 +52,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
     /** @protected    object  Ethna_Logger        ログオブジェクト */
     protected $logger = null;
 
-    protected $actionResolver;
-
     /** @var  Ethna_Container */
     protected $container;
 
@@ -390,7 +388,8 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
         $default_form_class = $this->class['form'];
         $actionResolverClass = $this->class['action_resolver'];
         /** @var Ethna_ActionResolver $actionResolver */
-        $this->actionResolver = $actionResolver = new $actionResolverClass($this->getAppId(), $this->logger, $default_form_class, $actionDir);
+        $actionResolver = new $actionResolverClass($this->getAppId(), $this->logger, $default_form_class, $actionDir);
+        $this->container->setActionResolver($actionResolver);
         // アクション名の取得
         $action_name = $actionResolver->resolveActionName($request, $default_action_name);
         $this->container->setCurrentActionName($action_name);
@@ -412,10 +411,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
         return $response;
     }
 
-    public function getActionFormName($action_name)
-    {
-        return $this->actionResolver->getActionFormName($action_name);
-    }
     /**
      *  エラーハンドラ
      *

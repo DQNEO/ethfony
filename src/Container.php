@@ -37,6 +37,9 @@ class Ethna_Container implements ContainerInterface
 
     protected $currentActionName;
 
+    /** @var  Ethna_ActionResolver */
+    protected $actionResolver;
+
     public $view;
 
     /** @var  Ethna_Container */
@@ -332,6 +335,22 @@ class Ethna_Container implements ContainerInterface
         $this->currentActionName = $currentActionName;
     }
 
+    /**
+     * @param string $action_name
+     * @return string form_name
+     */
+    public function getActionFormName(string $action_name)
+    {
+        return $this->actionResolver->getActionFormName($action_name);
+    }
+
+    /**
+     * @param Ethna_ActionResolver $actionResolver
+     */
+    public function setActionResolver($actionResolver)
+    {
+        $this->actionResolver = $actionResolver;
+    }
 
 
 }
