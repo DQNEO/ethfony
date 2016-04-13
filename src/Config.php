@@ -23,9 +23,6 @@ class Ethna_Config
      *  @access private
      */
 
-    /** @protected    object  Ethna_Kernel    controllerオブジェクト */
-    protected $controller;
-
     /** @FIXME @protected    array   設定内容 */
     public $config = null;
 
@@ -38,10 +35,9 @@ class Ethna_Config
      *  @access public
      *  @param  object  Ethna_Kernel    $controller    controllerオブジェクト
      */
-    public function __construct($controller)
+    public function __construct(string $dir)
     {
-        $this->controller = $controller;
-
+        $this->dir = $dir;
         $this->load();
     }
 
@@ -113,7 +109,7 @@ class Ethna_Config
      */
     protected function getConfigFilePath()
     {
-        return $this->controller->getDirectory('etc') . '/' . $this->filename;
+        return $this->dir . '/' . $this->filename;
     }
 }
 // }}}

@@ -12,6 +12,7 @@
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Ethna_ContainerInterface as ContainerInterface;
 
 // {{{ Ethna_ActionClass
 
@@ -69,7 +70,7 @@ class Ethna_ActionClass
      *  Ethna_ActionClassのコンストラクタ
      *
      */
-    public function __construct($controller, $action_form, $viewResolver)
+    public function __construct(ContainerInterface $controller, $action_form, $viewResolver)
     {
         $this->controller = $controller;
         $this->config = $controller->getConfig();

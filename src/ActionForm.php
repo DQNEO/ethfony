@@ -9,7 +9,7 @@
  *  @version    $Id$
  */
 use Symfony\Component\HttpFoundation\Request;
-
+use Ethna_ContainerInterface as ContainerInterface;
 // {{{ Ethna_ActionForm
 /**
  *  アクションフォームクラス
@@ -77,14 +77,13 @@ class Ethna_ActionForm
     /**
      *  Ethna_ActionFormクラスのコンストラクタ
      *
-     *  @access public
-     *  @param  object  Ethna_Kernel    $controller    controllerオブジェクト
      */
-    public function __construct($controller)
+    public function __construct(ContainerInterface $controller)
     {
         $this->controller = $controller;
         $this->action_error = $controller->getActionError();
         $this->ae = $this->action_error;
+        $this->action_error->action_form = $this;
         $this->i18n = $controller->getI18N();
         $this->logger = $controller->getLogger();
         $this->plugin = $controller->getPlugin();
@@ -623,7 +622,8 @@ class Ethna_ActionForm
             return null;
         }
 
-        $c = Ethna_Kernel::getInstance();
+        //ここは意味不明
+        $c = Ethna_Container::getInstance();
         $this->controller = $c;
 
         return to_array($this->get($name));
