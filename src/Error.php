@@ -61,9 +61,9 @@ class Ethna_Error
      */
     public function __construct($message = null, $code = null, $mode = null, $options = null)
     {
-        $controller = Ethna_Kernel::getInstance();
-        if ($controller !== null) {
-            $this->i18n = $controller->getI18N();
+        $container = Ethna_Container::getInstance();
+        if ($container !== null) {
+            $this->i18n = $container->getI18N();
         }
 
         // $options 以降の引数 -> $userinfo
