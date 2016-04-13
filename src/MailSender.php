@@ -93,7 +93,7 @@ class Ethna_MailSender
         if ($template === MAILSENDER_TYPE_DIRECT) {
             $mail = $macro;
         } else {
-            $renderer = $this->getRenderer();
+            $renderer = $this->container->getRenderer();
 
             // 基本情報設定
             $env_datetime = _et('%Y/%m/%d %H:%M:%S');
@@ -266,15 +266,5 @@ class Ethna_MailSender
         return array($header, $body);
     }
 
-    /**
-     *  メールフォーマット用レンダラオブジェクト取得する
-     *
-     *  @access public
-     *  @return object  Ethna_Renderer  レンダラオブジェクト
-     */
-    function getRenderer()
-    {
-        return $this->container->getRenderer();
-    }
 }
 // }}}
