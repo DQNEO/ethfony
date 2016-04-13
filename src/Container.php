@@ -42,6 +42,11 @@ class Ethna_Container implements ContainerInterface
     /** @var  Ethna_Container */
     private static $instance;
 
+    /**
+     * @var
+     */
+    protected $sessionName;
+
     public static function getInstance(): Ethna_ContainerInterface
     {
         return static::$instance;
@@ -51,12 +56,13 @@ class Ethna_Container implements ContainerInterface
      * Ethna_Container constructor.
      * @param $directory (absolute)
      */
-    public function __construct(string $base, array $directory, array $class, string $appid, $locale)
+    public function __construct(string $base, array $directory, array $class, string $appid, $locale, $sessionName)
     {
         $this->base = $base;
         $this->class = $class;
         $this->appid = $appid;
         $this->locale = $locale;
+        $this->sessionName = $sessionName;
 
         /**
          * ディレクトリ設定を絶対パスに変換
@@ -147,7 +153,7 @@ class Ethna_Container implements ContainerInterface
         static $obj = null;
         if ($obj === null) {
             $class_name = $this->class['session'];
-            $obj = new $class_name($this);
+            $obj = new $class_name($this, $this->sessionName);
         }
         return $obj;
     }

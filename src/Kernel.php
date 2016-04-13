@@ -57,6 +57,8 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
     /** @var  Ethna_Container */
     protected $container;
 
+    protected $sessionName = 'EthnaSESSID';
+
     /**
      *  アプリケーションのエントリポイント
      *
@@ -327,7 +329,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
 
         Ethna::setErrorCallback(array($this, 'handleError'));
 
-        $this->container = new Ethna_Container(BASE, $this->directory, $this->class, $this->appid, $this->locale);
+        $this->container = new Ethna_Container(BASE, $this->directory, $this->class, $this->appid, $this->locale, '');
         $this->directory = $this->container->getDirectories();
         $config = $this->container->getConfig();
         $this->url = $config->get('url');
@@ -368,7 +370,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
 
         Ethna::setErrorCallback(array($this, 'handleError'));
 
-        $this->container = new Ethna_Container(BASE, $this->directory, $this->class, $this->appid, $this->locale);
+        $this->container = new Ethna_Container(BASE, $this->directory, $this->class, $this->appid, $this->locale, $this->sessionName);
         $this->directory = $this->container->getDirectories();
 
         $config = $this->getConfig();
