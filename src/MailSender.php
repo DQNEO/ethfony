@@ -37,7 +37,8 @@ class Ethna_MailSender
     /** @var    string  送信オプション */
     var $option = '';
 
-    var $controller;
+    /** @var  Ethna_ContainerInterface */
+    protected $container;
 
     /** @var    object  Ethna_Config    設定オブジェクト */
     var $config;
@@ -47,13 +48,11 @@ class Ethna_MailSender
     /**
      *  Ethna_MailSenderクラスのコンストラクタ
      *
-     *  @access public
-     *  @param  object  Ethna_Controller
      */
-    public function __construct($controller)
+    public function __construct(Ethna_ContainerInterface $container)
     {
-        $this->controller = $controller;
-        $this->config = $controller->getConfig();
+        $this->container = $container;
+        $this->config = $container->getConfig();
     }
 
     /**
@@ -275,7 +274,7 @@ class Ethna_MailSender
      */
     function getRenderer()
     {
-        return $this->controller->getRenderer();
+        return $this->container->getRenderer();
     }
 }
 // }}}
