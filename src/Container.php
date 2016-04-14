@@ -40,6 +40,7 @@ class Ethna_Container implements ContainerInterface
     /** @var  Ethna_ActionResolver */
     protected $actionResolver;
 
+    /** @var  Ethna_ViewClass */
     public $view;
 
     /** @var  Ethna_Container */
@@ -361,6 +362,22 @@ class Ethna_Container implements ContainerInterface
     public function setActionResolver($actionResolver)
     {
         $this->actionResolver = $actionResolver;
+    }
+
+    /**
+     * @return Ethna_ViewClass
+     */
+    public function getView(): Ethna_ViewClass
+    {
+        return $this->view;
+    }
+
+    /**
+     * @param Ethna_ViewClass $view
+     */
+    public function setView(Ethna_ViewClass $view)
+    {
+        $this->view = $view;
     }
 
 

@@ -204,8 +204,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
      */
     public function getView()
     {
-        // 明示的にクラスファクトリを利用していない
-        return $this->container->view;
+        return $this->container->getView();
     }
 
     public function getConfig(): Ethna_Config
