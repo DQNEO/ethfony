@@ -34,7 +34,7 @@ class Ethna_ActionClass
      *  @access private
      */
 
-    protected $controller;
+    protected $container;
 
     /** @protected    object  Ethna_Config        設定オブジェクト    */
     protected $config;
@@ -70,21 +70,21 @@ class Ethna_ActionClass
      *  Ethna_ActionClassのコンストラクタ
      *
      */
-    public function __construct(ContainerInterface $controller, $action_form, $viewResolver)
+    public function __construct(ContainerInterface $container, $action_form, $viewResolver)
     {
-        $this->controller = $controller;
-        $this->config = $controller->getConfig();
-        $this->i18n = $controller->getI18N();
+        $this->container = $container;
+        $this->config = $container->getConfig();
+        $this->i18n = $container->getI18N();
 
-        $this->action_error = $controller->getActionError();
+        $this->action_error = $container->getActionError();
         $this->ae = $this->action_error;
 
         $this->action_form = $action_form;
         $this->af = $this->action_form;
 
-        $this->session = $controller->getSession();
-        $this->plugin = $controller->getPlugin();
-        $this->logger = $controller->getLogger();
+        $this->session = $container->getSession();
+        $this->plugin = $container->getPlugin();
+        $this->logger = $container->getLogger();
         $this->viewResolver = $viewResolver;
     }
 

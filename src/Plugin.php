@@ -9,7 +9,7 @@
  *  @package    Ethna
  *  @version    $Id$
  */
-
+use Ethna_ContainerInterface as ContainerInterface;
 // {{{ Ethna_Plugin
 /**
  *  プラグインクラス
@@ -28,8 +28,8 @@ class Ethna_Plugin
      *  @access private
      */
 
-    /** @protected    object  Ethna_Kernel    コントローラオブジェクト */
-    protected $controller;
+    /** @var Ethna_ContainerInterface */
+    protected $container;
 
     /** @protected    object  Ethna_Logger        ログオブジェクト */
     protected $logger;
@@ -46,16 +46,13 @@ class Ethna_Plugin
     /**
      *  Ethna_Pluginのコンストラクタ
      *
-     *  @access public
-     *  @param  object  Ethna_Kernel    $controller コントローラオブジェクト
      */
-    public function __construct($controller)
+    public function __construct(ContainerInterface $container)
     {
-        $this->controller = $controller;
-        $this->controller = $this->controller;
+        $this->container = $container;
         $this->logger = null;
 
-        $this->appid_list = array($controller->getAppId(), 'Ethna');
+        $this->appid_list = array($container->getAppId(), 'Ethna');
 
     }
 
@@ -183,7 +180,7 @@ class Ethna_Plugin
         }
 
         // プラグイン作成
-        $instance = new $plugin_class($this->controller, $type, $name);
+        $instance = new $plugin_class($this->container, $type, $name);
         if (is_object($instance) == false
             || strcasecmp(get_class($instance), $plugin_class) != 0) {
 
@@ -247,7 +244,7 @@ class Ethna_Plugin
      */
     public function getPluginNaming($type, $name, $appid = 'Ethna')
     {
-        $ext = $this->controller->getExt('php');
+        $ext = $this->container->getExt('php');
 
         $plugin_class_name = array(
             $appid,
@@ -258,7 +255,7 @@ class Ethna_Plugin
         if ($appid == 'Ethna') {
             $baseDir = ETHNA_BASE . "/src/Plugin";
         } else {
-            $baseDir = $this->controller->getDirectory('plugin');
+            $baseDir = $this->container->getDirectory('plugin');
         }
 
         if ($name !== null) {
@@ -448,8 +445,7 @@ class Ethna_Plugin
      */
     public static function import($type, $name = null)
     {
-        $controller = Ethna_Kernel::getInstance();
-        $plugin = $controller->getPlugin();
+        $plugin = Ethna_Container::getInstance()->getPlugin();
 
         $plugin->includePlugin($type, $name);
     }

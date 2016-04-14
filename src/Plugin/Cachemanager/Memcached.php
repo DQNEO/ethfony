@@ -38,12 +38,12 @@ class Ethna_Plugin_Cachemanager_Memcached extends Ethna_Plugin_Cachemanager
      *  constructor
      *
      */
-    public function __construct($controller)
+    public function __construct(Ethna_ContainerInterface $container)
     {
-        parent::__construct($controller);
+        parent::__construct($container);
 
         if ($this->opt['use_pconnect']) {
-            $this->m = new Memcached($controller->getAppId());
+            $this->m = new Memcached($container->getAppId());
         }
         else {
             $this->m = new Memcached();

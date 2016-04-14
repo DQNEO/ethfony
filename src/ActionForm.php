@@ -71,22 +71,22 @@ class Ethna_ActionForm
     /** @protected    int   フォーム配列で使用可能な深さの上限 */
     public $max_form_deps = 10;
 
-    /**#@-*/
-    protected $controller;
+    /** @var Ethna_Container */
+    protected $container;
 
     /**
      *  Ethna_ActionFormクラスのコンストラクタ
      *
      */
-    public function __construct(ContainerInterface $controller)
+    public function __construct(ContainerInterface $container)
     {
-        $this->controller = $controller;
-        $this->action_error = $controller->getActionError();
+        $this->container = $container;
+        $this->action_error = $container->getActionError();
         $this->ae = $this->action_error;
         $this->action_error->action_form = $this;
-        $this->i18n = $controller->getI18N();
-        $this->logger = $controller->getLogger();
-        $this->plugin = $controller->getPlugin();
+        $this->i18n = $container->getI18N();
+        $this->logger = $container->getLogger();
+        $this->plugin = $container->getPlugin();
 
         if (isset($_SERVER['REQUEST_METHOD']) == false) {
             return;
@@ -177,6 +177,7 @@ class Ethna_ActionForm
     {
         $http_vars = (new Ethna_RequestWrapper($reqeust))->getHttpVars();
         $_files = $reqeust->files->all();
+
         foreach ($this->form as $name => $def) {
             $type = is_array($def['type']) ? $def['type'][0] : $def['type'];
             if ($type == VAR_TYPE_FILE) {
@@ -624,7 +625,7 @@ class Ethna_ActionForm
 
         //ここは意味不明
         $c = Ethna_Container::getInstance();
-        $this->controller = $c;
+        $this->container = $c;
 
         return to_array($this->get($name));
     }
@@ -1089,7 +1090,7 @@ class Ethna_ActionForm
      *  ユーザが動的にフォーム定義を変更したい場合に
      *  このメソッドをオーバーライドします。
      *
-     *  $this->controller も初期化済みのため、DBやセッション
+     *  $this->container も初期化済みのため、DBやセッション
      *  の値に基づいてフォーム定義を変更することができます。
      *
      *  @access public 

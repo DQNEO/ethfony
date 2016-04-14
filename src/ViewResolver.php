@@ -6,15 +6,15 @@ use Ethna_ContainerInterface as ContainerInterface;
  */
 class Ethna_ViewResolver
 {
-    private $controller;
+    private $container;
     private $logger;
     private $viewDir;
     private $appId;
     private $baseViewClassName;
 
-    public function __construct(ContainerInterface $controller, $logger, $viewDir, $appId, $baseViewClassName)
+    public function __construct(ContainerInterface $container, $logger, $viewDir, $appId, $baseViewClassName)
     {
-        $this->controller = $controller;
+        $this->container = $container;
         $this->logger = $logger;
         $this->viewDir = $viewDir;
         $this->appId = $appId;
@@ -41,7 +41,7 @@ class Ethna_ViewResolver
 
         }
 
-        return new $class_name($this->controller, $af, $forward_name, $this->getTemplatePath($forward_name));
+        return new $class_name($this->container, $af, $forward_name, $this->getTemplatePath($forward_name));
     }
 
     /**

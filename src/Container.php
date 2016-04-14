@@ -37,7 +37,24 @@ class Ethna_Container implements ContainerInterface
 
     protected $currentActionName;
 
+    /** @var  Ethna_ActionResolver */
+    protected $actionResolver;
+
+    /** @var  Ethna_ViewClass */
     public $view;
+
+    public $url;
+
+    /**
+     *  アプリケーションベースURLを返す
+     *
+     *  @access public
+     *  @return string  アプリケーションベースURL
+     */
+    public function getURL()
+    {
+        return $this->url;
+    }
 
     /** @var  Ethna_Container */
     private static $instance;
@@ -83,6 +100,17 @@ class Ethna_Container implements ContainerInterface
 
         $this->directory = $directory;
         static::$instance = $this;
+    }
+
+    /**
+     *  アプリケーションベースディレクトリを返す
+     *
+     *  @access public
+     *  @return string  アプリケーションベースディレクトリ
+     */
+    public function getBasedir()
+    {
+        return $this->base;
     }
 
     public function getDirectories(): array
@@ -330,6 +358,60 @@ class Ethna_Container implements ContainerInterface
     public function setCurrentActionName($currentActionName)
     {
         $this->currentActionName = $currentActionName;
+    }
+
+    /**
+     * @param string $action_name
+     * @return string form_name
+     */
+    public function getActionFormName(string $action_name)
+    {
+        return $this->actionResolver->getActionFormName($action_name);
+    }
+
+    /**
+     * @param Ethna_ActionResolver $actionResolver
+     */
+    public function setActionResolver($actionResolver)
+    {
+        $this->actionResolver = $actionResolver;
+    }
+
+    /**
+     * @return Ethna_ViewClass
+     */
+    public function getView(): Ethna_ViewClass
+    {
+        return $this->view;
+    }
+
+    /**
+     * @param Ethna_ViewClass $view
+     */
+    public function setView(Ethna_ViewClass $view)
+    {
+        $this->view = $view;
+    }
+
+    /**
+     *  ビューディレクトリ名を決定する
+     *
+     *  @return string  ビューディレクトリ
+     */
+    public function getViewdir()
+    {
+        return $this->directory['view'] . "/";
+    }
+
+    /**
+     *  アプリケーションのテンポラリディレクトリを取得する
+     *
+     *  @access public
+     *  @return string  テンポラリディレクトリのパス名
+     */
+    public function getTmpdir()
+    {
+        return $this->getDirectory('tmp');
     }
 
 

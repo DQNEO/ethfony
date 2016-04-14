@@ -28,7 +28,6 @@ class Ethna_Util
      */
     public static function isDuplicatePost()
     {
-        $c = Ethna_Kernel::getInstance();
 
         // use raw post data
         if (isset($_POST['uniqid'])) {
@@ -42,8 +41,9 @@ class Ethna_Util
         // purge old files
         Ethna_Util::purgeTmp("uniqid_", 60*60*1);
 
+        $container = Ethna_Container::getInstance();
         $filename = sprintf("%s/uniqid_%s_%s",
-                            $c->getDirectory('tmp'),
+                            $container->getDirectory('tmp'),
                             $_SERVER['REMOTE_ADDR'],
                             $uniqid);
         if (file_exists($filename) == false) {
@@ -70,7 +70,7 @@ class Ethna_Util
      */
     public static function clearDuplicatePost()
     {
-        $c = Ethna_Kernel::getInstance();
+        $container = Ethna_Container::getInstance();
 
         // use raw post data
         if (isset($_POST['uniqid'])) {
@@ -80,7 +80,7 @@ class Ethna_Util
         }
 
         $filename = sprintf("%s/uniqid_%s_%s",
-                            $c->getDirectory('tmp'),
+                            $container->getDirectory('tmp'),
                             $_SERVER['REMOTE_ADDR'],
                             $uniqid);
         if (file_exists($filename)) {
@@ -102,14 +102,14 @@ class Ethna_Util
      */
     public static function isCsrfSafe()
     {
-        $c = Ethna_Kernel::getInstance();
-        $name = $c->getConfig()->get('csrf');
+        $container = Ethna_Container::getInstance();
+        $name = $container->getConfig()->get('csrf');
 
         if (is_null($name)) {
             $name = 'Session';
         }
 
-        $plugin = $c->getPlugin('Csrf', $name);
+        $plugin = $container->getPlugin('Csrf', $name);
         $csrf = $plugin->getPlugin('Csrf', $name);
         return $csrf->isValid();
     }
@@ -124,14 +124,14 @@ class Ethna_Util
      */
     public static function setCsrfID()
     {
-        $c = Ethna_Kernel::getInstance();
-        $name = $c->getConfig()->get('csrf');
+        $container = Ethna_Container::getInstance();
+        $name = $container->getConfig()->get('csrf');
         
         if (is_null($name)) {
             $name = 'Session';
         }
         
-        $plugin = $c->getPlugin('Csrf', $name);
+        $plugin = $container->getPlugin('Csrf', $name);
         $csrf = $plugin->getPlugin('Csrf', $name);
         return $csrf->set();
     }
@@ -704,17 +704,17 @@ class Ethna_Util
      */
     public static function purgeTmp($prefix, $timeout)
     {
-        $c = Ethna_Kernel::getInstance();
+        $container = Ethna_Container::getInstance();
 
-        $dh = opendir($c->getDirectory('tmp'));
+        $dh = opendir($container->getDirectory('tmp'));
         if ($dh) {
             while (($file = readdir($dh)) !== false) {
                 if ($file == '.' || $file == '..') {
                     continue;
-                } else if (is_dir($c->getDirectory('tmp') . '/' . $file)) {
+                } else if (is_dir($container->getDirectory('tmp') . '/' . $file)) {
                     continue;
                 } else if (strncmp($file, $prefix, strlen($prefix)) == 0) {
-                    $f = $c->getDirectory('tmp') . "/" . $file;
+                    $f = $container->getDirectory('tmp') . "/" . $file;
                     $st = stat($f);
                     if ($st[9] + $timeout < time()) {
                         unlink($f);

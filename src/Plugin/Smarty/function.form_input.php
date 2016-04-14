@@ -15,8 +15,7 @@ function smarty_function_form_input($params, &$smarty)
     }
 
     // view object
-    $c = Ethna_Kernel::getInstance();
-    $view = $c->getView();
+    $view = Ethna_Container::getInstance()->getView();
     if ($view === null) {
         return null;
     }
@@ -54,7 +53,7 @@ function smarty_function_form_input($params, &$smarty)
     }
 
     // 現在のアクションで受け取ったフォーム値
-    $af = $c->getActionForm();
+    $af = Ethna_Container::getInstance()->getActionForm();
     $val = $af->get($name);
     if ($val !== null) {
         $params['default'] = $val;

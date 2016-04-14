@@ -10,8 +10,7 @@ function smarty_block_form($params, $content, &$smarty, &$repeat)
         // default
         if (isset($params['default']) === false) {
             // 指定なしのときは $form を使う
-            $c = Ethna_Kernel::getInstance();
-            $af = $c->getActionForm();
+            $af = Ethna_Container::getInstance()->getActionForm();
 
             // c.f. http://smarty.php.net/manual/en/plugins.block.functions.php
             $smarty->_tag_stack[count($smarty->_tag_stack)-1][1]['default']
@@ -21,8 +20,7 @@ function smarty_block_form($params, $content, &$smarty, &$repeat)
         // 動的フォームヘルパを呼ぶ
         if (isset($params['ethna_action'])) {
             $ethna_action = $params['ethna_action'];
-            $c = Ethna_Kernel::getInstance();
-            $view = $c->getView();
+            $view = Ethna_Container::getInstance()->getView();
             $view->addActionFormHelper($ethna_action, true);
         }
 
@@ -32,8 +30,7 @@ function smarty_block_form($params, $content, &$smarty, &$repeat)
     } else {
         // {/form}: ブロック全体を出力
 
-        $c = Ethna_Kernel::getInstance();
-        $view = $c->getView();
+        $view = Ethna_Container::getInstance()->getView();
         if ($view === null) {
             return null;
         }
@@ -44,12 +41,12 @@ function smarty_block_form($params, $content, &$smarty, &$repeat)
             unset($params['ethna_action']);
 
             $view->addActionFormHelper($ethna_action);
-            $hidden = $c->getActionRequest($ethna_action, 'hidden');
+            $hidden = Ethna_Kernel::getInstance()->getActionRequest($ethna_action, 'hidden');
             $content = $hidden . $content;
 
             //デバグ用に、送信先のアクション名を表示する
             //超絶便利。これのおかげて開発効率だいぶあがった。
-            if ($c->getConfig()->get('showFormActionName')) {
+            if (Ethna_Container::getInstance()->getConfig()->get('showFormActionName')) {
                 echo "[" . $ethna_action. "]";
             }
 

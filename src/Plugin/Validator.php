@@ -40,7 +40,8 @@ class Ethna_Plugin_Validator
     /** @protected    bool    配列を受け取るバリデータかどうかのフラグ */
     public $accept_array = false;
 
-    protected $controller;
+    /** @var  Ethna_ContainerInterface */
+    protected $container;
 
     /** @var  Ethna_Plugin */
     protected $plugin;
@@ -49,15 +50,13 @@ class Ethna_Plugin_Validator
     /**
      *  コンストラクタ
      *
-     *  @access public
-     *  @param  object  Ethna_Kernel    $controller コントローラオブジェクト
      */
-    public function __construct($controller)
+    public function __construct(Ethna_ContainerInterface $container)
     {
-        $this->controller = $controller;
-        $this->plugin = $controller->getPlugin();
-        $this->logger = $controller->getLogger();
-        $this->action_form = $controller->getActionForm();
+        $this->container = $container;
+        $this->plugin = $container->getPlugin();
+        $this->logger = $container->getLogger();
+        $this->action_form = $container->getActionForm();
         $this->af = $this->action_form;
     }
 

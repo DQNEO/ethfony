@@ -32,8 +32,6 @@ class Ethna_Config
     /**
      *  Ethna_Configクラスのコンストラクタ
      *
-     *  @access public
-     *  @param  object  Ethna_Kernel    $controller    controllerオブジェクト
      */
     public function __construct(string $dir)
     {

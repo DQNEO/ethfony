@@ -34,7 +34,6 @@ class Ethna_Plugin_Logwriter_Echo extends Ethna_Plugin_Logwriter
      */
     function log($level, $message)
     {
-        $c = Ethna_Kernel::getInstance();
 
         $prefix = $this->ident;
         if (array_key_exists("pid", $this->option)) {

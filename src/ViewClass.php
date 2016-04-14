@@ -19,12 +19,9 @@ use Ethna_ContainerInterface as ContainerInterface;
  */
 class Ethna_ViewClass
 {
-    /**#@+
-     *  @access private
-     */
 
-    /** @protected    object  Ethna_Kernel    Controllerオブジェクト */
-    protected $controller;
+    /** @var  Ethna_Container  */
+    protected $container;
 
     /** @public    object  Ethna_Config        設定オブジェクト    */
     public $config;
@@ -75,22 +72,22 @@ class Ethna_ViewClass
      *  @param  string  $forward_name   ビューに関連付けられている遷移名
      *  @param  string  $forward_path   ビューに関連付けられているテンプレートファイル名
      */
-    public function __construct(ContainerInterface $controller, Ethna_ActionForm $action_form, $forward_name, $forward_path)
+    public function __construct(ContainerInterface $container, Ethna_ActionForm $action_form, $forward_name, $forward_path)
     {
-        $this->controller = $this->controller = $controller;
-        $this->controller->view = $this;
-        $this->config = $this->controller->getConfig();
-        $this->i18n = $this->controller->getI18N();
-        $this->logger = $this->controller->getLogger();
-        $this->plugin = $this->controller->getPlugin();
+        $this->container = $container;
+        $this->container->view = $this;
+        $this->config = $this->container->getConfig();
+        $this->i18n = $this->container->getI18N();
+        $this->logger = $this->container->getLogger();
+        $this->plugin = $this->container->getPlugin();
 
-        $this->action_error = $this->controller->getActionError();
+        $this->action_error = $this->container->getActionError();
         $this->ae = $this->action_error;
 
         $this->action_form = $action_form;
         $this->af = $action_form;
 
-        $this->session = $this->controller->getSession();
+        $this->session = $this->container->getSession();
 
         $this->forward_name = $forward_name;
         $this->forward_path = $forward_path;
@@ -103,7 +100,7 @@ class Ethna_ViewClass
 
     protected function getCurrentActionName()
     {
-        return $this->controller->getCurrentActionName();
+        return $this->container->getCurrentActionName();
     }
 
     // {{{ preforward
@@ -196,18 +193,18 @@ class Ethna_ViewClass
 
         //    現在のアクションと等しければ、対応する
         //    アクションフォームを設定
-        $controller = Ethna_Kernel::getInstance();
-        if ($action === $controller->getCurrentActionName()) {
+        $container = Ethna_Container::getInstance();
+        if ($action === $container->getCurrentActionName()) {
             $this->helper_action_form[$action] = $this->af;
         } else {
             //    アクションが異なる場合
-            $form_name = $controller->getActionFormName($action);
+            $form_name = $container->getActionFormName($action);
             if ($form_name === null) {
                 $this->logger->log(LOG_WARNING,
                     'action form for the action [%s] not found.', $action);
                 return;
             }
-            $this->helper_action_form[$action] = new $form_name($controller);
+            $this->helper_action_form[$action] = new $form_name($container);
         }
 
         //   動的フォームを設定するためのヘルパメソッドを呼ぶ
@@ -482,7 +479,7 @@ class Ethna_ViewClass
             }
         } else {
             // マネージャから取得
-            $mgr = $this->controller->getManager($split[0]);
+            $mgr = $this->container->getManager($split[0]);
             $attr_list = $mgr->getAttrList($split[1]);
             if (is_array($attr_list)) {
                 foreach ($attr_list as $key => $val) {
@@ -1001,7 +998,7 @@ class Ethna_ViewClass
      */
     function _getRenderer()
     {
-        $renderer = $this->controller->getRenderer();
+        $renderer = $this->container->getRenderer();
 
         $form_array = $this->af->getArray();
         $app_array = $this->af->getAppArray();

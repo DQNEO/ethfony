@@ -53,8 +53,8 @@ class Ethna_Logger
         'debug'     => array('name' => 'LOG_DEBUG',     'value' => 0),
     );
 
-    /** @protected    object  Ethna_Kernel    controllerオブジェクト */
-    public $controller;
+    /** @var Ethna_ContainerInterface */
+    public $container;
 
     /** @protected    array   ログファシリティ */
     public $facility = array();
@@ -89,18 +89,14 @@ class Ethna_Logger
     /**#@-*/
     // }}}
     
-    // {{{ Ethna_Logger
     /**
      *  Ethna_Loggerクラスのコンストラクタ
      *
-     *  @access public
-     *  @param  object  Ethna_Kernel    $controller controllerオブジェクト
      */
-    public function __construct(ContainerInterface $controller)
+    public function __construct(ContainerInterface $container)
     {
-        $this->controller = $controller;
-        $this->controller = $this->controller;
-        $config = $controller->getConfig();
+        $this->container = $container;
+        $config = $container->getConfig();
 
         // ログファシリティテーブル補完(LOCAL0〜LOCAL8)
         for ($i = 0; $i < 8; $i++) {
@@ -368,7 +364,7 @@ class Ethna_Logger
             $plugin = $facility;
         }
 
-        $plugin_manager = $this->controller->getPlugin();
+        $plugin_manager = $this->container->getPlugin();
         $plugin_object = $plugin_manager->getPlugin('Logwriter',
                                                     ucfirst(strtolower($plugin)));
         if (Ethna::isError($plugin_object)) {
@@ -376,7 +372,7 @@ class Ethna_Logger
         }
 
         if (isset($option['ident']) == false) {
-            $option['ident'] = $this->controller->getAppId();
+            $option['ident'] = $this->container->getAppId();
         }
         if (isset($option['facility']) == false) {
             $option['facility'] = $facility;
@@ -403,9 +399,9 @@ class Ethna_Logger
         // ヘッダ
         $header = "Mime-Version: 1.0\n";
         $header .= "Content-Type: text/plain; charset=ISO-2022-JP\n";
-        $header .= "X-Alert: " . $this->controller->getAppId();
+        $header .= "X-Alert: " . $this->container->getAppId();
         $subject = sprintf("[%s] alert (%s%s)\n",
-                           $this->controller->getAppId(),
+                           $this->container->getAppId(),
                            substr($message, 0, 12),
                            strlen($message) > 12 ? "..." : "");
         

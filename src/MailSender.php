@@ -37,7 +37,8 @@ class Ethna_MailSender
     /** @var    string  送信オプション */
     var $option = '';
 
-    var $controller;
+    /** @var  Ethna_ContainerInterface */
+    protected $container;
 
     /** @var    object  Ethna_Config    設定オブジェクト */
     var $config;
@@ -47,13 +48,11 @@ class Ethna_MailSender
     /**
      *  Ethna_MailSenderクラスのコンストラクタ
      *
-     *  @access public
-     *  @param  object  Ethna_Controller
      */
-    public function __construct($controller)
+    public function __construct(Ethna_ContainerInterface $container)
     {
-        $this->controller = $controller;
-        $this->config = $controller->getConfig();
+        $this->container = $container;
+        $this->config = $container->getConfig();
     }
 
     /**
@@ -94,7 +93,7 @@ class Ethna_MailSender
         if ($template === MAILSENDER_TYPE_DIRECT) {
             $mail = $macro;
         } else {
-            $renderer = $this->getRenderer();
+            $renderer = $this->container->getRenderer();
 
             // 基本情報設定
             $env_datetime = _et('%Y/%m/%d %H:%M:%S');
@@ -267,15 +266,5 @@ class Ethna_MailSender
         return array($header, $body);
     }
 
-    /**
-     *  メールフォーマット用レンダラオブジェクト取得する
-     *
-     *  @access public
-     *  @return object  Ethna_Renderer  レンダラオブジェクト
-     */
-    function getRenderer()
-    {
-        return $this->controller->getRenderer();
-    }
 }
 // }}}
