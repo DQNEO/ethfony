@@ -406,10 +406,4 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
     }
 
 
-    public function getManager($key)
-    {
-        return $this->container->getManager($key);
-    }
-
-
 }
