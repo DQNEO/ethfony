@@ -56,7 +56,9 @@ class Ethna_I18N
 
         $kernel = Ethna_Kernel::getInstance();
         $this->encoding = $kernel->getEncoding();
-        $this->logger = $kernel->getLogger();
+
+        $container = Ethna_Container::getInstance();
+        $this->logger = $container->getLogger();
 
         $this->messages = false;  //  not initialized yet.
     }
