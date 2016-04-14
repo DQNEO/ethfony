@@ -71,6 +71,13 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
         $kernel->terminate($request, $response);
     }
 
+    public static function handleHttp(Ethna_Kernel $kernel)
+    {
+        $request = Request::createFromGlobals();
+        $response = $kernel->handle($request);
+        $response->send();
+        $kernel->terminate($request, $response);
+    }
 
     /**
      *  Ethna_Kernelクラスのコンストラクタ
