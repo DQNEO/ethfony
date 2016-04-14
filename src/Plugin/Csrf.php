@@ -46,11 +46,8 @@ class Ethna_Plugin_Csrf
      */
     public function __construct(Ethna_ContainerInterface $container)
     {
-        // オブジェクトの設定
-        $this->container = $container;
-
         $this->config = $container->getConfig();
-        $this->logger = $this->container->getLogger();
+        $this->logger = $container->getLogger();
     }
 
     /**
