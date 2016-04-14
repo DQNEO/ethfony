@@ -107,8 +107,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
         if (isset($GLOBALS['_Ethna_controller'])) {
             return $GLOBALS['_Ethna_controller'];
         } else {
-            $_ret_object = null;
-            return $_ret_object;
+            return null;
         }
     }
 
