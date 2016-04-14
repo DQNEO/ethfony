@@ -445,8 +445,7 @@ class Ethna_Plugin
      */
     public static function import($type, $name = null)
     {
-        $controller = Ethna_Kernel::getInstance();
-        $plugin = $controller->getPlugin();
+        $plugin = Ethna_Container::getInstance()->getPlugin();
 
         $plugin->includePlugin($type, $name);
     }
