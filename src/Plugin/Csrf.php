@@ -45,13 +45,13 @@ class Ethna_Plugin_Csrf
      *  @access public
      *  @param  object  Ethna_Kernel    $controller    コントローラオブジェクト
      */
-    public function __construct($controller)
+    public function __construct($container)
     {
         // オブジェクトの設定
-        $this->controller = $controller;
+        $this->controller = $container;
         $this->controller = $this->controller;
 
-        $this->config = $controller->getConfig();
+        $this->config = $container->getConfig();
         $this->logger = $this->controller->getLogger();
     }
 
