@@ -155,20 +155,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
         return $this->container->getExt($key);
     }
 
-
-    /**
-     *  Setter for ActionForm
-     *  if the ::$action_form class is not null, then cannot set the view
-     *
-     *  @access public
-     *  @return object  Ethna_ActionForm    アクションフォームオブジェクト
-     */
-    public function setActionForm($af)
-    {
-        $this->container->setActionForm($af);
-    }
-
-
     /**
      *  エンコーディング名へのアクセサ(R)
      *
