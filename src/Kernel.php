@@ -213,13 +213,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
         return $this->container->getLogger();
     }
 
-    /**
-     *  セッションオブジェクトのアクセサ
-     */
-    public function getSession(): Ethna_Session
-    {
-        return $this->container->getSession();
-    }
 
     /**
      *  エンコーディング名へのアクセサ(R)
@@ -313,7 +306,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
         $action_name = $actionResolver->resolveActionName($request, $default_action_name);
         $this->container->setCurrentActionName($action_name);
 
-        $this->getSession()->restore();
+        $this->container->getSession()->restore();
 
         $i18n = $this->getI18N();
         $i18n->setLanguage($this->locale);
