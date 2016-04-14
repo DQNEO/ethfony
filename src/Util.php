@@ -28,7 +28,6 @@ class Ethna_Util
      */
     public static function isDuplicatePost()
     {
-        $c = Ethna_Kernel::getInstance();
 
         // use raw post data
         if (isset($_POST['uniqid'])) {
@@ -42,8 +41,9 @@ class Ethna_Util
         // purge old files
         Ethna_Util::purgeTmp("uniqid_", 60*60*1);
 
+        $container = Ethna_Container::getInstance();
         $filename = sprintf("%s/uniqid_%s_%s",
-                            $c->getDirectory('tmp'),
+                            $container->getDirectory('tmp'),
                             $_SERVER['REMOTE_ADDR'],
                             $uniqid);
         if (file_exists($filename) == false) {
