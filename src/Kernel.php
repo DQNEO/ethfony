@@ -88,13 +88,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
         $this->default_action_name = $default_action_name;
     }
 
-    /**
-     *  アプリケーション実行後の後始末を行います。
-     */
-    public function terminate(Request $request, Response $response)
-    {
-        $this->logger->end();
-    }
 
     /**
      *  (現在アクティブな)コントローラのインスタンスを返す
@@ -219,6 +212,14 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
         $arguments = [$request];
         $response = call_user_func_array($callable, $arguments);
         return $response;
+    }
+
+    /**
+     *  アプリケーション実行後の後始末を行います。
+     */
+    public function terminate(Request $request, Response $response)
+    {
+        $this->logger->end();
     }
 
     /**
