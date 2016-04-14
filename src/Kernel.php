@@ -433,15 +433,5 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
         return $this->getDirectory('tmp');
     }
 
-    /**
-     *  アプリケーションのテンプレートファイル拡張子を取得する
-     *
-     *  @access public
-     *  @return string  テンプレートファイルの拡張子
-     */
-    public function getTemplateext()
-    {
-        return $this->getExt('tpl');
-    }
 
 }
