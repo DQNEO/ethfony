@@ -74,7 +74,7 @@ class Ethna_ViewClass
      */
     public function __construct(ContainerInterface $container, Ethna_ActionForm $action_form, $forward_name, $forward_path)
     {
-        $this->container = $this->container = $container;
+        $this->container = $container;
         $this->container->view = $this;
         $this->config = $this->container->getConfig();
         $this->i18n = $this->container->getI18N();
