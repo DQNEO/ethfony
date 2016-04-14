@@ -37,7 +37,7 @@ class Ethna_Plugin_Cachemanager
      *
      *  @access public
      */
-    public function __construct($container)
+    public function __construct(Ethna_ContainerInterface $container)
     {
         $this->config = $container->getConfig();
 
