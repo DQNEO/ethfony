@@ -28,9 +28,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
     /** @var    string      アプリケーションID */
     protected $appid = 'ETHNA';
 
-    /** @var    string      アプリケーションベースディレクトリ */
-    protected $base = '';
-
     /** @protected    string      アプリケーションベースURL */
     protected $url = '';
 
@@ -125,7 +122,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
     public function console($action_name)
     {
         $GLOBALS['_Ethna_controller'] = $this;
-        $this->base = BASE;
 
         Ethna::setErrorCallback(array($this, 'handleError'));
 
@@ -166,7 +162,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
     {
         $default_action_name = $this->default_action_name;
         $GLOBALS['_Ethna_controller'] = $this;
-        $this->base = BASE;
 
         Ethna::setErrorCallback(array($this, 'handleError'));
 
