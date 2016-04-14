@@ -26,9 +26,9 @@ class Ethna_Plugin_Urlhandler
      *  Urlhandlerクラスのコンストラクタ
      *
      */
-    public function __construct($controller)
+    public function __construct($container)
     {
-        $this->logger = $controller->getLogger();
+        $this->logger = $container->getLogger();
     }
 
 
