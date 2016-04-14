@@ -29,15 +29,17 @@ class Ethna_Plugin_Cachemanager
     /** @protected    object  Ethna_Config        設定オブジェクト    */
     protected $config;
 
+    /** @var  Ethna_ContainerInterface */
+    protected $container;
 
     /**
      *  コンストラクタ
      *
      *  @access public
      */
-    public function __construct($controller)
+    public function __construct($container)
     {
-        $this->config = $controller->getConfig();
+        $this->config = $container->getConfig();
 
 	// load config
 	$this->_loadConfig();

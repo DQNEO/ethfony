@@ -29,7 +29,7 @@ class Ethna_Plugin
      */
 
     /** @var Ethna_ContainerInterface */
-    protected $controller;
+    protected $container;
 
     /** @protected    object  Ethna_Logger        ログオブジェクト */
     protected $logger;
@@ -49,12 +49,12 @@ class Ethna_Plugin
      *  @access public
      *  @param  object  Ethna_Kernel    $controller コントローラオブジェクト
      */
-    public function __construct(ContainerInterface $controller)
+    public function __construct(ContainerInterface $container)
     {
-        $this->controller = $controller;
+        $this->container = $container;
         $this->logger = null;
 
-        $this->appid_list = array($controller->getAppId(), 'Ethna');
+        $this->appid_list = array($container->getAppId(), 'Ethna');
 
     }
 
@@ -182,7 +182,7 @@ class Ethna_Plugin
         }
 
         // プラグイン作成
-        $instance = new $plugin_class($this->controller, $type, $name);
+        $instance = new $plugin_class($this->container, $type, $name);
         if (is_object($instance) == false
             || strcasecmp(get_class($instance), $plugin_class) != 0) {
 
@@ -246,7 +246,7 @@ class Ethna_Plugin
      */
     public function getPluginNaming($type, $name, $appid = 'Ethna')
     {
-        $ext = $this->controller->getExt('php');
+        $ext = $this->container->getExt('php');
 
         $plugin_class_name = array(
             $appid,
@@ -257,7 +257,7 @@ class Ethna_Plugin
         if ($appid == 'Ethna') {
             $baseDir = ETHNA_BASE . "/src/Plugin";
         } else {
-            $baseDir = $this->controller->getDirectory('plugin');
+            $baseDir = $this->container->getDirectory('plugin');
         }
 
         if ($name !== null) {

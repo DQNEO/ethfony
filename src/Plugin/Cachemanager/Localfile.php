@@ -22,10 +22,10 @@ class Ethna_Plugin_Cachemanager_Localfile extends Ethna_Plugin_Cachemanager
     private $tmpDir;
 
     /**#@-*/
-    public function __construct($controller)
+    public function __construct($container)
     {
-        parent::__construct($controller);
-        $this->tmpDir = $controller->getTmpdir();
+        parent::__construct($container);
+        $this->tmpDir = $container->getTmpdir();
     }
 
     /**
