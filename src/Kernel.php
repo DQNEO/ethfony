@@ -230,17 +230,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
     }
 
     /**
-     *  URLハンドラオブジェクトのアクセサ
-     *
-     *  @access public
-     *  @return object  Ethna_UrlHandler    URLハンドラオブジェクト
-     */
-    public function getUrlHandler()
-    {
-        return $this->container->getUrlHandler();
-    }
-
-    /**
      *  エンコーディング名へのアクセサ(R)
      *
      *  @access public
