@@ -222,14 +222,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
     }
 
     /**
-     *  プラグインオブジェクトのアクセサ
-     */
-    public function getPlugin(): Ethna_Plugin
-    {
-        return $this->container->getPlugin();
-    }
-
-    /**
      *  エンコーディング名へのアクセサ(R)
      *
      *  @access public
@@ -305,7 +297,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
         }
         $this->container->url = $url;
 
-        $plugin = $this->getPlugin();
+        $plugin = $this->container->getPlugin();
 
         $this->logger = $this->getLogger();
         $plugin->setLogger($this->logger);
