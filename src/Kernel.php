@@ -185,17 +185,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
 
 
     /**
-     *  Accessor for ViewClass
-     *
-     *  @access public
-     *  @return object  Ethna_View          ビューオブジェクト
-     */
-    public function getView()
-    {
-        return $this->container->getView();
-    }
-
-    /**
      *  エンコーディング名へのアクセサ(R)
      *
      *  @access public
