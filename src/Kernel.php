@@ -52,6 +52,9 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
 
     protected $sessionName = 'EthnaSESSID';
 
+    /** @var  Ethna_Kernel */
+    private static $instance;
+
     /**
      *  アプリケーションのエントリポイント
      *
@@ -68,7 +71,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
         $response = $kernel->handle($request);
         $response->send();
         $kernel->terminate($request, $response);
-
     }
 
 
@@ -84,19 +86,11 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
 
 
     /**
-     *  (現在アクティブな)コントローラのインスタンスを返す
-     *
-     *  @access public
-     *  @return object  Ethna_Kernel    コントローラのインスタンス
-     *  @static
+     *  Singleton Accessor
      */
-    public static function getInstance()
+    public static function getInstance(): Ethna_Kernel
     {
-        if (isset($GLOBALS['_Ethna_controller'])) {
-            return $GLOBALS['_Ethna_controller'];
-        } else {
-            return null;
-        }
+        return self::$instance;
     }
 
     /**
@@ -118,7 +112,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
      */
     public function console($action_name)
     {
-        $GLOBALS['_Ethna_controller'] = $this;
+        self::$instance = $this;
 
         Ethna::setErrorCallback(array($this, 'handleError'));
 
@@ -158,7 +152,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true): Response
     {
         $default_action_name = $this->default_action_name;
-        $GLOBALS['_Ethna_controller'] = $this;
+        self::$instance  = $this;
 
         Ethna::setErrorCallback(array($this, 'handleError'));
 
