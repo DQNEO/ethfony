@@ -155,11 +155,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
         return $this->container->getExt($key);
     }
 
-    public function getActionError(): Ethna_ActionError
-    {
-        return $this->container->getActionError();
-    }
-
 
     /**
      *  Setter for ActionForm
