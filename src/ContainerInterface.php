@@ -23,8 +23,6 @@ interface Ethna_ContainerInterface
 
     public function getExt(string $key): string;
 
-    public function getEtcdir();
-
     public function getTmpdir();
 
 }

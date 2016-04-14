@@ -394,17 +394,6 @@ class Ethna_Container implements ContainerInterface
     }
 
     /**
-     *  アプリケーションの設定ディレクトリを取得する
-     *
-     *  @access public
-     *  @return string  設定ディレクトリのパス名
-     */
-    public function getEtcdir()
-    {
-        return $this->getDirectory('etc');
-    }
-
-    /**
      *  アプリケーションのテンポラリディレクトリを取得する
      *
      *  @access public
