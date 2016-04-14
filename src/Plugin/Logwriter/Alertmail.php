@@ -95,8 +95,7 @@ class Ethna_Plugin_Logwriter_Alertmail extends Ethna_Plugin_Logwriter
     {
         restore_error_handler();
 
-        $c = Ethna_Kernel::getInstance();
-        $appid = $c->getAppId();
+        $appid = Ethna_Container::getInstance()->getAppId();
 
         $header = "Mime-Version: 1.0\n";
         $header .= "Content-Type: text/plain; charset=ISO-2022-JP\n";
