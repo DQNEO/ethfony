@@ -41,7 +41,7 @@ function smarty_block_form($params, $content, &$smarty, &$repeat)
             unset($params['ethna_action']);
 
             $view->addActionFormHelper($ethna_action);
-            $hidden = $c->getActionRequest($ethna_action, 'hidden');
+            $hidden = Ethna_Kernel::getInstance()->getActionRequest($ethna_action, 'hidden');
             $content = $hidden . $content;
 
             //デバグ用に、送信先のアクション名を表示する
