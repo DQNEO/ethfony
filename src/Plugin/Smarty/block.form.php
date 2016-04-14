@@ -41,7 +41,7 @@ function smarty_block_form($params, $content, &$smarty, &$repeat)
             unset($params['ethna_action']);
 
             $view->addActionFormHelper($ethna_action);
-            $hidden = Ethna_Kernel::getInstance()->getActionRequest($ethna_action, 'hidden');
+            $hidden = getActionRequest($ethna_action, 'hidden');
             $content = $hidden . $content;
 
             //デバグ用に、送信先のアクション名を表示する
@@ -70,5 +70,24 @@ function smarty_block_form($params, $content, &$smarty, &$repeat)
         // $contentを囲む<form>ブロック全体を出力
         return $view->getFormBlock($content, $params);
     }
+}
+
+
+/**
+ *  アクション名を指定するクエリ/HTMLを生成する
+ *
+ *  @access public
+ *  @param  string  $action action to request
+ *  @param  string  $type   hidden, url...
+ */
+function getActionRequest($action, $type = "hidden")
+{
+    $s = null;
+    if ($type == "hidden") {
+        $s = sprintf('<input type="hidden" name="action_%s" value="true" />', htmlspecialchars($action, ENT_QUOTES, mb_internal_encoding()));
+    } else if ($type == "url") {
+        $s = sprintf('action_%s=true', urlencode($action));
+    }
+    return $s;
 }
 

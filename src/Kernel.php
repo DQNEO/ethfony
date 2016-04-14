@@ -223,23 +223,4 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
     }
 
 
-    /**
-     *  アクション名を指定するクエリ/HTMLを生成する
-     *
-     *  @access public
-     *  @param  string  $action action to request
-     *  @param  string  $type   hidden, url...
-     */
-    public function getActionRequest($action, $type = "hidden")
-    {
-        $s = null;
-        if ($type == "hidden") {
-            $s = sprintf('<input type="hidden" name="action_%s" value="true" />', htmlspecialchars($action, ENT_QUOTES, mb_internal_encoding()));
-        } else if ($type == "url") {
-            $s = sprintf('action_%s=true', urlencode($action));
-        }
-        return $s;
-    }
-
-
 }
