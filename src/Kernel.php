@@ -133,17 +133,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
     }
 
     /**
-     *  (action,view以外の)テストケースを置くディレクトリ名を決定する
-     *
-     *  @access public
-     *  @return string  テストケースを置くディレクトリ
-     */
-    public function getTestdir()
-    {
-        return (empty($this->directory['test']) ? ($this->base . (empty($this->base) ? '' : '/')) : ($this->directory['test'] . "/"));
-    }
-
-    /**
      *  エンコーディング名へのアクセサ(R)
      *
      *  @access public
