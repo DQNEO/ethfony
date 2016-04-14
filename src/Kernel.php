@@ -471,5 +471,3 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
     }
 
 }
-
-class_alias('Ethna_Kernel', 'Ethna_Controller');
