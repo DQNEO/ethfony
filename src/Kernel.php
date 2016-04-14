@@ -43,6 +43,8 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
     /**
      * @protected    string ロケール名(e.x ja_JP, en_US 等),
      *                  (ロケール名は ll_cc の形式。ll = 言語コード cc = 国コード)
+     *
+     *  @see http://www.gnu.org/software/gettext/manual/html_node/Locale-Names.html
      */
     protected $locale = 'ja_JP';
 
@@ -247,19 +249,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
     public function getCurrentActionName()
     {
         return $this->container->getCurrentActionName();
-    }
-
-    /**
-     *  ロケール名へのアクセサ(R)
-     *
-     *  @access public
-     *  @return string  ロケール名(e.x ja_JP, en_US 等),
-     *                  (ロケール名は、ll_cc の形式。ll = 言語コード cc = 国コード)
-     *  @see http://www.gnu.org/software/gettext/manual/html_node/Locale-Names.html
-     */
-    public function getLocale()
-    {
-        return $this->locale;
     }
 
 
