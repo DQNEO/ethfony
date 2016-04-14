@@ -53,23 +53,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
     /** @var  Ethna_Kernel */
     private static $instance;
 
-    /**
-     *  アプリケーションのエントリポイント
-     *
-     *  @access public
-     *  @param  string  $class_name     アプリケーションコントローラのクラス名
-     *  @param  mixed   $action_name    指定のアクション名(省略可)
-     *  @static
-     */
-    public static function main(string $class_name, string $default_action_name = "")
-    {
-        /** @var Ethna_Kernel $kernel */
-        $kernel = new $class_name($default_action_name);
-        $request = Request::createFromGlobals();
-        $response = $kernel->handle($request);
-        $response->send();
-        $kernel->terminate($request, $response);
-    }
 
     public static function handleHttp(Ethna_Kernel $kernel)
     {
@@ -82,7 +65,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
     /**
      *  Ethna_Kernelクラスのコンストラクタ
      *
-     *  @access     public
+     *  @param  string   $action_name    指定のアクション名(省略可)
      */
     public function __construct(string $default_action_name = '')
     {
