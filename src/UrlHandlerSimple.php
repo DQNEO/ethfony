@@ -189,8 +189,7 @@ class Ethna_UrlHandlerSimple
             $instance[$name] = new $name();
         } else {
             // get instance with plugin
-            $controller = Ethna_Kernel::getInstance();
-            $plugin = $controller->getPlugin();
+            $plugin = Ethna_Kernel::getInstance()->getPlugin();
             $instance[$name] = $plugin->getPlugin('Urlhandler', $name);
         }
 
