@@ -52,7 +52,6 @@ class Ethna_Plugin
     public function __construct($controller)
     {
         $this->controller = $controller;
-        $this->controller = $this->controller;
         $this->logger = null;
 
         $this->appid_list = array($controller->getAppId(), 'Ethna');
