@@ -17,7 +17,6 @@ function smarty_function_url($params, &$smarty)
     }
 
     $c = Ethna_Kernel::getInstance();
-    $config = $c->getConfig();
     $url_handler = $c->getUrlHandler();
     list($path, $path_key) = $url_handler->actionToRequest($action, $query);
 
