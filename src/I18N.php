@@ -145,7 +145,7 @@ class Ethna_I18N
         //    このメソッドを呼び出すと、ロケール名が空になる
         //    その場合は Ethna_Kernel の設定を補う
         if (empty($this->locale)) {
-            $this->locale = Ethna_Kernel::getInstance()->getLocale();
+            throw new \Exception('locale is not set');
         }
 
         //    ロケールディレクトリが存在しない場合は、E_NOTICEを出し、
