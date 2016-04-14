@@ -241,18 +241,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
     }
 
     /**
-     *  実行中のアクション名を返す
-     *
-     *  @access public
-     *  @return string  実行中のアクション名
-     */
-    public function getCurrentActionName()
-    {
-        return $this->container->getCurrentActionName();
-    }
-
-
-    /**
      *  エンコーディング名へのアクセサ(R)
      *
      *  @access public
