@@ -37,8 +37,7 @@ class Ethna_Plugin_Cachemanager
      */
     public function __construct($controller)
     {
-        $this->controller = $controller;
-        $this->config = $this->controller->getConfig();
+        $this->config = $controller->getConfig();
 
 	// load config
 	$this->_loadConfig();
