@@ -113,16 +113,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
     }
 
     /**
-     *  アプリケーションIDを返す
-     *
-     *  @return string  アプリケーションID
-     */
-    protected function getAppId(): string
-    {
-        return ucfirst(strtolower($this->appid));
-    }
-
-    /**
      *  エンコーディング名へのアクセサ(R)
      *
      *  @access public
@@ -208,7 +198,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
         $default_form_class = $this->class['form'];
         $actionResolverClass = $this->class['action_resolver'];
         /** @var Ethna_ActionResolver $actionResolver */
-        $actionResolver = new $actionResolverClass($this->getAppId(), $this->logger, $default_form_class, $actionDir);
+        $actionResolver = new $actionResolverClass($this->container->getAppId(), $this->logger, $default_form_class, $actionDir);
         $this->container->setActionResolver($actionResolver);
         // アクション名の取得
         $action_name = $actionResolver->resolveActionName($request, $default_action_name);
