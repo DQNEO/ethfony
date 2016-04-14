@@ -134,17 +134,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
     }
 
     /**
-     *  アプリケーションベースディレクトリを返す
-     *
-     *  @access public
-     *  @return string  アプリケーションベースディレクトリ
-     */
-    public function getBasedir()
-    {
-        return $this->base;
-    }
-
-    /**
      *  ビューディレクトリ名を決定する
      *
      *  @access public

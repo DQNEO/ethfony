@@ -88,6 +88,17 @@ class Ethna_Container implements ContainerInterface
         static::$instance = $this;
     }
 
+    /**
+     *  アプリケーションベースディレクトリを返す
+     *
+     *  @access public
+     *  @return string  アプリケーションベースディレクトリ
+     */
+    public function getBasedir()
+    {
+        return $this->base;
+    }
+
     public function getDirectories(): array
     {
         return $this->directory;

@@ -181,8 +181,7 @@ class Ethna_Plugin_Logwriter
             }
         }
 
-        $c = Ethna_Kernel::getInstance();
-        $basedir = $c->getBasedir();
+        $basedir = Ethna_Container::getInstance()->getBasedir();
 
         $function = sprintf("%s.%s", isset($bt[$i]['class']) ? $bt[$i]['class'] : 'global', $bt[$i]['function']);
 
