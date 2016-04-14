@@ -123,17 +123,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
     }
 
     /**
-     *  アプリケーションベースURLを返す
-     *
-     *  @access public
-     *  @return string  アプリケーションベースURL
-     */
-    public function getURL()
-    {
-        return $this->url;
-    }
-
-    /**
      *  ビューディレクトリ名を決定する
      *
      *  @access public
@@ -304,7 +293,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
         $this->container = new Ethna_Container(BASE, $this->directory, $this->class, $this->appid, $this->locale, '');
         $this->directory = $this->container->getDirectories();
         $config = $this->container->getConfig();
-        $this->url = $config->get('url');
+        $this->container->url = $config->get('url');
 
         $plugin = $this->container->getPlugin();
         $this->logger = $this->container->getLogger();
@@ -346,11 +335,12 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
         $this->directory = $this->container->getDirectories();
 
         $config = $this->getConfig();
-        $this->url = $config->get('url');
-        if (empty($this->url)) {
-            $this->url = Ethna_Util::getUrlFromRequestUri();
-            $config->set('url', $this->url);
+        $url = $config->get('url');
+        if (empty($url)) {
+            $url = Ethna_Util::getUrlFromRequestUri();
+            $config->set('url', $url);
         }
+        $this->container->url = $url;
 
         $plugin = $this->getPlugin();
 

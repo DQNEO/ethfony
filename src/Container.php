@@ -43,6 +43,19 @@ class Ethna_Container implements ContainerInterface
     /** @var  Ethna_ViewClass */
     public $view;
 
+    public $url;
+
+    /**
+     *  アプリケーションベースURLを返す
+     *
+     *  @access public
+     *  @return string  アプリケーションベースURL
+     */
+    public function getURL()
+    {
+        return $this->url;
+    }
+
     /** @var  Ethna_Container */
     private static $instance;
 

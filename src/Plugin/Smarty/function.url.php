@@ -16,8 +16,8 @@ function smarty_function_url($params, &$smarty)
         unset($query[$key]);
     }
 
-    $c = Ethna_Kernel::getInstance();
-    $url_handler = $c->getUrlHandler();
+    $container = Ethna_Container::getInstance();
+    $url_handler = $container->getUrlHandler();
     list($path, $path_key) = $url_handler->actionToRequest($action, $query);
 
     if ($path != "") {
@@ -31,7 +31,7 @@ function smarty_function_url($params, &$smarty)
     }
     $query = $url_handler->buildQueryParameter($query);
 
-    $url = sprintf('%s%s', $c->getUrl(), $path);
+    $url = sprintf('%s%s', $container->getUrl(), $path);
 
     if (preg_match('|^(\w+)://(.*)$|', $url, $match)) {
         if ($scheme) {
