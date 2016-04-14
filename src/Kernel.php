@@ -31,8 +31,8 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
     /** @protected    array       アプリケーションディレクトリ */
     protected $directory = array();
 
-    /** @protected    array       クラス設定 */
-    public $class = array();
+    /** @var    array       クラス設定 */
+    protected $class = array();
 
     /**
      * @protected    string ロケール名(e.x ja_JP, en_US 等),
