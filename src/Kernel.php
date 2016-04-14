@@ -42,8 +42,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
      */
     protected $locale = 'ja_JP';
 
-    protected $encoding = 'UTF-8';
-
     /** @protected    object  Ethna_Logger        ログオブジェクト */
     protected $logger = null;
 
@@ -91,17 +89,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
     public static function getInstance(): Ethna_Kernel
     {
         return self::$instance;
-    }
-
-    /**
-     *  エンコーディング名へのアクセサ(R)
-     *
-     *  @access public
-     *  @return string  $encoding クライアントエンコーディング名
-     */
-    public function getEncoding()
-    {
-        return $this->encoding;
     }
 
     /**

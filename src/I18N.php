@@ -32,7 +32,7 @@ class Ethna_I18N
     protected $appid;
 
     /** @protected    string  エンコーディング */
-    protected $encoding;
+    protected $encoding = 'UTF-8';
 
     /** @protected    mixed   Ethna独自のメッセージカタログ */
     protected $messages;
@@ -53,9 +53,6 @@ class Ethna_I18N
     {
         $this->locale_dir = $locale_dir;
         $this->appid = $appid;
-
-        $kernel = Ethna_Kernel::getInstance();
-        $this->encoding = $kernel->getEncoding();
 
         $container = Ethna_Container::getInstance();
         $this->logger = $container->getLogger();
