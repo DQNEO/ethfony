@@ -29,9 +29,6 @@ class Ethna_Plugin_Cachemanager
     /** @protected    object  Ethna_Config        設定オブジェクト    */
     protected $config;
 
-    /** @var  Ethna_ContainerInterface */
-    protected $container;
-
     /**
      *  コンストラクタ
      *
