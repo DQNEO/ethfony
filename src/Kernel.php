@@ -28,9 +28,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
     /** @var    string      アプリケーションID */
     protected $appid = 'ETHNA';
 
-    /** @protected    string      アプリケーションベースURL */
-    protected $url = '';
-
     /** @protected    array       アプリケーションディレクトリ */
     protected $directory = array();
 
