@@ -195,16 +195,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
         return $this->container->getView();
     }
 
-    public function getConfig(): Ethna_Config
-    {
-        return $this->container->getConfig();
-    }
-
-    public function getI18N(): Ethna_I18N
-    {
-        return $this->container->getI18N();
-    }
-
     /**
      *  エンコーディング名へのアクセサ(R)
      *
@@ -273,7 +263,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
         $this->container = new Ethna_Container(BASE, $this->directory, $this->class, $this->appid, $this->locale, $this->sessionName);
         $this->directory = $this->container->getDirectories();
 
-        $config = $this->getConfig();
+        $config = $this->container->getConfig();
         $url = $config->get('url');
         if (empty($url)) {
             $url = Ethna_Util::getUrlFromRequestUri();
@@ -299,7 +289,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
 
         $this->container->getSession()->restore();
 
-        $i18n = $this->getI18N();
+        $i18n = $this->container->getI18N();
         $i18n->setLanguage($this->locale);
 
         // アクションフォーム初期化
