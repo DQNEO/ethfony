@@ -52,12 +52,12 @@ class Ethna_Plugin_Validator
      *  @access public
      *  @param  object  Ethna_Kernel    $controller コントローラオブジェクト
      */
-    public function __construct($controller)
+    public function __construct($container)
     {
-        $this->controller = $controller;
-        $this->plugin = $controller->getPlugin();
-        $this->logger = $controller->getLogger();
-        $this->action_form = $controller->getActionForm();
+        $this->controller = $container;
+        $this->plugin = $container->getPlugin();
+        $this->logger = $container->getLogger();
+        $this->action_form = $container->getActionForm();
         $this->af = $this->action_form;
     }
 
