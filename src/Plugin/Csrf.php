@@ -25,7 +25,7 @@ class Ethna_Plugin_Csrf
      *  @access private
      */
     /** @protected    object  Ethna_Kernel    controllerオブジェクト */
-    protected $controller;
+    protected $container;
 
     /** @protected    object  Ethna_Config        設定オブジェクト */
     protected $config;
@@ -48,10 +48,10 @@ class Ethna_Plugin_Csrf
     public function __construct($container)
     {
         // オブジェクトの設定
-        $this->controller = $container;
+        $this->container = $container;
 
         $this->config = $container->getConfig();
-        $this->logger = $this->controller->getLogger();
+        $this->logger = $this->container->getLogger();
     }
 
     /**
