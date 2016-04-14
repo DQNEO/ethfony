@@ -160,16 +160,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
         return $this->container->getActionError();
     }
 
-    /**
-     *  Accessor for ActionForm
-     *
-     *  @access public
-     *  @return object  Ethna_ActionForm    アクションフォームオブジェクト
-     */
-    public function getActionForm()
-    {
-        return $this->container->getActionForm();
-    }
 
     /**
      *  Setter for ActionForm
