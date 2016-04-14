@@ -46,8 +46,6 @@ class Ethna_Plugin
     /**
      *  Ethna_Pluginのコンストラクタ
      *
-     *  @access public
-     *  @param  object  Ethna_Kernel    $controller コントローラオブジェクト
      */
     public function __construct(ContainerInterface $container)
     {
