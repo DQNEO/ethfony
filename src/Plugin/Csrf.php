@@ -24,7 +24,7 @@ class Ethna_Plugin_Csrf
     /**#@+
      *  @access private
      */
-    /** @protected    object  Ethna_Kernel    controllerオブジェクト */
+    /** @var Ethna_ContainerInterface */
     protected $container;
 
     /** @protected    object  Ethna_Config        設定オブジェクト */
@@ -43,9 +43,8 @@ class Ethna_Plugin_Csrf
      *  Csrfのコンストラクタ
      *
      *  @access public
-     *  @param  object  Ethna_Kernel    $controller    コントローラオブジェクト
      */
-    public function __construct($container)
+    public function __construct(Ethna_ContainerInterface $container)
     {
         // オブジェクトの設定
         $this->container = $container;
