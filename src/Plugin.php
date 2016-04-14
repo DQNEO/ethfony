@@ -9,7 +9,7 @@
  *  @package    Ethna
  *  @version    $Id$
  */
-
+use Ethna_ContainerInterface as ContainerInterface;
 // {{{ Ethna_Plugin
 /**
  *  プラグインクラス
@@ -28,7 +28,7 @@ class Ethna_Plugin
      *  @access private
      */
 
-    /** @protected    object  Ethna_Kernel    コントローラオブジェクト */
+    /** @var Ethna_ContainerInterface */
     protected $controller;
 
     /** @protected    object  Ethna_Logger        ログオブジェクト */
@@ -49,7 +49,7 @@ class Ethna_Plugin
      *  @access public
      *  @param  object  Ethna_Kernel    $controller コントローラオブジェクト
      */
-    public function __construct($controller)
+    public function __construct(ContainerInterface $controller)
     {
         $this->controller = $controller;
         $this->logger = null;
