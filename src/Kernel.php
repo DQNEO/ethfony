@@ -206,15 +206,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
     }
 
     /**
-     *  ログオブジェクトのアクセサ
-     */
-    public function getLogger(): Ethna_Logger
-    {
-        return $this->container->getLogger();
-    }
-
-
-    /**
      *  エンコーディング名へのアクセサ(R)
      *
      *  @access public
@@ -292,7 +283,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
 
         $plugin = $this->container->getPlugin();
 
-        $this->logger = $this->getLogger();
+        $this->logger = $this->container->getLogger();
         $plugin->setLogger($this->logger);
         $this->logger->begin();
 
