@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
-use Ethna_ContainerInterface as ContainerInterface;
 
 
 /**
@@ -22,7 +21,7 @@ use Ethna_ContainerInterface as ContainerInterface;
  *  @access     public
  *  @package    Ethna
  */
-class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, ContainerInterface
+class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
 {
     protected $default_action_name;
 
@@ -114,10 +113,9 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
     /**
      *  アプリケーションIDを返す
      *
-     *  @access public
      *  @return string  アプリケーションID
      */
-    public function getAppId(): string
+    protected function getAppId(): string
     {
         return ucfirst(strtolower($this->appid));
     }
@@ -125,10 +123,9 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface, Containe
     /**
      *  ビューディレクトリ名を決定する
      *
-     *  @access public
      *  @return string  ビューディレクトリ
      */
-    public function getViewdir()
+    protected function getViewdir()
     {
         return $this->directory['view'] . "/";
     }
