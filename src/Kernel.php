@@ -150,11 +150,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
         return $this->container->getDirectory($key);
     }
 
-    public function getExt(string $key):string
-    {
-        return $this->container->getExt($key);
-    }
-
     /**
      *  エンコーディング名へのアクセサ(R)
      *
