@@ -50,8 +50,6 @@ class Ethna_Plugin_Validator
     /**
      *  コンストラクタ
      *
-     *  @access public
-     *  @param  object  Ethna_Kernel    $controller コントローラオブジェクト
      */
     public function __construct(Ethna_ContainerInterface $container)
     {
