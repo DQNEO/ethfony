@@ -123,16 +123,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
     }
 
     /**
-     *  ビューディレクトリ名を決定する
-     *
-     *  @return string  ビューディレクトリ
-     */
-    protected function getViewdir()
-    {
-        return $this->directory['view'] . "/";
-    }
-
-    /**
      *  エンコーディング名へのアクセサ(R)
      *
      *  @access public
@@ -234,7 +224,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
         $action_form = $actionResolver->newActionForm($action_name, $this->container);
         $this->container->setActionForm($action_form);
 
-        $viewResolver = new Ethna_ViewResolver($this->container, $this->logger, $this->getViewdir(), $this->getAppId(), $this->class['view']);
+        $viewResolver = new Ethna_ViewResolver($this->container, $this->logger, $this->container->getViewdir(), $this->container->getAppId(), $this->class['view']);
         $callable = $actionResolver->getController($request, $action_name, $this->container, $action_form, $viewResolver);
         $arguments = [$request];
         $response = call_user_func_array($callable, $arguments);

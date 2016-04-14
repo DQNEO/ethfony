@@ -394,6 +394,16 @@ class Ethna_Container implements ContainerInterface
     }
 
     /**
+     *  ビューディレクトリ名を決定する
+     *
+     *  @return string  ビューディレクトリ
+     */
+    public function getViewdir()
+    {
+        return $this->directory['view'] . "/";
+    }
+
+    /**
      *  アプリケーションのテンポラリディレクトリを取得する
      *
      *  @access public
