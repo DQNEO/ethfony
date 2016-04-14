@@ -49,7 +49,6 @@ class Ethna_Plugin_Csrf
     {
         // オブジェクトの設定
         $this->controller = $container;
-        $this->controller = $this->controller;
 
         $this->config = $container->getConfig();
         $this->logger = $this->controller->getLogger();
