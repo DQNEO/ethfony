@@ -25,8 +25,6 @@ class Ethna_Plugin_Urlhandler
      /**
      *  Urlhandlerクラスのコンストラクタ
      *
-     *  @access public
-     *  @param  object  Ethna_Kernel    $controller コントローラオブジェクト
      */
     public function __construct($controller)
     {
