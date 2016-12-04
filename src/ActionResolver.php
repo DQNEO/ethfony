@@ -135,15 +135,10 @@ class Ethna_ActionResolver
      *
      * @access public
      * @param  string $action_name アクション名
-     * @return string  アクションのフォームクラス名
      */
-    public function getActionFormName($action_name)
+    public function getActionFormName($action_name): ?string
     {
         list(, $form_class_name,) = $this->getClassNames($action_name);
-        if (is_null($form_class_name)) {
-            return null;
-        }
-
         return $form_class_name;
     }
 
