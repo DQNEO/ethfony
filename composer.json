@@ -1,16 +1,15 @@
 {
-  "name":"ethnam/ethnam",
+  "name":"dqneo/ethfony",
   "description": "web application framework.",
   "type": "library",
   "license": "BSD-4-Clause",
-  "keywords": [ "framework", "ethnam" ],
-  "homepage": "https://github.com/ethnamphp/ethnam",
+  "keywords": [ "framework", "ethna", "symfony","ethfony" ],
+  "homepage": "https://github.com/DQNEO/ethfony",
   "authors": [
-        { "name": "DQNEO", "role" : "Administrator"},
-        { "name": "contributors", "homepage": "https://github.com/ethnamphp/ethnam/blob/master/AUTHORS" }
+        { "name": "DQNEO", "role" : "Administrator"}
     ],
   "require": {
-    "php" : ">=5.4.0",
+    "php" : ">=7.1.0",
     "symfony/symfony": "3.0.*"
   },
   "require-dev" : {
