@@ -5,3 +5,4 @@ vendor/
 # for local test
 ,
 /.idea/
+composer.lock
