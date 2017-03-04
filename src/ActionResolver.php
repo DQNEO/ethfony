@@ -32,8 +32,7 @@ class Ethna_ActionResolver
         list($action_class_name,,) = $this->getClassNames($action_name);
         if (is_null($action_class_name)) {
             $this->logger->end();
-            $r = Ethna::raiseError("undefined action [%s]", E_APP_UNDEFINED_ACTION, $action_name);
-            throw new \Exception($r->getMessage());
+            throw new \Exception("undefined action [$action_name]");
         }
         return $action_name;
     }
