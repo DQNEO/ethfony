@@ -4,3 +4,4 @@ vendor/
 
 # for local test
 ,
+/.idea/
