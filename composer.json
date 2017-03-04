@@ -10,7 +10,8 @@
         { "name": "contributors", "homepage": "https://github.com/ethnamphp/ethnam/blob/master/AUTHORS" }
     ],
   "require": {
-    "php" : ">=5.4.0"
+    "php" : ">=5.4.0",
+    "symfony/symfony": "3.0.*"
   },
   "require-dev" : {
     "phpunit/phpunit": "3.7.*"
