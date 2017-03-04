@@ -88,17 +88,17 @@ class Ethna_ActionResolver
     /**
      *  フォームにより要求されたアクション名に対応する定義を返す
      *
-     * @param  string $action_name アクション名
+     * @param  string $key アクション名
      * @return array  クラス名
      */
-    protected function getClassNames($action_name)
+    protected function getClassNames($key)
     {
 
         // アクションスクリプトのインクルード
         // "foo_bar" -> "/Foo/Bar.php"となる
         $postfix1 = preg_replace_callback('/_(.)/', function (array $matches) {
                 return '/' . strtoupper($matches[1]);
-            }, ucfirst($action_name));
+            }, ucfirst($key));
         $class_path = $postfix1 . '.php';
         $this->logger->log(LOG_DEBUG, "default action path [%s]", $class_path);
         if (file_exists($this->actionDir . $class_path)) {
@@ -109,7 +109,7 @@ class Ethna_ActionResolver
 
         $postfix = preg_replace_callback('/_(.)/', function (array $matches) {
             return strtoupper($matches[1]);
-        }, ucfirst($action_name));
+        }, ucfirst($key));
         $action_class_name = sprintf("%s_Action_%s", $this->appId, $postfix);
         $this->logger->log(LOG_DEBUG, "default action class [%s]", $action_class_name);
         // actionクラスが存在しなければ探索中止
