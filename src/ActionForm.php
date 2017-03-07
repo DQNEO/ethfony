@@ -78,8 +78,12 @@ class Ethna_ActionForm
      *  Ethna_ActionFormクラスのコンストラクタ
      *
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, array $form = null)
     {
+        if (isset($form)) {
+            $this->form = $form;
+        }
+
         $this->container = $container;
         $this->action_error = $container->getActionError();
         $this->ae = $this->action_error;
@@ -106,6 +110,8 @@ class Ethna_ActionForm
                 }
             }
         }
+
+        $container->setActionForm($this);
     }
 
     /**

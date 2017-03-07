@@ -165,13 +165,9 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
         $i18n = $this->container->getI18N();
         $i18n->setLanguage($this->locale);
 
-        // アクションフォーム初期化
-        // フォーム定義、フォーム値設定
-        $action_form = $actionResolver->newActionForm($action_name, $this->container);
-        $this->container->setActionForm($action_form);
 
         $viewResolver = new Ethna_ViewResolver($this->container, $this->logger, $this->container->getViewdir(), $this->container->getAppId(), $this->class['view']);
-        $callable = $actionResolver->getController($request, $action_name, $this->container, $action_form, $viewResolver);
+        $callable = $actionResolver->getController($request, $action_name, $this->container, null, $viewResolver);
         $arguments = [$request];
         $response = call_user_func_array($callable, $arguments);
         return $response;
