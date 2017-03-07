@@ -55,15 +55,7 @@ class Ethna_ActionResolver
         /** @var Ethna_ActionClass $ac */
         $ac = new $action_class_name($container, null, $viewResolver);
         $form_class_name = $this->getActionFormName($action_name);
-
-        // form定義を外から注入
-        if (! empty($ac->form)) {
-            $form_injection = $ac->form;
-        } else {
-            $form_injection = null;
-        }
-
-        $action_form =  new $form_class_name($container, $form_injection);
+        $action_form =  new $form_class_name($container);
         $ac->setActionForm($action_form);
         return [$ac, $method];
     }
