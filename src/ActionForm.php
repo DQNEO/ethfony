@@ -106,6 +106,8 @@ class Ethna_ActionForm
                 }
             }
         }
+
+        $container->setActionForm($this);
     }
 
     /**

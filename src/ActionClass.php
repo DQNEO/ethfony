@@ -70,7 +70,7 @@ class Ethna_ActionClass
      *  Ethna_ActionClassのコンストラクタ
      *
      */
-    public function __construct(ContainerInterface $container, $action_form, $viewResolver)
+    public function __construct(ContainerInterface $container, $void, $viewResolver)
     {
         $this->container = $container;
         $this->config = $container->getConfig();
@@ -79,13 +79,16 @@ class Ethna_ActionClass
         $this->action_error = $container->getActionError();
         $this->ae = $this->action_error;
 
-        $this->action_form = $action_form;
-        $this->af = $this->action_form;
-
         $this->session = $container->getSession();
         $this->plugin = $container->getPlugin();
         $this->logger = $container->getLogger();
         $this->viewResolver = $viewResolver;
+    }
+
+    public function setActionForm(Ethna_ActionForm $action_form)
+    {
+        $this->action_form = $action_form;
+        $this->af = $this->action_form;
     }
 
     /**

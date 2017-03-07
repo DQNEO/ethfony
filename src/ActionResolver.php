@@ -37,8 +37,9 @@ class Ethna_ActionResolver
         return $action_name;
     }
 
-    public function getController(Request $request, $action_name, ContainerInterface $container, $action_form, $viewResolver): callable
+    public function getController(Request $request, $action_name, ContainerInterface $container, $void, $viewResolver): callable
     {
+
         list($action_class_name ,$void ,$method) = $this->getClassNames($action_name);
         if ($action_class_name == null) {
             throw new \Exception('action class not found');
@@ -49,16 +50,14 @@ class Ethna_ActionResolver
             $method = 'run';
         }
 
-        $ac = new $action_class_name($container, $action_form, $viewResolver);
-
-        return [$ac, $method];
-    }
-
-    public function newActionForm($action_name, ContainerInterface $container)
-    {
+        // アクションフォーム初期化
+        // フォーム定義、フォーム値設定
+        /** @var Ethna_ActionClass $ac */
+        $ac = new $action_class_name($container, null, $viewResolver);
         $form_class_name = $this->getActionFormName($action_name);
-        return new $form_class_name($container);
-
+        $action_form =  new $form_class_name($container);
+        $ac->setActionForm($action_form);
+        return [$ac, $method];
     }
 
     /**
@@ -135,7 +134,7 @@ class Ethna_ActionResolver
      * @access public
      * @param  string $action_name アクション名
      */
-    public function getActionFormName($action_name): ?string
+    public function getActionFormName($action_name): string
     {
         list(, $form_class_name,) = $this->getClassNames($action_name);
         return $form_class_name;
