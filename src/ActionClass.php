@@ -85,6 +85,18 @@ class Ethna_ActionClass
         $this->viewResolver = $viewResolver;
     }
 
+
+    /**
+     *  現在実行中のアクション名
+     *
+     *  @return string actionname
+     */
+    public function getActionName()
+    {
+        return $this->container->getCurrentActionName();
+    }
+
+
     public function setActionForm(Ethna_ActionForm $action_form)
     {
         $this->action_form = $action_form;
