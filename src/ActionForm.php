@@ -33,12 +33,6 @@ class Ethna_ActionForm
     /** @FIXME @protected    array   フォーム値 */
     public $form_vars = array();
 
-    /** @protected    array   アプリケーション設定値 */
-    public $app_vars = array();
-
-    /** @protected    array   アプリケーション設定値(自動エスケープなし) */
-    public $app_ne_vars = array();
-
     /** @protected    object  Ethna_ActionError   アクションエラーオブジェクト */
     public $action_error;
 
@@ -74,6 +68,8 @@ class Ethna_ActionForm
     /** @var Ethna_Container */
     protected $container;
 
+    /** @var  Ethna_AppDataContainer */
+    protected $dataContainer;
     /**
      *  Ethna_ActionFormクラスのコンストラクタ
      *
@@ -108,6 +104,7 @@ class Ethna_ActionForm
         }
 
         $container->setActionForm($this);
+        $this->dataContainer = $container->getDataContainer();
     }
 
     /**
@@ -325,90 +322,34 @@ class Ethna_ActionForm
         return $retval;
     }
 
-    /**
-     *  アプリケーション設定値のアクセサ(R)
-     *
-     *  @access public
-     *  @param  string  $name   キー
-     *  @return mixed   アプリケーション設定値
-     */
     public function getApp($name)
     {
-        if (isset($this->app_vars[$name]) == false) {
-            return null;
-        }
-        return $this->app_vars[$name];
+        return $this->dataContainer->getApp($name);
     }
 
-    /**
-     *  アプリケーション設定値のアクセサ(W)
-     *
-     *  @access public
-     *  @param  string  $name   キー
-     *  @param  mixed   $value  値
-     */
     public function setApp($name, $value)
     {
-        $this->app_vars[$name] = $value;
+        return $this->dataContainer->setApp($name, $value);
     }
 
-    /**
-     *  アプリケーション設定値を配列にして返す
-     *
-     *  @access public
-     *  @param  boolean $escape HTMLエスケープフラグ(true:エスケープする)
-     *  @return array   フォーム値を格納した配列
-     */
     public function getAppArray($escape = true)
     {
-        $retval = array();
-
-        $this->_getArray($this->app_vars, $retval, $escape);
-
-        return $retval;
+        return $this->dataContainer->getAppArray($escape);
     }
 
-    /**
-     *  アプリケーション設定値(自動エスケープなし)のアクセサ(R)
-     *
-     *  @access public
-     *  @param  string  $name   キー
-     *  @return mixed   アプリケーション設定値
-     */
     public function getAppNE($name)
     {
-        if (isset($this->app_ne_vars[$name]) == false) {
-            return null;
-        }
-        return $this->app_ne_vars[$name];
+        return $this->dataContainer->getAppNE($name);
     }
 
-    /**
-     *  アプリケーション設定値(自動エスケープなし)のアクセサ(W)
-     *
-     *  @access public
-     *  @param  string  $name   キー
-     *  @param  mixed   $value  値
-     */
     public function setAppNE($name, $value)
     {
-        $this->app_ne_vars[$name] = $value;
+        return $this->dataContainer->setAppNE($name, $value);
     }
 
-    /**
-     *  アプリケーション設定値(自動エスケープなし)を配列にして返す
-     *
-     *  @access public
-     *  @param  boolean $escape HTMLエスケープフラグ(true:エスケープする)
-     *  @return array   フォーム値を格納した配列
-     */
     public function getAppNEArray($escape = false)
     {
-        $retval = array();
-
-        $this->_getArray($this->app_ne_vars, $retval, $escape);
-
-        return $retval;
+        return $this->dataContainer->getAppNEArray($escape);
     }
 
     /**
@@ -421,17 +362,7 @@ class Ethna_ActionForm
      */
     public function _getArray(&$vars, &$retval, $escape)
     {
-        foreach (array_keys($vars) as $name) {
-            if (is_array($vars[$name])) {
-                $retval[$name] = array();
-                $this->_getArray($vars[$name], $retval[$name], $escape);
-            } else if (is_null($vars[$name])) {
-                $retval[$name] = null;
-            } else {
-                $retval[$name] = $escape
-                    ? htmlspecialchars($vars[$name], ENT_QUOTES, mb_internal_encoding()) : $vars[$name];
-            }
-        }
+        return $this->dataContainer->_getArray($vars, $retval, $escape);
     }
 
     /**

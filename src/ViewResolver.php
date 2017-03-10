@@ -21,7 +21,7 @@ class Ethna_ViewResolver
         $this->baseViewClassName = $baseViewClassName;
     }
 
-    public function getView(string $forward_name, Ethna_ActionForm $af): Ethna_ViewClass
+    public function getView(string $forward_name, ?Ethna_ActionForm $af): Ethna_ViewClass
     {
         $view_path = preg_replace_callback('/_(.)/', function(array $matches){return '/' . strtoupper($matches[1]); }, ucfirst($forward_name)) . '.php';
         $this->logger->log(LOG_DEBUG, "default view path [%s]", $view_path);

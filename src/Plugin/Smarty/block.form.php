@@ -11,14 +11,20 @@ function smarty_block_form($params, $content, &$smarty, &$repeat)
         if (isset($params['default']) === false) {
             // 指定なしのときは $form を使う
             $af = Ethna_Container::getInstance()->getActionForm();
+            if ($af) {
+                // c.f. http://smarty.php.net/manual/en/plugins.block.functions.php
+                $smarty->_tag_stack[count($smarty->_tag_stack)-1][1]['default']
+                    = $af->getArray(false);
+            }
 
-            // c.f. http://smarty.php.net/manual/en/plugins.block.functions.php
-            $smarty->_tag_stack[count($smarty->_tag_stack)-1][1]['default']
-                = $af->getArray(false);
         }
 
         // 動的フォームヘルパを呼ぶ
-        if (isset($params['ethna_action'])) {
+        // 動的フォームヘルパを呼ぶ
+        if (isset($params['ethna_form'])) {
+            $view = Ethna_Container::getInstance()->getView();
+            $view->addActionFormHelperByFormClassName($params['ethna_form'], true);
+        } else if (isset($params['ethna_action'])) {
             $ethna_action = $params['ethna_action'];
             $view = Ethna_Container::getInstance()->getView();
             $view->addActionFormHelper($ethna_action, true);

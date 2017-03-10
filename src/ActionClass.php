@@ -48,10 +48,10 @@ class Ethna_ActionClass
     /** @protected    object  Ethna_ActionError   アクションエラーオブジェクト(省略形) */
     protected $ae;
 
-    /** @protected    object  Ethna_ActionForm    アクションフォームオブジェクト */
+    /** @var Ethna_ActionForm    アクションフォームオブジェクト */
     protected $action_form;
 
-    /** @protected    object  Ethna_ActionForm    アクションフォームオブジェクト(省略形) */
+    /** @var Ethna_ActionForm    アクションフォームオブジェクト */
     protected $af;
 
     /** @protected    object  Ethna_Session       セッションオブジェクト */
@@ -66,6 +66,9 @@ class Ethna_ActionClass
     /** @var  Ethna_ViewResolver  */
     protected $viewResolver;
 
+    /** @var Ethna_AppDataContainer */
+    protected $dataContainer;
+
     /**
      *  Ethna_ActionClassのコンストラクタ
      *
@@ -73,6 +76,7 @@ class Ethna_ActionClass
     public function __construct(ContainerInterface $container, $void, $viewResolver)
     {
         $this->container = $container;
+        $this->dataContainer = $container->getDataContainer();
         $this->config = $container->getConfig();
         $this->i18n = $container->getI18N();
 
@@ -172,16 +176,7 @@ class Ethna_ActionClass
      */
     protected function view(string $forward_name, array $parameters = []):Response
     {
-        foreach ($parameters as $key => $val) {
-            $this->af->setApp($key, $val);
-        }
-
-        $view = $this->viewResolver->getView($forward_name, $this->af);
-
-        return new StreamedResponse(function() use($view) {
-            $view->preforward();
-            $view->forward();
-        });
+        return $this->viewResolver->getView($forward_name, $this->af)->render($parameters);
     }
 
 

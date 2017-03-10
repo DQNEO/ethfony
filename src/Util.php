@@ -468,6 +468,7 @@ class Ethna_Util
      */
     public static function getRandom($length = 64)
     {
+        return sha1(time());
         static $srand = false;
 
         if ($srand == false) {
