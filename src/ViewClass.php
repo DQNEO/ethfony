@@ -200,9 +200,8 @@ class Ethna_ViewClass
             //    アクションが異なる場合
             $form_name = $container->getActionFormName($action);
             if ($form_name === null) {
-                $this->logger->log(LOG_WARNING,
-                    'action form for the action [%s] not found.', $action);
-                return;
+                throw new \Exception(sprintf(
+                    'action form for the action [%s] not found.', $action));
             }
             $this->helper_action_form[$action] = new $form_name($container);
         }
