@@ -25,4 +25,6 @@ interface Ethna_ContainerInterface
 
     public function getTmpdir();
 
+    public function getView(): Ethna_ViewClass;
+
 }
