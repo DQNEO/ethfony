@@ -45,6 +45,17 @@ class Ethna_Container implements ContainerInterface
 
     public $url;
 
+    /** @var  Ethna_AppDataContainer */
+    protected $dataContainer;
+
+    /**
+     * @return Ethna_AppDataContainer
+     */
+    public function getDataContainer(): Ethna_AppDataContainer
+    {
+        return $this->dataContainer;
+    }
+
     /**
      *  アプリケーションベースURLを返す
      *
@@ -81,6 +92,7 @@ class Ethna_Container implements ContainerInterface
         $this->locale = $locale;
         $this->sessionName = $sessionName;
 
+        $this->dataContainer = new Ethna_AppDataContainer();
         /**
          * ディレクトリ設定を絶対パスに変換
          */
@@ -252,7 +264,7 @@ class Ethna_Container implements ContainerInterface
 
     /**
      */
-    public function getActionForm(): Ethna_ActionForm
+    public function getActionForm(): ?Ethna_ActionForm
     {
         return $this->action_form;
     }

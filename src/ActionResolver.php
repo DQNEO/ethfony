@@ -55,8 +55,10 @@ class Ethna_ActionResolver
         /** @var Ethna_ActionClass $ac */
         $ac = new $action_class_name($container, null, $viewResolver);
         $form_class_name = $this->getActionFormName($action_name);
-        $action_form =  new $form_class_name($container);
-        $ac->setActionForm($action_form);
+        if ($form_class_name) {
+            $action_form =  new $form_class_name($container);
+            $ac->setActionForm($action_form);
+        }
         return [$ac, $method];
     }
 
@@ -134,7 +136,7 @@ class Ethna_ActionResolver
      * @access public
      * @param  string $action_name アクション名
      */
-    public function getActionFormName($action_name): string
+    public function getActionFormName($action_name): ?string
     {
         list(, $form_class_name,) = $this->getClassNames($action_name);
         return $form_class_name;

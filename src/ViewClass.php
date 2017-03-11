@@ -9,6 +9,9 @@
  *  @version    $Id$
  */
 use Ethna_ContainerInterface as ContainerInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+
 // {{{ Ethna_ViewClass
 /**
  *  viewクラス
@@ -65,6 +68,7 @@ class Ethna_ViewClass
     /** @protected    boolean  配列フォームを呼んだカウンタをリセットするか否か */
     protected $reset_counter = false;
 
+    protected $form_array = [];
     /**
      *  Ethna_ViewClassのコンストラクタ
      *
@@ -72,7 +76,7 @@ class Ethna_ViewClass
      *  @param  string  $forward_name   ビューに関連付けられている遷移名
      *  @param  string  $forward_path   ビューに関連付けられているテンプレートファイル名
      */
-    public function __construct(ContainerInterface $container, Ethna_ActionForm $action_form, $forward_name, $forward_path)
+    public function __construct(ContainerInterface $container, ?Ethna_ActionForm $action_form, $forward_name, $forward_path)
     {
         $this->container = $container;
         $this->container->view = $this;
@@ -84,9 +88,11 @@ class Ethna_ViewClass
         $this->action_error = $this->container->getActionError();
         $this->ae = $this->action_error;
 
-        $this->action_form = $action_form;
-        $this->af = $action_form;
-
+        if (isset($action_form)) {
+            $this->action_form = $action_form;
+            $this->af = $action_form;
+            $this->form_array = $action_form->getArray();
+        }
         $this->session = $this->container->getSession();
 
         $this->forward_name = $forward_name;
@@ -96,6 +102,20 @@ class Ethna_ViewClass
             $this->addActionFormHelper($action);
         }
     }
+
+    public function render(array $parameters = []) :Response
+    {
+        $dataContainer = $this->container->getDataContainer();
+        foreach ($parameters as $key => $val) {
+            $dataContainer->setApp($key, $val);
+        }
+
+        return new StreamedResponse(function() {
+            $this->preforward();
+            $this->forward();
+        });
+    }
+
     // }}}
 
     protected function getCurrentActionName()
@@ -181,6 +201,24 @@ class Ethna_ViewClass
      *  @param  boolean $dynamic_helper 動的フォームヘルパを呼ぶか否か
      *  @access public
      */
+    public function addActionFormHelperByFormClassName($form_name, $dynamic_helper = false)
+    {
+        $this->helper_action_form[$form_name] = new $form_name(Ethna_Container::getInstance());
+        //   動的フォームを設定するためのヘルパメソッドを呼ぶ
+        if ($dynamic_helper) {
+            $af = $this->helper_action_form[$form_name];
+            $af->setFormDef_ViewHelper();
+        }
+    }
+
+    // {{{ addActionFormHelper
+    /**
+     *  helperアクションフォームオブジェクトを設定する
+     *
+     *  @param  string $action アクション名
+     *  @param  boolean $dynamic_helper 動的フォームヘルパを呼ぶか否か
+     *  @access public
+     */
     public function addActionFormHelper($action, $dynamic_helper = false)
     {
         //
@@ -253,9 +291,11 @@ class Ethna_ViewClass
         }
 
         // 最初に $this->af を調べる
-        $def = $this->af->getDef($name);
-        if ($def !== null) {
-            return $this->af;
+        if ($this->af) {
+            $def = $this->af->getDef($name);
+            if ($def !== null) {
+                return $this->af;
+            }
         }
 
         // $this->helper_action_form を順に調べる
@@ -998,11 +1038,11 @@ class Ethna_ViewClass
     function _getRenderer()
     {
         $renderer = $this->container->getRenderer();
+        $dataContainer = $this->container->getDataContainer();
 
-        $form_array = $this->af->getArray();
-        $app_array = $this->af->getAppArray();
-        $app_ne_array = $this->af->getAppNEArray();
-        $renderer->setPropByRef('form', $form_array);
+        $app_array = $dataContainer->getAppArray();
+        $app_ne_array = $dataContainer->getAppNEArray();
+        $renderer->setPropByRef('form', $this->form_array);
         $renderer->setPropByRef('app', $app_array);
         $renderer->setPropByRef('app_ne', $app_ne_array);
         $message_list = Ethna_Util::escapeHtml($this->ae->getMessageList());

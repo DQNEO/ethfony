@@ -27,4 +27,6 @@ interface Ethna_ContainerInterface
 
     public function getView(): Ethna_ViewClass;
 
+    public function getDataContainer(): Ethna_AppDataContainer;
+
 }
