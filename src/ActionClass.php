@@ -142,8 +142,10 @@ class Ethna_ActionClass
 
     public function run(Request $request): Response
     {
-        $this->af->setFormDef_PreHelper();
-        $this->af->setFormVars($request);
+        if ($this->af) {
+            $this->af->setFormDef_PreHelper();
+            $this->af->setFormVars($request);
+        }
 
 
         $forward_name = $this->authenticate();
