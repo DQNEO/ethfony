@@ -40,7 +40,7 @@ class Ethna_ActionResolver
     public function getController(Request $request, $action_name, ContainerInterface $container, $void, $viewResolver): callable
     {
 
-        list($action_class_name ,$void ,$method) = $this->getClassNames($action_name);
+        list($action_class_name ,$form_class_name ,$method) = $this->getClassNames($action_name);
         if ($action_class_name == null) {
             throw new \Exception('action class not found');
         }
@@ -54,7 +54,6 @@ class Ethna_ActionResolver
         // フォーム定義、フォーム値設定
         /** @var Ethna_ActionClass $ac */
         $ac = new $action_class_name($container, null, $viewResolver);
-        $form_class_name = $this->getActionFormName($action_name);
         if ($form_class_name) {
             $action_form =  new $form_class_name($container);
             $ac->setActionForm($action_form);
