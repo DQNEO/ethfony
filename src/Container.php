@@ -305,7 +305,7 @@ class Ethna_Container implements ContainerInterface
             return $this->manager[$type];
         }
 
-        $obj = new $class_name($this,$this->getConfig(), $this->getI18N(), $this->getSession(), $this->getActionForm());
+        $obj = new $class_name($this);
 
         //  生成したオブジェクトはキャッシュする
         if (isset($this->manager[$type]) == false || is_object($this->manager[$type]) == false) {
