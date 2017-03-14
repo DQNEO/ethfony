@@ -176,7 +176,6 @@ class Ethna_ActionForm
     {
         $http_vars = (new Ethna_RequestWrapper($reqeust))->getHttpVars();
         $_files = $reqeust->files->all();
-
         foreach ($this->form as $name => $def) {
             $type = is_array($def['type']) ? $def['type'][0] : $def['type'];
             if ($type == VAR_TYPE_FILE) {
@@ -190,7 +189,7 @@ class Ethna_ActionForm
 
                 // 配列構造の検査
                 if (is_array($def['type'])) {
-                    if (is_array($_files[$name]['tmp_name']) == false) {
+                    if (isset($_files[$name]['tmp_name']) && is_array($_files[$name]['tmp_name']) == false) {
                         $this->handleError($name, E_FORM_WRONGTYPE_ARRAY);
                         $this->form_vars[$name] = null;
                         continue;
@@ -204,7 +203,7 @@ class Ethna_ActionForm
                 }
 
                 $files = null;
-                if (is_array($def['type'])) {
+                if (is_array($def['type']) && isset($_files[$name]['tmp_name'])) {
                     $files = array();
                     // ファイルデータを再構成
                     foreach (array_keys($_files[$name]['name']) as $key) {
