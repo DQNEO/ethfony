@@ -381,6 +381,11 @@ class Ethna_Container implements ContainerInterface
         return $this->actionResolver->getActionFormName($action_name);
     }
 
+    public function getActionResolver() :Ethna_ActionResolver
+    {
+        return $this->actionResolver;
+    }
+
     /**
      * @param Ethna_ActionResolver $actionResolver
      */

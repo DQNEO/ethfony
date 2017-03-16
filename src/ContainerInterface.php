@@ -29,4 +29,6 @@ interface Ethna_ContainerInterface
 
     public function getDataContainer(): Ethna_AppDataContainer;
 
+    public function getActionResolver() :Ethna_ActionResolver;
+
 }
