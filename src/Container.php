@@ -389,7 +389,7 @@ class Ethna_Container implements ContainerInterface
     /**
      * @param Ethna_ActionResolver $actionResolver
      */
-    public function setActionResolver($actionResolver)
+    public function setActionResolver(Ethna_ActionResolver $actionResolver)
     {
         $this->actionResolver = $actionResolver;
     }
