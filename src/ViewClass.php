@@ -110,8 +110,9 @@ class Ethna_ViewClass
             $dataContainer->setApp($key, $val);
         }
 
+        $this->preforward();
+
         return new StreamedResponse(function() {
-            $this->preforward();
             $this->forward();
         });
     }
