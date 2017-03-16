@@ -100,8 +100,8 @@ class Ethna_ActionResolver
                 return '/' . strtoupper($matches[1]);
             }, ucfirst($action_name));
         $class_path = $postfix1 . '.php';
-        $this->logger->log(LOG_DEBUG, "default action path [%s]", $class_path);
         if (file_exists($this->actionDir . $class_path)) {
+            $this->logger->log(LOG_DEBUG, "action file is found [%s]", $class_path);
             include_once $this->actionDir . $class_path;
         } else {
             $this->logger->log(LOG_INFO, 'file not found:' . $this->actionDir . $class_path);
