@@ -37,7 +37,7 @@ class Ethna_ActionResolver
         return $action_name;
     }
 
-    public function getController(Request $request, $action_name, ContainerInterface $container, $void, $viewResolver): callable
+    public function getController(Request $request, $action_name, ContainerInterface $container, $viewClassName): callable
     {
 
         list($action_class_name ,$form_class_name ,$method) = $this->getClassNames($action_name);
@@ -53,7 +53,7 @@ class Ethna_ActionResolver
         // アクションフォーム初期化
         // フォーム定義、フォーム値設定
         /** @var Ethna_ActionClass $ac */
-        $ac = new $action_class_name($container, null, $viewResolver);
+        $ac = new $action_class_name($container, $viewClassName);
         if ($form_class_name) {
             $action_form =  new $form_class_name($container);
             $ac->setActionForm($action_form);

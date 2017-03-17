@@ -63,17 +63,15 @@ class Ethna_ActionClass
     /** @protected    object  Ethna_Logger    ログオブジェクト */
     protected $logger;
 
-    /** @var  Ethna_ViewResolver  */
-    protected $viewResolver;
-
     /** @var Ethna_AppDataContainer */
     protected $dataContainer;
 
+    protected $viewClassName;
     /**
      *  Ethna_ActionClassのコンストラクタ
      *
      */
-    public function __construct(ContainerInterface $container, $void, $viewResolver)
+    public function __construct(ContainerInterface $container, $viewClassName)
     {
         $this->container = $container;
         $this->dataContainer = $container->getDataContainer();
@@ -86,7 +84,7 @@ class Ethna_ActionClass
         $this->session = $container->getSession();
         $this->plugin = $container->getPlugin();
         $this->logger = $container->getLogger();
-        $this->viewResolver = $viewResolver;
+        $this->viewClassName = $viewClassName;
     }
 
 
@@ -178,7 +176,9 @@ class Ethna_ActionClass
      */
     protected function view(string $forward_name, array $parameters = []):Response
     {
-        return $this->viewResolver->getView($forward_name, $this->af)->render($parameters);
+        $className = $this->viewClassName;
+        $view = new $className($this->container, $this->af, $forward_name);
+        return $view->render($parameters);
     }
 
 
