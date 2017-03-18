@@ -326,7 +326,7 @@ class Ethna_Container implements ContainerInterface
      */
     public function getRenderer()
     {
-        if ($this->renderer instanceof Ethna_Renderer) {
+        if (isset($this->renderer)) {
             return $this->renderer;
         }
 
