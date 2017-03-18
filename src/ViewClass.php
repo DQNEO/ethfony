@@ -1057,6 +1057,10 @@ class Ethna_ViewClass
         $renderer = $this->container->getRenderer();
         $dataContainer = $this->container->getDataContainer();
 
+        $renderer->setProp('actionname', $this->getCurrentActionName());
+        $renderer->setProp('viewname', $this->forward_name);
+        $renderer->setProp('forward_path', $this->forward_path);
+
         $app_array = $dataContainer->getAppArray();
         $app_ne_array = $dataContainer->getAppNEArray();
         $renderer->setPropByRef('form', $this->form_array);
