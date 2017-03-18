@@ -68,7 +68,6 @@ class Ethna_ViewClass
     /** @protected    boolean  配列フォームを呼んだカウンタをリセットするか否か */
     protected $reset_counter = false;
 
-    protected $form_array = [];
     /**
      *  Ethna_ViewClassのコンストラクタ
      *
@@ -91,7 +90,6 @@ class Ethna_ViewClass
         if (isset($action_form)) {
             $this->action_form = $action_form;
             $this->af = $action_form;
-            $this->form_array = $action_form->getArray();
         }
         $this->session = $this->container->getSession();
 
@@ -136,7 +134,11 @@ class Ethna_ViewClass
 
         $app_array = $dataContainer->getAppArray();
         $app_ne_array = $dataContainer->getAppNEArray();
-        $renderer->setPropByRef('form', $this->form_array); // this may be a bug! we should use $af here
+
+        if (isset($this->af)) {
+            $form_array = $this->af->getArray();
+            $renderer->setPropByRef('form', $form_array); // this may be a bug! we should use $af here
+        }
         $renderer->setPropByRef('app', $app_array);
         $renderer->setPropByRef('app_ne', $app_ne_array);
         $message_list = Ethna_Util::escapeHtml($this->ae->getMessageList());
