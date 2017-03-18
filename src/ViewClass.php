@@ -127,9 +127,14 @@ class Ethna_ViewClass
         }
 
         $this->preforward($dataContainer);
+        $renderer = $this->_getRenderer();
+        $this->_setDefault($renderer);
 
-        return new StreamedResponse(function() {
-            $this->forward();
+        return new StreamedResponse(function() use ($renderer) {
+            $e = $renderer->perform($this->forward_path);
+            if (Ethna::isError($e)) {
+                throw new \Exception($e->getMessage());
+            }
         });
     }
 
@@ -156,26 +161,6 @@ class Ethna_ViewClass
     {
     }
     // }}}
-
-    // {{{ forward
-    /**
-     *  遷移名に対応する画面を出力する
-     *
-     *  特殊な画面を表示する場合を除いて特にオーバーライドする必要は無い
-     *  (preforward()のみオーバーライドすれば良い)
-     *
-     *  @access public
-     */
-    public function forward()
-    {
-        $renderer = $this->_getRenderer();
-        $this->_setDefault($renderer);
-
-        $e = $renderer->perform($this->forward_path);
-        if (Ethna::isError($e)) {
-            throw new \Exception($e->getMessage());
-        }
-    }
 
     // {{{ getCurrentForwardName()
     /**
