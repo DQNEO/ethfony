@@ -174,26 +174,6 @@ class Ethna_ViewClass
     }
     // }}}
 
-    // {{{ templateExists
-    /**
-     *  テンプレートファイルが存在するか否かを返します。
-     *
-     * @param   string  $filename  チェック対象のテンプレートファイル
-     * @access  public
-     * @return  boolean 指定したテンプレートファイルが存在すればtrue
-     *                  存在しなければfalse
-     */
-    public function templateExists($filename)
-    {
-        $renderer = $this->_getRenderer();
-        if ($renderer->templateExists($filename)) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-    // }}}
 
     // {{{ addActionFormHelper
     /**

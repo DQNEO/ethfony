@@ -260,22 +260,6 @@ class Ethna_Renderer
     }
 
     /**
-     *  テンプレートの有無をチェックする
-     *
-     *  @param string $template テンプレート名
-     *
-     *  @access public
-     */
-    public function templateExists($template)
-    {
-        if (substr($this->template_dir, -1) != '/') {
-            $this->template_dir .= '/';
-        }
-
-        return (is_readable($this->template_dir . $template));
-    }
-
-    /**
      *  プラグインをセットする
      *
      *  @param string $name　プラグイン名
