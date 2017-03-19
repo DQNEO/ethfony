@@ -398,7 +398,7 @@ class Ethna_Container implements ContainerInterface
     public function getView(): Ethna_ViewClass
     {
         if (!isset($this->view)) {
-            $this->view = new Ethna_ViewClass($this, null,null);
+            $this->view = new Ethna_ViewClass($this);
         }
         return $this->view;
     }
