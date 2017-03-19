@@ -191,13 +191,8 @@ class Ethna_ViewClass
             return;
         }
 
-        //    現在のアクションと等しければ、対応する
-        //    アクションフォームを設定
         $container = Ethna_Container::getInstance();
-        if ($action === $container->getCurrentActionName()) {
-            $this->helper_action_form[$action] = $this->af;
-        } else {
-            //    アクションが異なる場合
+        if (ture) {
             $form_name = $container->getActionResolver()->getActionFormName($action);
             if ($form_name === null) {
                 throw new \Exception(sprintf(
