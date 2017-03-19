@@ -96,6 +96,11 @@ class Ethna_ActionClass
         return $this->container->getCurrentActionName();
     }
 
+    public function getCurrentActionName()
+    {
+        return $this->container->getCurrentActionName();
+    }
+
 
     public function setActionForm(Ethna_ActionForm $action_form)
     {
