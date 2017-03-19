@@ -82,32 +82,8 @@ class Ethna_Renderer
      *
      *  @access public
      */
-    public function perform($template = null, $capture = false)
+    public function perform($template = null)
     {
-        if ($template == null && $this->template == null) {
-            return Ethna::raiseWarning('template is not defined');
-        }
-
-        if ($template != null) {
-            $this->template = $template;
-        }
-
-        // テンプレートの有無のチェック
-        if (is_readable($this->template_dir . $this->template) === false) {
-            return Ethna::raiseWarning("template is not found: " . $this->template);
-        }
-
-        extract($this->prop);
-        if ($capture === true) {
-            ob_start();
-            include $this->template_dir . $this->template;
-            $captured = ob_get_contents();
-            ob_end_clean();
-            return $captured;
-        } else {
-            include $this->template_dir . $this->template;
-            return true;
-        }
     }
 
     /**
@@ -257,22 +233,6 @@ class Ethna_Renderer
         if (substr($this->template_dir, -1) != '/') {
             $this->template_dir .= '/';
         }
-    }
-
-    /**
-     *  テンプレートの有無をチェックする
-     *
-     *  @param string $template テンプレート名
-     *
-     *  @access public
-     */
-    public function templateExists($template)
-    {
-        if (substr($this->template_dir, -1) != '/') {
-            $this->template_dir .= '/';
-        }
-
-        return (is_readable($this->template_dir . $template));
     }
 
     /**

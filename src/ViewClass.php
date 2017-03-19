@@ -9,8 +9,6 @@
  *  @version    $Id$
  */
 use Ethna_ContainerInterface as ContainerInterface;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 // {{{ Ethna_ViewClass
 /**
@@ -38,37 +36,15 @@ class Ethna_ViewClass
     /** @public    object  Ethna_Plugin    プラグインオブジェクト */
     public $plugin;
 
-    /** @public    object  Ethna_ActionError   アクションエラーオブジェクト */
-    public $action_error;
-
-    /** @public    object  Ethna_ActionError   アクションエラーオブジェクト(省略形) */
-    public $ae;
-
-    /** @public    object  Ethna_ActionForm    アクションフォームオブジェクト */
-    public $action_form;
-
-    /** @public    object  Ethna_ActionForm    アクションフォームオブジェクト(省略形) */
-    public $af;
-
     /** @public    array   アクションフォームオブジェクト(helper) */
     public $helper_action_form = array();
 
     /** @public    array   helperでhtmlのattributeにはしないパラメータの一覧 */
     public $helper_parameter_keys = array('default', 'option', 'separator');
 
-    /** @public    object  Ethna_Session       セッションオブジェクト */
-    public $session;
-
-    /** @public    string  遷移名 */
-    public $forward_name;
-
-    /** @public    string  遷移先テンプレートファイル名 */
-    public $forward_path;
-
     /** @protected    boolean  配列フォームを呼んだカウンタをリセットするか否か */
     protected $reset_counter = false;
 
-    protected $form_array = [];
     /**
      *  Ethna_ViewClassのコンストラクタ
      *
@@ -76,139 +52,15 @@ class Ethna_ViewClass
      *  @param  string  $forward_name   ビューに関連付けられている遷移名
      *  @param  string  $forward_path   ビューに関連付けられているテンプレートファイル名
      */
-    public function __construct(ContainerInterface $container, ?Ethna_ActionForm $action_form, $forward_name)
+    public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
-        $this->container->view = $this;
         $this->config = $this->container->getConfig();
         $this->i18n = $this->container->getI18N();
         $this->logger = $this->container->getLogger();
         $this->plugin = $this->container->getPlugin();
 
-        $this->action_error = $this->container->getActionError();
-        $this->ae = $this->action_error;
-
-        if (isset($action_form)) {
-            $this->action_form = $action_form;
-            $this->af = $action_form;
-            $this->form_array = $action_form->getArray();
-        }
-        $this->session = $this->container->getSession();
-
-        $this->forward_name = $forward_name;
-        $this->forward_path = $this->getTemplatePath($forward_name);
-
-
-        foreach (array_keys($this->helper_action_form) as $action) {
-            $this->addActionFormHelper($action);
-        }
     }
-
-    /**
-     *  遷移名に対応するテンプレートパス名が省略された場合のデフォルトパス名を返す
-     *
-     *  デフォルトでは"foo_bar"というforward名が"foo/bar" + テンプレート拡張子となる
-     *  ので好み応じてオーバライドする
-     *
-     *  @access public
-     *  @param  string  $forward_name   forward名
-     *  @return string  forwardパス名
-     */
-    protected function getTemplatePath($forward_name)
-    {
-        return str_replace('_', '/', $forward_name) . '.tpl';
-    }
-
-    public function render(array $parameters = []) :Response
-    {
-        $dataContainer = $this->container->getDataContainer();
-        foreach ($parameters as $key => $val) {
-            $dataContainer->setApp($key, $val);
-        }
-
-        $this->preforward($dataContainer);
-
-        return new StreamedResponse(function() {
-            $this->forward();
-        });
-    }
-
-    // }}}
-
-    protected function getCurrentActionName()
-    {
-        return $this->container->getCurrentActionName();
-    }
-
-    // {{{ preforward
-    /**
-     *  画面表示前処理
-     *
-     *  テンプレートに設定する値でコンテキストに依存しないものは
-     *  ここで設定する(例:セレクトボックス等)
-     *
-     *  @access public
-     *  @param  mixed  $params  アクションクラスから返された引数 
-     *                          array('forward_name', $param) の形でアクション
-     *                          から値を返すことで、$params に値が渡されます。
-     */
-    public function preforward($dataContainer)
-    {
-    }
-    // }}}
-
-    // {{{ forward
-    /**
-     *  遷移名に対応する画面を出力する
-     *
-     *  特殊な画面を表示する場合を除いて特にオーバーライドする必要は無い
-     *  (preforward()のみオーバーライドすれば良い)
-     *
-     *  @access public
-     */
-    public function forward()
-    {
-        $renderer = $this->_getRenderer();
-        $this->_setDefault($renderer);
-
-        $e = $renderer->perform($this->forward_path);
-        if (Ethna::isError($e)) {
-            throw new \Exception($e->getMessage());
-        }
-    }
-
-    // {{{ getCurrentForwardName()
-    /**
-     *  getCurrentForwardName
-     *
-     *  @access public
-     */
-    public function getCurrentForwardName()
-    {
-        return $this->forward_name;
-    }
-    // }}}
-
-    // {{{ templateExists
-    /**
-     *  テンプレートファイルが存在するか否かを返します。
-     *
-     * @param   string  $filename  チェック対象のテンプレートファイル
-     * @access  public
-     * @return  boolean 指定したテンプレートファイルが存在すればtrue
-     *                  存在しなければfalse
-     */
-    public function templateExists($filename)
-    {
-        $renderer = $this->_getRenderer();
-        if ($renderer->templateExists($filename)) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-    // }}}
 
     // {{{ addActionFormHelper
     /**
@@ -246,20 +98,13 @@ class Ethna_ViewClass
             return;
         }
 
-        //    現在のアクションと等しければ、対応する
-        //    アクションフォームを設定
         $container = Ethna_Container::getInstance();
-        if ($action === $container->getCurrentActionName()) {
-            $this->helper_action_form[$action] = $this->af;
-        } else {
-            //    アクションが異なる場合
-            $form_name = $container->getActionResolver()->getActionFormName($action);
-            if ($form_name === null) {
-                throw new \Exception(sprintf(
-                    'action form for the action [%s] not found.', $action));
-            }
-            $this->helper_action_form[$action] = new $form_name($container);
+        $form_name = $container->getActionResolver()->getActionFormName($action);
+        if ($form_name === null) {
+            throw new \Exception(sprintf(
+                'action form for the action [%s] not found.', $action));
         }
+        $this->helper_action_form[$action] = new $form_name($container);
 
         //   動的フォームを設定するためのヘルパメソッドを呼ぶ
         if ($dynamic_helper) {
@@ -304,14 +149,6 @@ class Ethna_ViewClass
                     'helper action form for action [%s] not found',
                     $action);
                 return null;
-            }
-        }
-
-        // 最初に $this->af を調べる
-        if ($this->af) {
-            $def = $this->af->getDef($name);
-            if ($def !== null) {
-                return $this->af;
             }
         }
 
@@ -1045,55 +882,5 @@ class Ethna_ViewClass
     }
     // }}}
 
-    // {{{ _getRenderer
-    /**
-     *  レンダラオブジェクトを取得する
-     *
-     *  @access protected
-     *  @return object  Ethna_Renderer  レンダラオブジェクト
-     */
-    function _getRenderer()
-    {
-        $renderer = $this->container->getRenderer();
-        $dataContainer = $this->container->getDataContainer();
-
-        $renderer->setProp('actionname', $this->getCurrentActionName());
-        $renderer->setProp('viewname', $this->forward_name);
-        $renderer->setProp('forward_path', $this->forward_path);
-
-        $app_array = $dataContainer->getAppArray();
-        $app_ne_array = $dataContainer->getAppNEArray();
-        $renderer->setPropByRef('form', $this->form_array);
-        $renderer->setPropByRef('app', $app_array);
-        $renderer->setPropByRef('app_ne', $app_ne_array);
-        $message_list = Ethna_Util::escapeHtml($this->ae->getMessageList());
-        $renderer->setPropByRef('errors', $message_list);
-        if (isset($_SESSION)) {
-            $tmp_session = Ethna_Util::escapeHtml($_SESSION);
-            $renderer->setPropByRef('session', $tmp_session);
-        }
-        $renderer->setProp('script',
-            htmlspecialchars(basename($_SERVER['SCRIPT_NAME']), ENT_QUOTES, mb_internal_encoding()));
-        $renderer->setProp('request_uri',
-            isset($_SERVER['REQUEST_URI'])
-            ? htmlspecialchars($_SERVER['REQUEST_URI'], ENT_QUOTES, mb_internal_encoding())
-            : '');
-        $renderer->setProp('config', $this->config->get());
-
-        return $renderer;
-    }
-    // }}}
-
-    // {{{ _setDefault
-    /**
-     *  共通値を設定する
-     *
-     *  @access protected
-     *  @param  object  Ethna_Renderer  レンダラオブジェクト
-     */
-    protected function _setDefault($renderer)
-    {
-    }
-    // }}}
 }
 // }}}

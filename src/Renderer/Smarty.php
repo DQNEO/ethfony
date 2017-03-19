@@ -10,6 +10,9 @@
  */
 
 // {{{ Ethna_Renderer_Smarty
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+
 /**
  *  Smarty rendere class
  *
@@ -66,6 +69,36 @@ class Ethna_Renderer_Smarty extends Ethna_Renderer
         return 'smarty';
     }
 
+    public function render(Ethna_AppDataContainer $dataContainer,$config, $ae, $form_array, $actionName, $forward_name, $forward_path ) :Response
+    {
+        $this->setProp('actionname', $actionName);
+        $this->setProp('viewname', $forward_name);
+        $this->setProp('forward_path', $forward_path);
+
+        $app_array = $dataContainer->getAppArray();
+        $app_ne_array = $dataContainer->getAppNEArray();
+
+        $this->setPropByRef('form', $form_array);
+        $this->setPropByRef('app', $app_array);
+        $this->setPropByRef('app_ne', $app_ne_array);
+        $message_list = Ethna_Util::escapeHtml($ae->getMessageList());
+        $this->setPropByRef('errors', $message_list);
+        if (isset($_SESSION)) {
+            $tmp_session = Ethna_Util::escapeHtml($_SESSION);
+            $this->setPropByRef('session', $tmp_session);
+        }
+        $this->setProp('script',
+            htmlspecialchars(basename($_SERVER['SCRIPT_NAME']), ENT_QUOTES, mb_internal_encoding()));
+        $this->setProp('request_uri',
+            isset($_SERVER['REQUEST_URI'])
+                ? htmlspecialchars($_SERVER['REQUEST_URI'], ENT_QUOTES, mb_internal_encoding())
+                : '');
+        $this->setProp('config', $config);
+
+        return $this->perform($forward_path);
+
+    }
+
     /**
      *  ビューを出力する
      *
@@ -74,10 +107,10 @@ class Ethna_Renderer_Smarty extends Ethna_Renderer
      *
      *  @access public
      */
-    public function perform($template = null, $capture = false)
+    public function perform($template = null) :Response
     {
         if ($template === null && $this->template === null) {
-            return Ethna::raiseWarning('template is not defined');
+            throw new \Exception('template is not defined');
         }
 
         if ($template !== null) {
@@ -86,13 +119,9 @@ class Ethna_Renderer_Smarty extends Ethna_Renderer
         set_error_handler(null);
         if ((is_absolute_path($this->template) && is_readable($this->template))
             || is_readable($this->template_dir . $this->template)) {
-                if ($capture === true) {
-                    $captured = $this->engine->fetch($this->template);
-                    return $captured;
-                } else {
-                    header('X-MemoryUsage: ' .  memory_get_usage());
-                    $this->engine->display($this->template);
-                }
+            return new StreamedResponse(function() {
+                $this->engine->display($this->template);
+            });
         } else {
             throw new \Exception('template not found ' .$this->template_dir .  $this->template);
         }
