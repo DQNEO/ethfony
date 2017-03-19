@@ -211,11 +211,6 @@ class Ethna_ActionClass
         return str_replace('_', '/', $forward_name) . '.tpl';
     }
 
-    protected function getViewHookPath($forward_name)
-    {
-        return preg_replace_callback('/_(.)/', function(array $matches){return '/' . strtoupper($matches[1]);}, ucfirst($forward_name));
-    }
-
     protected function prerender($forward_name)
     {
     }
