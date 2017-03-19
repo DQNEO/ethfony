@@ -208,8 +208,10 @@ class Ethna_ViewClass
 
         //   動的フォームを設定するためのヘルパメソッドを呼ぶ
         if ($dynamic_helper) {
-            $af = $this->helper_action_form[$action];
-            $af->setFormDef_ViewHelper();
+            // BUG!!
+            // 下記のコードが何のためにあるのか思い出せない
+            //$af = $this->helper_action_form[$action];
+            //$af->setFormDef_ViewHelper();
         }
     }
     // }}}
