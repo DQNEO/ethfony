@@ -68,11 +68,11 @@ class Ethna_Renderer_Smarty
     }
 
 
-    public function render(Ethna_AppDataContainer $dataContainer,$config, $ae, $form_array, $actionName, $forward_name, $forward_path ) :Response
+    public function render($forward_path, Ethna_AppDataContainer $dataContainer, $config, $message_list, array $form_array, array $debugInfo) :Response
     {
-        $this->setProp('actionname', $actionName);
-        $this->setProp('viewname', $forward_name);
-        $this->setProp('forward_path', $forward_path);
+        $this->setProp('actionname', $debugInfo['actionname']);
+        $this->setProp('viewname', $debugInfo['viewname']);
+        $this->setProp('forward_path', $debugInfo['forward_path']);
 
         $app_array = $dataContainer->getAppArray();
         $app_ne_array = $dataContainer->getAppNEArray();
@@ -80,7 +80,7 @@ class Ethna_Renderer_Smarty
         $this->setPropByRef('form', $form_array);
         $this->setPropByRef('app', $app_array);
         $this->setPropByRef('app_ne', $app_ne_array);
-        $message_list = Ethna_Util::escapeHtml($ae->getMessageList());
+        $message_list = Ethna_Util::escapeHtml($message_list);
         $this->setPropByRef('errors', $message_list);
         if (isset($_SESSION)) {
             $tmp_session = Ethna_Util::escapeHtml($_SESSION);

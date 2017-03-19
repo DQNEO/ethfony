@@ -183,7 +183,16 @@ class Ethna_ActionClass
             $this->dataContainer->setApp($key, $val);
         }
 
+        $forward_path = $this->getTemplatePath($forward_name);
+        $this->prerender($forward_name);
+
         $renderer = $this->container->getRenderer();
+
+        $debugInfo = [
+            'actionname' => $this->getCurrentActionName(),
+            'viewname' => $forward_name,
+            'forward_path' => $forward_path,
+        ];
 
         if (isset($this->af)) {
             $form_array = $this->af->getArray();
@@ -191,9 +200,7 @@ class Ethna_ActionClass
             $form_array = [];
         }
 
-        $forward_path = $this->getTemplatePath($forward_name);
-        $this->prerender($forward_name);
-        return $renderer->render($this->dataContainer, $this->config->get(), $this->ae, $form_array, $this->getCurrentActionName(), $forward_name, $forward_path );
+        return $renderer->render($forward_path, $this->dataContainer, $this->config->get(), $this->ae->getMessageList(), $form_array,$debugInfo);
     }
 
     /**
