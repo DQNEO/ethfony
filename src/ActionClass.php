@@ -66,12 +66,11 @@ class Ethna_ActionClass
     /** @var Ethna_AppDataContainer */
     protected $dataContainer;
 
-    protected $viewClassName;
     /**
      *  Ethna_ActionClassのコンストラクタ
      *
      */
-    public function __construct(ContainerInterface $container, $viewClassName)
+    public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
         $this->dataContainer = $container->getDataContainer();
@@ -84,7 +83,6 @@ class Ethna_ActionClass
         $this->session = $container->getSession();
         $this->plugin = $container->getPlugin();
         $this->logger = $container->getLogger();
-        $this->viewClassName = $viewClassName;
     }
 
 
@@ -94,6 +92,11 @@ class Ethna_ActionClass
      *  @return string actionname
      */
     public function getActionName()
+    {
+        return $this->container->getCurrentActionName();
+    }
+
+    public function getCurrentActionName()
     {
         return $this->container->getCurrentActionName();
     }
@@ -176,11 +179,48 @@ class Ethna_ActionClass
      */
     protected function view(string $forward_name, array $parameters = []):Response
     {
-        $className = $this->viewClassName;
-        $view = new $className($this->container, $this->af, $forward_name);
-        return $view->render($parameters);
+        foreach ($parameters as $key => $val) {
+            $this->dataContainer->setApp($key, $val);
+        }
+
+        $forward_path = $this->getTemplatePath($forward_name);
+        $this->prerender($forward_name);
+
+        $renderer = $this->container->getRenderer();
+
+        $debugInfo = [
+            'actionname' => $this->getCurrentActionName(),
+            'viewname' => $forward_name,
+            'forward_path' => $forward_path,
+        ];
+
+        if (isset($this->af)) {
+            $form_array = $this->af->getArray();
+        } else {
+            $form_array = [];
+        }
+
+        return $renderer->render($forward_path, $this->dataContainer, $this->config->get(), $this->ae->getMessageList(), $form_array,$debugInfo);
     }
 
+    /**
+     *  遷移名に対応するテンプレートパス名が省略された場合のデフォルトパス名を返す
+     *
+     *  デフォルトでは"foo_bar"というforward名が"foo/bar" + テンプレート拡張子となる
+     *  ので好み応じてオーバライドする
+     *
+     *  @access public
+     *  @param  string  $forward_name   forward名
+     *  @return string  forwardパス名
+     */
+    protected function getTemplatePath($forward_name)
+    {
+        return str_replace('_', '/', $forward_name) . '.tpl';
+    }
+
+    protected function prerender($forward_name)
+    {
+    }
 
 }
 // }}}
