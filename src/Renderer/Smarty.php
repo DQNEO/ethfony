@@ -20,15 +20,18 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
  *  @access     public
  *  @package    Ethna
  */
-class Ethna_Renderer_Smarty extends Ethna_Renderer
+class Ethna_Renderer_Smarty
 {
-    /** @private    string compile directory  */
-    private $compile_dir;
-
     protected $config = array(
         'left_delimiter' => '{{',
         'right_delimiter' => '}}',
     );
+
+    /** @var Smarty  */
+    protected $engine;
+
+    /** @protected    string  template directory  */
+    protected $template_dir;
 
     /**
      *  Ethna_Renderer_Smartyクラスのコンストラクタ
@@ -37,7 +40,7 @@ class Ethna_Renderer_Smarty extends Ethna_Renderer
      */
     public function __construct(string $template_dir, array $option)
     {
-        parent::__construct($template_dir, $option);
+        $this->setTemplateDir($template_dir);
 
         $this->engine = new Smarty;
 
@@ -64,10 +67,6 @@ class Ethna_Renderer_Smarty extends Ethna_Renderer
         );
     }
 
-    public function getName()
-    {
-        return 'smarty';
-    }
 
     public function render(Ethna_AppDataContainer $dataContainer,$config, $ae, $form_array, $actionName, $forward_name, $forward_path ) :Response
     {
@@ -95,55 +94,15 @@ class Ethna_Renderer_Smarty extends Ethna_Renderer
                 : '');
         $this->setProp('config', $config);
 
-        return $this->perform($forward_path);
-
-    }
-
-    /**
-     *  ビューを出力する
-     *
-     *  @param  string  $template   テンプレート名
-     *  @param  bool    $capture    true ならば出力を表示せずに返す
-     *
-     *  @access public
-     */
-    public function perform($template = null) :Response
-    {
-        if ($template === null && $this->template === null) {
-            throw new \Exception('template is not defined');
-        }
-
-        if ($template !== null) {
-            $this->template = $template;
-        }
         set_error_handler(null);
-        if ((is_absolute_path($this->template) && is_readable($this->template))
-            || is_readable($this->template_dir . $this->template)) {
-            return new StreamedResponse(function() {
-                $this->engine->display($this->template);
+        if ((is_absolute_path($forward_path) && is_readable($forward_path))
+            || is_readable($this->template_dir . $forward_path)) {
+            return new StreamedResponse(function() use ($forward_path) {
+                $this->engine->display($forward_path);
             });
         } else {
-            throw new \Exception('template not found ' .$this->template_dir .  $this->template);
+            throw new \Exception('template not found ' .$this->template_dir .  $forward_path);
         }
-    }
-
-    /**
-     * テンプレート変数を取得する
-     *
-     *  @param string $name  変数名
-     *
-     *  @return mixed　変数
-     *
-     *  @access public
-     */
-    public function getProp($name = null)
-    {
-        $property = $this->engine->get_template_vars($name);
-
-        if ($property !== null) {
-            return $property;
-        }
-        return null;
     }
 
     /**
@@ -208,6 +167,10 @@ class Ethna_Renderer_Smarty extends Ethna_Renderer
         $this->engine->assign_by_ref($name, $value);
     }
 
+    /** @protected    array  レンダラプラグイン(Ethna_Pluginとは関係なし) */
+    protected $plugin_registry = [];
+
+
     /**
      *  プラグインをセットする
      *
@@ -243,8 +206,25 @@ class Ethna_Renderer_Smarty extends Ethna_Renderer
         }
 
         // プラグインを登録する
-        parent::setPlugin($name, $type, $plugin);
+        $this->plugin_registry[$type][$name] = $plugin;
         $this->engine->$register_method($name, $plugin);
     }
+
+    /**
+     *  テンプレートディレクトリを割り当てる
+     *
+     *  @param string $dir ディレクトリ名
+     *
+     *  @access public
+     */
+    protected function setTemplateDir($dir)
+    {
+        $this->template_dir = $dir;
+
+        if (substr($this->template_dir, -1) != '/') {
+            $this->template_dir .= '/';
+        }
+    }
+
 }
 // }}}

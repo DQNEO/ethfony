@@ -322,7 +322,7 @@ class Ethna_Container implements ContainerInterface
      *  レンダラを取得する
      *
      */
-    public function getRenderer() :Ethna_Renderer
+    public function getRenderer() :Ethna_Renderer_Smarty
     {
         if (isset($this->renderer)) {
             return $this->renderer;
