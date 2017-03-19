@@ -107,7 +107,7 @@ class Ethna_Renderer_Smarty extends Ethna_Renderer
      *
      *  @access public
      */
-    public function perform($template = null, $capture = false) :Response
+    public function perform($template = null) :Response
     {
         if ($template === null && $this->template === null) {
             throw new \Exception('template is not defined');
@@ -119,12 +119,9 @@ class Ethna_Renderer_Smarty extends Ethna_Renderer
         set_error_handler(null);
         if ((is_absolute_path($this->template) && is_readable($this->template))
             || is_readable($this->template_dir . $this->template)) {
-                if ($capture === true) {
-                } else {
-                    return new StreamedResponse(function() {
-                        $this->engine->display($this->template);
-                    });
-                }
+            return new StreamedResponse(function() {
+                $this->engine->display($this->template);
+            });
         } else {
             throw new \Exception('template not found ' .$this->template_dir .  $this->template);
         }
