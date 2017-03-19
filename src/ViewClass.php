@@ -76,7 +76,7 @@ class Ethna_ViewClass
      *  @param  string  $forward_name   ビューに関連付けられている遷移名
      *  @param  string  $forward_path   ビューに関連付けられているテンプレートファイル名
      */
-    public function __construct(ContainerInterface $container, ?Ethna_ActionForm $action_form, $forward_name, $forward_path)
+    public function __construct(ContainerInterface $container, ?Ethna_ActionForm $action_form, $forward_name)
     {
         $this->container = $container;
         $this->container->view = $this;
@@ -96,11 +96,27 @@ class Ethna_ViewClass
         $this->session = $this->container->getSession();
 
         $this->forward_name = $forward_name;
-        $this->forward_path = $forward_path;
+        $this->forward_path = $this->getTemplatePath($forward_name);
+
 
         foreach (array_keys($this->helper_action_form) as $action) {
             $this->addActionFormHelper($action);
         }
+    }
+
+    /**
+     *  遷移名に対応するテンプレートパス名が省略された場合のデフォルトパス名を返す
+     *
+     *  デフォルトでは"foo_bar"というforward名が"foo/bar" + テンプレート拡張子となる
+     *  ので好み応じてオーバライドする
+     *
+     *  @access public
+     *  @param  string  $forward_name   forward名
+     *  @return string  forwardパス名
+     */
+    protected function getTemplatePath($forward_name)
+    {
+        return str_replace('_', '/', $forward_name) . '.tpl';
     }
 
     public function render(array $parameters = []) :Response
@@ -110,8 +126,9 @@ class Ethna_ViewClass
             $dataContainer->setApp($key, $val);
         }
 
+        $this->preforward($dataContainer);
+
         return new StreamedResponse(function() {
-            $this->preforward();
             $this->forward();
         });
     }
@@ -135,7 +152,7 @@ class Ethna_ViewClass
      *                          array('forward_name', $param) の形でアクション
      *                          から値を返すことで、$params に値が渡されます。
      */
-    public function preforward()
+    public function preforward($dataContainer)
     {
     }
     // }}}
@@ -236,7 +253,7 @@ class Ethna_ViewClass
             $this->helper_action_form[$action] = $this->af;
         } else {
             //    アクションが異なる場合
-            $form_name = $container->getActionFormName($action);
+            $form_name = $container->getActionResolver()->getActionFormName($action);
             if ($form_name === null) {
                 throw new \Exception(sprintf(
                     'action form for the action [%s] not found.', $action));

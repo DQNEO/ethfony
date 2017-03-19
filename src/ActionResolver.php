@@ -37,7 +37,7 @@ class Ethna_ActionResolver
         return $action_name;
     }
 
-    public function getController(Request $request, $action_name, ContainerInterface $container, $void, $viewResolver): callable
+    public function getController(Request $request, $action_name, ContainerInterface $container, $viewClassName): callable
     {
 
         list($action_class_name ,$form_class_name ,$method) = $this->getClassNames($action_name);
@@ -53,7 +53,7 @@ class Ethna_ActionResolver
         // アクションフォーム初期化
         // フォーム定義、フォーム値設定
         /** @var Ethna_ActionClass $ac */
-        $ac = new $action_class_name($container, null, $viewResolver);
+        $ac = new $action_class_name($container, $viewClassName);
         if ($form_class_name) {
             $action_form =  new $form_class_name($container);
             $ac->setActionForm($action_form);
@@ -100,8 +100,8 @@ class Ethna_ActionResolver
                 return '/' . strtoupper($matches[1]);
             }, ucfirst($action_name));
         $class_path = $postfix1 . '.php';
-        $this->logger->log(LOG_DEBUG, "default action path [%s]", $class_path);
         if (file_exists($this->actionDir . $class_path)) {
+            $this->logger->log(LOG_DEBUG, "action file is found [%s]", $class_path);
             include_once $this->actionDir . $class_path;
         } else {
             $this->logger->log(LOG_INFO, 'file not found:' . $this->actionDir . $class_path);

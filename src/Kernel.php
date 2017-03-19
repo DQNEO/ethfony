@@ -164,10 +164,8 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
 
         $i18n = $this->container->getI18N();
         $i18n->setLanguage($this->locale);
-
-
-        $viewResolver = new Ethna_ViewResolver($this->container, $this->logger, $this->container->getViewdir(), $this->container->getAppId(), $this->class['view']);
-        $callable = $actionResolver->getController($request, $action_name, $this->container, null, $viewResolver);
+        $viewClass = $this->class['view'];
+        $callable = $actionResolver->getController($request, $action_name, $this->container, $viewClass);
         $arguments = [$request];
         $response = call_user_func_array($callable, $arguments);
         return $response;
