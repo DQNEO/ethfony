@@ -31,4 +31,6 @@ interface Ethna_ContainerInterface
 
     public function getActionResolver() :Ethna_ActionResolver;
 
+    public function getRenderer() :Ethna_Renderer;
+
 }

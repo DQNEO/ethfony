@@ -117,51 +117,6 @@ class Ethna_ViewClass
         return str_replace('_', '/', $forward_name) . '.tpl';
     }
 
-    public function render(array $parameters = []) :Response
-    {
-        $dataContainer = $this->container->getDataContainer();
-        foreach ($parameters as $key => $val) {
-            $dataContainer->setApp($key, $val);
-        }
-
-        $this->preforward($dataContainer);
-
-        $renderer = $this->container->getRenderer();
-
-        $renderer->setProp('actionname', $this->getCurrentActionName());
-        $renderer->setProp('viewname', $this->forward_name);
-        $renderer->setProp('forward_path', $this->forward_path);
-
-        $app_array = $dataContainer->getAppArray();
-        $app_ne_array = $dataContainer->getAppNEArray();
-
-        if (isset($this->af)) {
-            $form_array = $this->af->getArray();
-            $renderer->setPropByRef('form', $form_array); // this may be a bug! we should use $af here
-        }
-        $renderer->setPropByRef('app', $app_array);
-        $renderer->setPropByRef('app_ne', $app_ne_array);
-        $message_list = Ethna_Util::escapeHtml($this->ae->getMessageList());
-        $renderer->setPropByRef('errors', $message_list);
-        if (isset($_SESSION)) {
-            $tmp_session = Ethna_Util::escapeHtml($_SESSION);
-            $renderer->setPropByRef('session', $tmp_session);
-        }
-        $renderer->setProp('script',
-            htmlspecialchars(basename($_SERVER['SCRIPT_NAME']), ENT_QUOTES, mb_internal_encoding()));
-        $renderer->setProp('request_uri',
-            isset($_SERVER['REQUEST_URI'])
-                ? htmlspecialchars($_SERVER['REQUEST_URI'], ENT_QUOTES, mb_internal_encoding())
-                : '');
-        $renderer->setProp('config', $this->config->get());
-
-        return new StreamedResponse(function() use ($renderer) {
-            $e = $renderer->perform($this->forward_path);
-            if (Ethna::isError($e)) {
-                throw new \Exception($e->getMessage());
-            }
-        });
-    }
 
     // }}}
 
