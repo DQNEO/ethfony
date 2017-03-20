@@ -37,10 +37,6 @@ function smarty_block_form($params, $content, &$smarty, &$repeat)
         // {/form}: ブロック全体を出力
 
         $view = Ethna_Container::getInstance()->getFormHelper();
-        if ($view === null) {
-            return null;
-        }
-
         // ethna_action
         if (isset($params['ethna_action'])) {
             $ethna_action = $params['ethna_action'];

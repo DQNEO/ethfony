@@ -16,10 +16,6 @@ function smarty_function_form_input($params, &$smarty)
 
     // view object
     $view = Ethna_Container::getInstance()->getFormHelper();
-    if ($view === null) {
-        return null;
-    }
-
     // 現在の{form_input}を囲むform blockがあればパラメータを取得しておく
     $block_params = null;
     for ($i = count($smarty->_tag_stack); $i >= 0; --$i) {
