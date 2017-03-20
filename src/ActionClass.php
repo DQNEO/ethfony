@@ -153,7 +153,7 @@ class Ethna_ActionClass
         if ($forward_name === false) {
             throw new ActionAbortedException();
         } else if ($forward_name !== null) {
-            //Redirect Resposne or Ethna_FormHelper
+            //Redirect Resposne or forward_name
             return $forward_name;
         }
 
