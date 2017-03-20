@@ -23,17 +23,8 @@ class Ethna_FormHelper
     /** @var  Ethna_Container  */
     protected $container;
 
-    /** @public    object  Ethna_Config        設定オブジェクト    */
-    public $config;
-
-    /** @public    object  Ethna_I18N          i18nオブジェクト */
-    public $i18n;
-
     /** @public    object  Ethna_Logger    ログオブジェクト */
     public $logger;
-
-    /** @public    object  Ethna_Plugin    プラグインオブジェクト */
-    public $plugin;
 
     /** @public    array   アクションフォームオブジェクト(helper) */
     public $helper_action_form = array();
@@ -54,10 +45,7 @@ class Ethna_FormHelper
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
-        $this->config = $this->container->getConfig();
-        $this->i18n = $this->container->getI18N();
         $this->logger = $this->container->getLogger();
-        $this->plugin = $this->container->getPlugin();
 
     }
 
