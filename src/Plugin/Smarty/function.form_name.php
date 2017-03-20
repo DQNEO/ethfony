@@ -15,7 +15,7 @@ function smarty_function_form_name($params, &$smarty)
     }
 
     // view object
-    $view = Ethna_Container::getInstance()->getFormHelper();
+    $formHelper = Ethna_Container::getInstance()->getFormHelper();
     // action
     $action = null;
     if (isset($params['action'])) {
@@ -32,10 +32,10 @@ function smarty_function_form_name($params, &$smarty)
         }
     }
     if ($action !== null) {
-        $view->addActionFormHelper($action);
+        $formHelper->addActionFormHelper($action);
     }
 
-    return $view->getFormName($name, $action, $params);
+    return $formHelper->getFormName($name, $action, $params);
 }
 
 
