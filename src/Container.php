@@ -41,7 +41,7 @@ class Ethna_Container implements ContainerInterface
     protected $actionResolver;
 
     /** @var  Ethna_FormHelper */
-    public $view;
+    protected $view;
 
     public $url;
 
