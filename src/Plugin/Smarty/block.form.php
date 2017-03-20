@@ -22,11 +22,11 @@ function smarty_block_form($params, $content, &$smarty, &$repeat)
         // 動的フォームヘルパを呼ぶ
         // 動的フォームヘルパを呼ぶ
         if (isset($params['ethna_form'])) {
-            $view = Ethna_Container::getInstance()->getView();
+            $view = Ethna_Container::getInstance()->getFormHelper();
             $view->addActionFormHelperByFormClassName($params['ethna_form'], true);
         } else if (isset($params['ethna_action'])) {
             $ethna_action = $params['ethna_action'];
-            $view = Ethna_Container::getInstance()->getView();
+            $view = Ethna_Container::getInstance()->getFormHelper();
             $view->addActionFormHelper($ethna_action, true);
         }
 
@@ -36,7 +36,7 @@ function smarty_block_form($params, $content, &$smarty, &$repeat)
     } else {
         // {/form}: ブロック全体を出力
 
-        $view = Ethna_Container::getInstance()->getView();
+        $view = Ethna_Container::getInstance()->getFormHelper();
         if ($view === null) {
             return null;
         }
