@@ -404,14 +404,6 @@ class Ethna_Container implements ContainerInterface
     }
 
     /**
-     * @param Ethna_ViewClass $view
-     */
-    public function setView(Ethna_ViewClass $view)
-    {
-        $this->view = $view;
-    }
-
-    /**
      *  ビューディレクトリ名を決定する
      *
      *  @return string  ビューディレクトリ
