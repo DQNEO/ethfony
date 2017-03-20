@@ -40,7 +40,7 @@ class Ethna_Container implements ContainerInterface
     /** @var  Ethna_ActionResolver */
     protected $actionResolver;
 
-    /** @var  Ethna_ViewClass */
+    /** @var  Ethna_FormHelper */
     public $view;
 
     public $url;
@@ -393,12 +393,12 @@ class Ethna_Container implements ContainerInterface
     }
 
     /**
-     * @return Ethna_ViewClass
+     * @return Ethna_FormHelper
      */
-    public function getView(): Ethna_ViewClass
+    public function getView(): Ethna_FormHelper
     {
         if (!isset($this->view)) {
-            $this->view = new Ethna_ViewClass($this);
+            $this->view = new Ethna_FormHelper($this);
         }
         return $this->view;
     }
