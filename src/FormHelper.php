@@ -1,8 +1,7 @@
 <?php
 // vim: foldmethod=marker
 /**
- *  ViewClass.php
- *
+  *
  *  @author     Masaki Fujimoto <fujimoto@php.net>
  *  @license    http://www.opensource.org/licenses/bsd-license.php The BSD License
  *  @package    Ethna
@@ -10,7 +9,7 @@
  */
 use Ethna_ContainerInterface as ContainerInterface;
 
-// {{{ Ethna_ViewClass
+// {{{ Ethna_FormHelper
 /**
  *  viewクラス
  *
@@ -18,7 +17,7 @@ use Ethna_ContainerInterface as ContainerInterface;
  *  @access     public
  *  @package    Ethna
  */
-class Ethna_ViewClass
+class Ethna_FormHelper
 {
 
     /** @var  Ethna_Container  */
@@ -46,7 +45,7 @@ class Ethna_ViewClass
     protected $reset_counter = false;
 
     /**
-     *  Ethna_ViewClassのコンストラクタ
+     *  Ethna_FormHelperのコンストラクタ
      *
      *  @access public
      *  @param  string  $forward_name   ビューに関連付けられている遷移名

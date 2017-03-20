@@ -22,12 +22,12 @@ function smarty_block_form($params, $content, &$smarty, &$repeat)
         // 動的フォームヘルパを呼ぶ
         // 動的フォームヘルパを呼ぶ
         if (isset($params['ethna_form'])) {
-            $view = Ethna_Container::getInstance()->getView();
-            $view->addActionFormHelperByFormClassName($params['ethna_form'], true);
+            $formHelper = Ethna_Container::getInstance()->getFormHelper();
+            $formHelper->addActionFormHelperByFormClassName($params['ethna_form'], true);
         } else if (isset($params['ethna_action'])) {
             $ethna_action = $params['ethna_action'];
-            $view = Ethna_Container::getInstance()->getView();
-            $view->addActionFormHelper($ethna_action, true);
+            $formHelper = Ethna_Container::getInstance()->getFormHelper();
+            $formHelper->addActionFormHelper($ethna_action, true);
         }
 
         // ここで返す値は出力されない
@@ -36,17 +36,13 @@ function smarty_block_form($params, $content, &$smarty, &$repeat)
     } else {
         // {/form}: ブロック全体を出力
 
-        $view = Ethna_Container::getInstance()->getView();
-        if ($view === null) {
-            return null;
-        }
-
+        $formHelper = Ethna_Container::getInstance()->getFormHelper();
         // ethna_action
         if (isset($params['ethna_action'])) {
             $ethna_action = $params['ethna_action'];
             unset($params['ethna_action']);
 
-            $view->addActionFormHelper($ethna_action);
+            $formHelper->addActionFormHelper($ethna_action);
             $hidden = getActionRequest($ethna_action, 'hidden');
             $content = $hidden . $content;
 
@@ -74,7 +70,7 @@ function smarty_block_form($params, $content, &$smarty, &$repeat)
         }
 
         // $contentを囲む<form>ブロック全体を出力
-        return $view->getFormBlock($content, $params);
+        return $formHelper->getFormBlock($content, $params);
     }
 }
 

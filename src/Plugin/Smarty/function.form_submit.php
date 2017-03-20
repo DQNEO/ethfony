@@ -6,14 +6,10 @@
  */
 function smarty_function_form_submit($params, &$smarty)
 {
-    $view = Ethna_Container::getInstance()->getView();
-    if ($view === null) {
-        return null;
-    }
-
+    $formHelper = Ethna_Container::getInstance()->getFormHelper();
     //ここでi18n変換をかます
     $params['value'] = _et($params['value']);
 
-    return $view->getFormSubmit($params);
+    return $formHelper->getFormSubmit($params);
 }
 

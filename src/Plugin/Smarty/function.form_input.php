@@ -15,11 +15,7 @@ function smarty_function_form_input($params, &$smarty)
     }
 
     // view object
-    $view = Ethna_Container::getInstance()->getView();
-    if ($view === null) {
-        return null;
-    }
-
+    $formHelper = Ethna_Container::getInstance()->getFormHelper();
     // 現在の{form_input}を囲むform blockがあればパラメータを取得しておく
     $block_params = null;
     for ($i = count($smarty->_tag_stack); $i >= 0; --$i) {
@@ -38,7 +34,7 @@ function smarty_function_form_input($params, &$smarty)
         $action = $block_params['ethna_action'];
     }
     if ($action !== null) {
-        $view->addActionFormHelper($action, true);
+        $formHelper->addActionFormHelper($action, true);
     }
 
     // default
@@ -59,6 +55,6 @@ function smarty_function_form_input($params, &$smarty)
         $params['default'] = $val;
     }
 
-    return $view->getFormInput($name, $action, $params);
+    return $formHelper->getFormInput($name, $action, $params);
 }
 
