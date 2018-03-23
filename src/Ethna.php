@@ -99,7 +99,7 @@ class Ethna
      *  @param  int     $code               エラーコード
      *  @static
      */
-    public static function raiseNotice($message, $code = E_GENERAL)
+    public static function raiseNotice($message, $code = E_GENERAL): Ethna_Error
     {
         $userinfo = null;
         if (func_num_args() > 2) {

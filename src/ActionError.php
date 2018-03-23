@@ -67,11 +67,8 @@ class Ethna_ActionError
     /**
      *  Ethna_Errorオブジェクトを追加する
      *
-     *  @access public
-     *  @param  string              $name   エラーに対応するフォーム項目名(不要ならnull)
-     *  @param  object  Ethna_Error $error  エラーオブジェクト
      */
-    public function addObject($name, $error)
+    public function addObject(?string $name, Ethna_Error $error)
     {
         $elt = array();
         $elt['name'] = $name;
