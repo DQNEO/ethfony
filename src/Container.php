@@ -43,7 +43,7 @@ class Ethna_Container implements ContainerInterface
     /** @var  Ethna_FormHelper */
     protected $formHelper;
 
-    public $url;
+    protected $url;
 
     /** @var  Ethna_AppDataContainer */
     protected $dataContainer;
@@ -155,6 +155,7 @@ class Ethna_Container implements ContainerInterface
         if ($obj === null) {
             $class_name = $this->class['config'];
             $obj = new $class_name($this->getDirectory('etc'));
+            $this->url = $obj->get('url');
         }
         return $obj;
     }

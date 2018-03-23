@@ -96,7 +96,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
         $this->container = new Ethna_Container(BASE, $this->directory, $this->class, $this->appid, $this->locale, '');
         $this->directory = $this->container->getDirectories();
         $config = $this->container->getConfig();
-        $this->container->url = $config->get('url');
 
         $plugin = $this->container->getPlugin();
         $this->logger = $this->container->getLogger();
@@ -137,13 +136,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
         $this->directory = $this->container->getDirectories();
 
         $config = $this->container->getConfig();
-        $url = $config->get('url');
-        if (empty($url)) {
-            $url = Ethna_Util::getUrlFromRequestUri();
-            $config->set('url', $url);
-        }
-        $this->container->url = $url;
-
         $plugin = $this->container->getPlugin();
 
         $this->logger = $this->container->getLogger();
