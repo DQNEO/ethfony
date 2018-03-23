@@ -24,7 +24,6 @@ class Ethna_ActionError
      *  @access private
      */
 
-    /** @protected    array   エラーオブジェクトの一覧 */
     protected $error_list = array();
 
     /** @protected   Ethna_ActionForm    アクションフォームオブジェクト */
