@@ -124,7 +124,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
      */
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true): Response
     {
-        $default_action_name = $this->default_action_name;
         self::$instance  = $this;
 
         Ethna::setErrorCallback(array($this, 'handleError'));
@@ -146,7 +145,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
         $actionResolver = new $actionResolverClass($this->container->getAppId(), $logger, $default_form_class, $actionDir);
         $this->container->setActionResolver($actionResolver);
         // アクション名の取得
-        $action_name = $actionResolver->resolveActionName($request, $default_action_name);
+        $action_name = $actionResolver->resolveActionName($request, $this->default_action_name);
         $this->container->setCurrentActionName($action_name);
 
         $this->container->getSession()->restore();
