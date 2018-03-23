@@ -42,9 +42,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
      */
     protected $locale = 'ja_JP';
 
-    /** @protected    object  Ethna_Logger        ログオブジェクト */
-    protected $logger = null;
-
     /** @var  Ethna_Container */
     protected $container;
 
@@ -98,9 +95,9 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
         $config = $this->container->getConfig();
 
         $plugin = $this->container->getPlugin();
-        $this->logger = $this->container->getLogger();
-        $plugin->setLogger($this->logger);
-        $this->logger->begin();
+        $logger = $this->container->getLogger();
+        $logger->begin();
+        $plugin->setLogger($logger);
 
         $this->container->setCurrentActionName($action_name);
 
@@ -138,15 +135,15 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
         $config = $this->container->getConfig();
         $plugin = $this->container->getPlugin();
 
-        $this->logger = $this->container->getLogger();
-        $plugin->setLogger($this->logger);
-        $this->logger->begin();
+        $logger = $this->container->getLogger();
+        $logger->begin();
+        $plugin->setLogger($logger);
 
         $actionDir = $this->directory['action'] . "/";
         $default_form_class = $this->class['form'];
         $actionResolverClass = $this->class['action_resolver'];
         /** @var Ethna_ActionResolver $actionResolver */
-        $actionResolver = new $actionResolverClass($this->container->getAppId(), $this->logger, $default_form_class, $actionDir);
+        $actionResolver = new $actionResolverClass($this->container->getAppId(), $logger, $default_form_class, $actionDir);
         $this->container->setActionResolver($actionResolver);
         // アクション名の取得
         $action_name = $actionResolver->resolveActionName($request, $default_action_name);
@@ -167,7 +164,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
      */
     public function terminate(Request $request, Response $response)
     {
-        $this->logger->end();
+        $this->container->getLogger()->end();
     }
 
     /**
@@ -178,10 +175,11 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
      */
     public function handleError($error)
     {
+        $logger = $this->container->getLogger();
         // ログ出力
-        list ($log_level, $dummy) = $this->logger->errorLevelToLogLevel($error->getLevel());
+        list ($log_level, $dummy) = $logger->errorLevelToLogLevel($error->getLevel());
         $message = $error->getMessage();
-        $this->logger->log($log_level, sprintf("%s [ERROR CODE(%d)]", $message, $error->getCode()));
+        $logger->log($log_level, sprintf("%s [ERROR CODE(%d)]", $message, $error->getCode()));
     }
 
 
