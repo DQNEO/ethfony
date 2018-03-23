@@ -68,7 +68,7 @@ class Ethna_Renderer_Smarty
     }
 
 
-    public function render($forward_path, Ethna_AppDataContainer $dataContainer, $config, $message_list, array $form_array, array $debugInfo) :Response
+    public function render($forward_path, Ethna_AppDataContainer $dataContainer, $config, $message_list, array $form_array, array $debugInfo) :StreamedResponse
     {
         $this->setProp('actionname', $debugInfo['actionname']);
         $this->setProp('viewname', $debugInfo['viewname']);

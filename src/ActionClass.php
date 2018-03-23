@@ -177,7 +177,7 @@ class Ethna_ActionClass
 
     /**
      */
-    protected function view(string $forward_name, array $parameters = []):Response
+    protected function view(string $forward_name, array $parameters = []):StreamedResponse
     {
         foreach ($parameters as $key => $val) {
             $this->dataContainer->setApp($key, $val);
