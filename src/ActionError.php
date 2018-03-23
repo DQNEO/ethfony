@@ -176,12 +176,15 @@ class Ethna_ActionError
      *  @param  array   エラーエントリ
      *  @return string  エラーメッセージ
      */
-    protected function getMessageByEntry(&$error)
+    protected function getMessageByEntry(&$error): string
     {
-        $form_name = $this->action_form->getName($error['name']);
-        return str_replace("{form}", _et($form_name), $error['object']->getMessage());
+        if ($this->action_form) {
+            $form_name = $this->action_form->getName($error['name']);
+            return str_replace("{form}", _et($form_name), $error['object']->getMessage());
+        } else {
+            return $error['object']->getMessage();
+        }
     }
-
 
 }
 // }}}
