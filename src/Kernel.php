@@ -154,9 +154,7 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
         $i18n = $this->container->getI18N();
         $i18n->setLanguage($this->locale);
         $callable = $actionResolver->getController($request, $action_name, $this->container);
-        $arguments = [$request];
-        $response = call_user_func_array($callable, $arguments);
-        return $response;
+        return $callable($request);
     }
 
     /**
