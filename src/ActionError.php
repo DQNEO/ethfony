@@ -78,8 +78,6 @@ class Ethna_ActionError
         $elt['object'] = $error;
         $this->error_list[] = $elt;
 
-        // ログ出力(補足)
-        $this->logger->log(LOG_INFO, '{form} -> [%s]', $this->action_form->getName($name));
     }
 
     /**
