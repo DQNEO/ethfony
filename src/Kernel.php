@@ -60,9 +60,9 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
 
         $this->container = new Ethna_Container(BASE, $this->directory, $this->class, $this->appid, $this->locale, $this->sessionName);
 
-        $actionResolverClass = $this->class['action_resolver'];
-        /** @var Ethna_ActionResolver $resolver */
-        $this->resolver = new $actionResolverClass($this->container->getAppId(), $this->container->getLogger(), $this->class['form'], $this->container->getDirectory('action') . "/");
+        $resolverClass = $this->class['cotroll_resolver'];
+        /** @var Ethna_ControllerResolver $resolver */
+        $this->resolver = new $resolverClass($this->container->getAppId(), $this->container->getLogger(), $this->class['form'], $this->container->getDirectory('action') . "/");
 
         Ethna::setErrorCallback(array($this, 'handleError'));
     }
