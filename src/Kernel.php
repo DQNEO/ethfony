@@ -127,7 +127,9 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
         $this->container->setCurrentActionName($action_name);
 
         $callable = $this->resolver->getController($request, $action_name, $this->container);
-        return $callable($request);
+        $arguments = [$request];
+        $response = call_user_func_array($callable, $arguments);
+        return $response;
     }
 
     /**
