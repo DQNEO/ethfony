@@ -153,6 +153,15 @@ class Ethna_ActionError
         return $this->error_list;
     }
 
+    public function getErrorAssoc()
+    {
+        $message_list = array();
+        foreach ($this->error_list as $error) {
+            $message_list[$error['name']] = $this->getMessageByEntry($error);
+        }
+        return $message_list;
+    }
+
     /**
      *  エラーメッセージを配列にして返す
      *
