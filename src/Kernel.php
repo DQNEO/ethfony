@@ -23,6 +23,7 @@ use Symfony\Component\HttpKernel\TerminableInterface;
  */
 class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
 {
+    protected $resolver;
     protected $default_action_name;
 
     /** @var    string      アプリケーションID */
@@ -60,8 +61,8 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
         $this->container = new Ethna_Container(BASE, $this->directory, $this->class, $this->appid, $this->locale, $this->sessionName);
 
         $actionResolverClass = $this->class['action_resolver'];
-        /** @var Ethna_ActionResolver $actionResolver */
-        $this->actionResolver = new $actionResolverClass($this->container->getAppId(), $this->container->getLogger(), $this->class['form'], $this->container->getDirectory('action') . "/");
+        /** @var Ethna_ActionResolver $resolver */
+        $this->resolver = new $actionResolverClass($this->container->getAppId(), $this->container->getLogger(), $this->class['form'], $this->container->getDirectory('action') . "/");
 
         Ethna::setErrorCallback(array($this, 'handleError'));
     }
@@ -115,17 +116,17 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
 
         $logger->begin();
         // アクション名の取得
-        $action_name = $this->actionResolver->resolveActionName($request, $this->default_action_name);
+        $action_name = $this->resolver->resolveActionName($request, $this->default_action_name);
 
         $this->container->getSession()->restore();
 
         $i18n = $this->container->getI18N();
         $i18n->setLanguage($this->locale);
 
-        $this->container->setActionResolver($this->actionResolver);
+        $this->container->setActionResolver($this->resolver);
         $this->container->setCurrentActionName($action_name);
 
-        $callable = $this->actionResolver->getController($request, $action_name, $this->container);
+        $callable = $this->resolver->getController($request, $action_name, $this->container);
         return $callable($request);
     }
 
