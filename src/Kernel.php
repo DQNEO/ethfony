@@ -143,15 +143,17 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
         $actionResolverClass = $this->class['action_resolver'];
         /** @var Ethna_ActionResolver $actionResolver */
         $actionResolver = new $actionResolverClass($this->container->getAppId(), $logger, $default_form_class, $actionDir);
-        $this->container->setActionResolver($actionResolver);
         // アクション名の取得
         $action_name = $actionResolver->resolveActionName($request, $this->default_action_name);
-        $this->container->setCurrentActionName($action_name);
 
         $this->container->getSession()->restore();
 
         $i18n = $this->container->getI18N();
         $i18n->setLanguage($this->locale);
+
+        $this->container->setActionResolver($actionResolver);
+        $this->container->setCurrentActionName($action_name);
+
         $callable = $actionResolver->getController($request, $action_name, $this->container);
         return $callable($request);
     }
