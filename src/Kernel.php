@@ -47,14 +47,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
 
     protected $sessionName = 'EthnaSESSID';
 
-    public static function handleHttp(Ethna_Kernel $kernel)
-    {
-        $request = Request::createFromGlobals();
-        $response = $kernel->handle($request);
-        $response->send();
-        $kernel->terminate($request, $response);
-    }
-
     /**
      *  Ethna_Kernelクラスのコンストラクタ
      *
@@ -63,6 +55,15 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
     public function __construct(string $default_action_name = '')
     {
         $this->default_action_name = $default_action_name;
+
+
+        $this->container = new Ethna_Container(BASE, $this->directory, $this->class, $this->appid, $this->locale, $this->sessionName);
+
+        $actionResolverClass = $this->class['action_resolver'];
+        /** @var Ethna_ActionResolver $actionResolver */
+        $this->actionResolver = new $actionResolverClass($this->container->getAppId(), $this->container->getLogger(), $this->class['form'], $this->container->getDirectory('action') . "/");
+
+        Ethna::setErrorCallback(array($this, 'handleError'));
     }
 
 
@@ -74,10 +75,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
      */
     public function console($action_name)
     {
-        Ethna::setErrorCallback(array($this, 'handleError'));
-
-        $this->container = new Ethna_Container(BASE, $this->directory, $this->class, $this->appid, $this->locale, '');
-        $this->directory = $this->container->getDirectories();
         $config = $this->container->getConfig();
 
         $plugin = $this->container->getPlugin();
@@ -110,35 +107,25 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
      */
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true): Response
     {
-        Ethna::setErrorCallback(array($this, 'handleError'));
-
-        $this->container = new Ethna_Container(BASE, $this->directory, $this->class, $this->appid, $this->locale, $this->sessionName);
-        $this->directory = $this->container->getDirectories();
-
         $config = $this->container->getConfig();
         $plugin = $this->container->getPlugin();
 
         $logger = $this->container->getLogger();
-        $logger->begin();
         $plugin->setLogger($logger);
 
-        $actionDir = $this->directory['action'] . "/";
-        $default_form_class = $this->class['form'];
-        $actionResolverClass = $this->class['action_resolver'];
-        /** @var Ethna_ActionResolver $actionResolver */
-        $actionResolver = new $actionResolverClass($this->container->getAppId(), $logger, $default_form_class, $actionDir);
+        $logger->begin();
         // アクション名の取得
-        $action_name = $actionResolver->resolveActionName($request, $this->default_action_name);
+        $action_name = $this->actionResolver->resolveActionName($request, $this->default_action_name);
 
         $this->container->getSession()->restore();
 
         $i18n = $this->container->getI18N();
         $i18n->setLanguage($this->locale);
 
-        $this->container->setActionResolver($actionResolver);
+        $this->container->setActionResolver($this->actionResolver);
         $this->container->setCurrentActionName($action_name);
 
-        $callable = $actionResolver->getController($request, $action_name, $this->container);
+        $callable = $this->actionResolver->getController($request, $action_name, $this->container);
         return $callable($request);
     }
 
