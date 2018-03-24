@@ -63,6 +63,8 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
     public function __construct(string $default_action_name = '')
     {
         $this->default_action_name = $default_action_name;
+
+        Ethna::setErrorCallback(array($this, 'handleError'));
     }
 
 
@@ -74,8 +76,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
      */
     public function console($action_name)
     {
-        Ethna::setErrorCallback(array($this, 'handleError'));
-
         $this->container = new Ethna_Container(BASE, $this->directory, $this->class, $this->appid, $this->locale, '');
         $this->directory = $this->container->getDirectories();
         $config = $this->container->getConfig();
@@ -110,8 +110,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
      */
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true): Response
     {
-        Ethna::setErrorCallback(array($this, 'handleError'));
-
         $this->container = new Ethna_Container(BASE, $this->directory, $this->class, $this->appid, $this->locale, $this->sessionName);
         $this->directory = $this->container->getDirectories();
 
