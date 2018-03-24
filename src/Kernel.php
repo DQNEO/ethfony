@@ -47,10 +47,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
 
     protected $sessionName = 'EthnaSESSID';
 
-    /** @var  Ethna_Kernel */
-    private static $instance;
-
-
     public static function handleHttp(Ethna_Kernel $kernel)
     {
         $request = Request::createFromGlobals();
@@ -71,14 +67,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
 
 
     /**
-     *  Singleton Accessor
-     */
-    public static function getInstance(): Ethna_Kernel
-    {
-        return self::$instance;
-    }
-
-    /**
      *  フレームワークの処理を実行する(CLI)
      *
      *  @access private
@@ -86,8 +74,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
      */
     public function console($action_name)
     {
-        self::$instance = $this;
-
         Ethna::setErrorCallback(array($this, 'handleError'));
 
         $this->container = new Ethna_Container(BASE, $this->directory, $this->class, $this->appid, $this->locale, '');
@@ -124,8 +110,6 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
      */
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true): Response
     {
-        self::$instance  = $this;
-
         Ethna::setErrorCallback(array($this, 'handleError'));
 
         $this->container = new Ethna_Container(BASE, $this->directory, $this->class, $this->appid, $this->locale, $this->sessionName);
