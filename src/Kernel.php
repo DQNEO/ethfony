@@ -122,11 +122,9 @@ class Ethna_Kernel implements HttpKernelInterface, TerminableInterface
         $logger->begin();
         $plugin->setLogger($logger);
 
-        $actionDir = $this->directory['action'] . "/";
-        $default_form_class = $this->class['form'];
         $actionResolverClass = $this->class['action_resolver'];
         /** @var Ethna_ActionResolver $actionResolver */
-        $actionResolver = new $actionResolverClass($this->container->getAppId(), $logger, $default_form_class, $actionDir);
+        $actionResolver = new $actionResolverClass($this->container->getAppId(), $logger, $this->class['form'], $this->directory['action'] . "/");
         // アクション名の取得
         $action_name = $actionResolver->resolveActionName($request, $this->default_action_name);
 
