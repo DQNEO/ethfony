@@ -7,7 +7,7 @@ use Ethna_ContainerInterface as ContainerInterface;
  * Date: 2016/02/07
  * Time: 14:17
  */
-class Ethna_ActionResolver
+class Ethna_ControllerResolver
 {
     protected $appId;
     protected $logger;
